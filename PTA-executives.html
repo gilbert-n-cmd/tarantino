@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PTA-executives</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Base Styles (Mobile First) */
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #003366;
+    }
+    
+    main {
+      width: 95%;
+      max-width: 100%;
+      margin: 15px auto;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+    }
+
+    h1, h2, h3 {
+      color: #004080;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 20px 0 10px;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      margin: 18px 0 8px;
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto 15px;
+    }
+
+    /* Form Styles */
+    form {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #004080;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* Layout */
+    .form-text-section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .text-content {
+      order: 1;
+    }
+    img{
+      width: 100%;
+      height: auto;
+    }
+    form {
+      order: 2;
+    }
+
+    /* Desktop Overrides */
+    @media (min-width: 768px) {
+      main {
+        max-width: 100%;
+        padding: 20px;
+        margin: 20px auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+        text-align: left;
+        margin-bottom: 20px;
+      }
+      
+      p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+      
+      h3 {
+        margin-top: 20px;
+        font-size: 1.5rem;
+      }
+
+      .form-text-section {
+        flex-direction: row;
+        gap: 30px;
+      }
+
+      form {
+        flex: 1;
+        max-width: 350px;
+        margin-bottom: 0;
+      }
+
+      .text-content {
+        flex: 2;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+        <div class="time">
+          <b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b>
+        </div>
+        <button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>
+        <div id="chat-box">
+          <div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>
+          <div class="chat-body">
+            <p>Welcome to Bishop Angelo Tarantino Memorial Secondary School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>
+        </div>
+      </div>
+      <div>+256 779905605 | bishopangelotarantino@gmail.ac.ug</div>
+      <div class="right-section">
+        <div class="socials-icons img">
+          <a href="#footer-icons"><i class="fas fa-globe"></i></a>
+          <a href="#footer-icons"><i class="fab fa-instagram"></i></a>
+          <a href="#footer-icons"><i class="fab fa-facebook-f"></i></a>
+          <a href="#footer-icons"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <select class="language-selector">
+          <option value="en">English</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-Brigadier-Noble-Mayobo.html">About Brigadier Noble Mayobo</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="Muslim-community.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a>
+<div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+ <!-----<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+ <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  
+  <!---<div class="brightness-controls">
+    <button onclick="setBrightness('low')">Low</button>
+    <button onclick="setBrightness('medium')">Medium</button>
+    <button onclick="setBrightness('high')">High</button>
+  </div>--->
+  
+  <main>
+    <section class="form-text-section">
+  <div class="text-content">
+    <h1>PTA Executive Committee</h1>
+    <h2>Building a Stronger School Together</h2>
+    <img src="images/staff members.jpeg" alt="PTA Executive Committee">
+
+    <h3>Working Hand in Hand for Our Children’s Future</h3>
+    <p>
+      The Parent-Teacher Association (PTA) at Bishop Angelo Tarantino Memorial Secondary School plays a crucial role in strengthening the partnership between the school administration, teachers, and parents. Through active involvement, the PTA ensures that learners receive holistic education in a safe, supportive, and well-resourced environment.
+    </p>
+
+    <h3>What is the PTA Executive Committee?</h3>
+    <p>
+      The PTA Executive Committee is a democratically elected body of parents and staff members entrusted with representing the voices of the wider parent community. They work alongside school leadership to improve learning facilities, student welfare, discipline, and school development projects.
+    </p>
+
+    <h3>Why the PTA Matters</h3>
+    <p>
+      The PTA Executive helps bridge the gap between home and school. Their leadership encourages dialogue, supports policy implementation, and mobilizes resources. A strong PTA ensures transparency, accountability, and collaboration that benefits every learner.
+    </p>
+
+    <h3>Meet Our PTA Executive Team</h3>
+    <ul>
+      <li><strong>Chairperson:</strong> Mr. John Okello – Provides overall leadership and represents parents in major school decisions.</li>
+      <li><strong>Vice Chairperson:</strong> Mrs. Grace Ayesiga – Supports the chair and coordinates parent engagements.</li>
+      <li><strong>Secretary:</strong> Mr. Peter Musoke – Handles all official PTA communications and records.</li>
+      <li><strong>Treasurer:</strong> Mrs. Sarah Nabirye – Oversees PTA funds, budgets, and accountability reports.</li>
+      <li><strong>Members:</strong> A team of elected parents and staff who serve on various committees such as academics, welfare, security, and development.</li>
+    </ul>
+
+    <h3>What Does the PTA Executive Do?</h3>
+    <ul>
+      <li>Organizes termly PTA meetings to discuss student performance and school issues.</li>
+      <li>Supports infrastructure improvements (e.g., classroom construction, sanitation).</li>
+      <li>Promotes discipline and a positive learning environment.</li>
+      <li>Leads fundraising efforts for school development projects.</li>
+      <li>Represents parents’ voices in the School Management Committee (SMC).</li>
+    </ul>
+
+    <h3>How You Can Get Involved</h3>
+    <p>
+      Every parent is a valued member of the PTA and is encouraged to participate actively. Whether through attending meetings, volunteering, or contributing ideas, your involvement helps build a better future for our learners. Elections for the executive are held every two years, and any active parent is eligible to stand for office.
+    </p>
+
+    <h3>Conclusion</h3>
+    <p>
+      At Bishop Angelo Tarantino Memorial Secondary School, we believe that when parents and teachers work together, children thrive. The PTA Executive is committed to ensuring that our school remains a center of academic excellence, moral integrity, and community development. Together, we can make a lasting impact.
+    </p>
+  </div>
+</section>
+
+      
+      <form>
+        <h2>Contact Us</h2>
+        <label for="name">Enter your name</label>
+        <input type="text" id="name" name="name" placeholder="Your name" required />
+        
+        <label for="email">Enter your email</label>
+        <input type="email" id="email" name="email" placeholder="Your email" required />
+        
+        <label for="phone">Enter your phone number</label>
+        <input type="tel" id="phone" name="phone" placeholder="Your phone number" required />
+        
+        <label for="message">Type your message here...</label>
+        <textarea id="message" name="message" rows="4" placeholder="Your message"></textarea>
+        
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+      <marquee><p>&copy; 2025 Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>Designed by:<br> ATUMA GILBERT <br>www.gilbertatuma700@gmail.com<br> 0779905605 </p></marquee>
+
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

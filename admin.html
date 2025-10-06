@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bishop Angelo Tarantino Memorial Secondary School - Admin Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    </style>
+</head>
+<body>
+
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+       
+        <div class="time">
+          <b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b>
+        </div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+       <div id="chat-box">
+        <!---<div class="chat-header">
+          <span>Live Chat</span>
+          <button onclick="toggleChat()">✖</button>
+        </div>--->
+        <!---<div class="chat-body">
+          <p>Welcome to Bishop Angelo Tarantino Memorial Secondary School! How can we help you?</p>
+          <input type="text" placeholder="Type your message..." /><br /><br />
+          <button onclick="toggleChat()">send</button>
+        </div>--->
+      </div>
+    </div>
+      <div>+256 779905605 | bishopangelotarantino@gmail.ac.ug</div>
+      <div class="right-section">
+        <div class="socials-icons img">
+          <a href="#footer-icons"><i class="fas fa-globe"></i></a>
+          <a href="#footer-icons"><i class="fab fa-instagram"></i></a>
+          <a href="#footer-icons"><i class="fab fa-facebook-f"></i></a>
+          <a href="#footer-icons"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <select class="language-selector">
+          <option value="en">English</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+        </select>
+      </div>
+    </div>
+  </header>
+<div id="protected-content" style="display:none;">
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-Brigadier-Noble-Mayobo.html">About Brigadier Noble Mayobo</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a>
+    <div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+</div>
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+ <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!--<div class="brightness-controls">
+    <button onclick="setBrightness('low')">Low</button>
+    <button onclick="setBrightness('medium')">Medium</button>
+    <button onclick="setBrightness('high')">High</button>
+  </div>--->
+  <main style="max-width: 600px; margin: 40px auto; padding: 20px; background-color: #4d749b; border-radius: 8px; color: white;">
+    <div id="login-container">
+      <h1>Admin Login</h1>
+      <form id="login-form">
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: none;"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: none;"><br>
+        <button type="submit" style="background-color: white; color: #4d749b; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Login</button>
+      </form>
+      <div style="margin-top: 10px;">
+        <button id="register-btn" style="background-color: transparent; color: white; border: none; cursor: pointer; margin-right: 10px;">Register</button>
+        <button id="forgot-btn" style="background-color: transparent; color: white; border: none; cursor: pointer;">Forgot Password</button>
+      </div>
+    </div>
+
+    <div id="register-container" style="display:none; margin-top: 20px; color: white;">
+      <h1>Register</h1>
+      <form id="register-form" action="register_handler.php" method="POST">
+        <label for="reg-email">Email:</label><br>
+        <input type="email" id="reg-email" name="email" required style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: none;"><br>
+        <label for="reg-username">Username:</label><br>
+        <input type="text" id="reg-username" name="username" required style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: none;"><br>
+        <label for="reg-password">Set Password:</label><br>
+        <input type="password" id="reg-password" name="password" required style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: none;"><br>
+        <button type="submit" style="background-color: white; color: #4d749b; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Submit</button>
+        <button type="button" id="cancel-register" style="background-color: transparent; color: white; border: none; cursor: pointer; margin-left: 10px;">Cancel</button>
+      </form>
+    </div>
+    <div id="admin-form-container" style="display:none;">
+      <h1>Admin Information Entry</h1>
+      <form action="admin_handler.php" method="POST">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title" required style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: none;"><br>
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description" rows="5" required style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: none;"></textarea><br>
+        <button type="submit" style="background-color: white; color: #4d749b; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Add Information</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+            <marquee><p>&copy; 2025 Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>Designed by:<br> ATUMA GILBERT <br>www.gilbertatuma700@gmail.com<br> 0779905605 </p></marquee>
+
+
+    </div>
+  </footer>
+  <script src="script.js"></script>
+<script type="module">
+ // Import Firebase SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword 
+  } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+  import { 
+    getFirestore, 
+    setDoc, 
+    doc 
+  } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyD2g8x-tvOkFI0mi0gTzU2vFLo4aj8wB0s",
+    authDomain: "noble-register.firebaseapp.com",
+    projectId: "noble-register",
+    storageBucket: "noble-register.firebasestorage.app",
+    messagingSenderId: "280367520296",
+    appId: "1:280367520296:web:29b32c0f9669bdfae6731d"
+  };
+
+  // ✅ Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // ---------------- REGISTER ----------------
+  const signUp = document.getElementById('register-form');
+  signUp.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById('reg-email').value;
+    const username = document.getElementById('reg-username').value;
+    const password = document.getElementById('reg-password').value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+
+        // Save user data to Firestore
+        return setDoc(doc(db, "users", user.uid), {
+          email: email,
+          username: username
+        });
+      })
+      .then(() => {
+        alert('User registered successfully!');
+        document.getElementById('register-container').style.display = 'none';
+        document.getElementById('login-container').style.display = 'block';
+      })
+      .catch((error) => {
+        alert("Error registering: " + error.message);
+        console.error(error);
+      });
+  });
+  signUp.reset();
+// After successful registration
+//signUp.reset();
+
+// After successful login
+//loginForm.reset();
+
+// On error, you can optionally clear just the password
+document.getElementById('password').value = "";
+document.getElementById('reg-password').value = "";
+  // ---------------- LOGIN ----------------
+  const loginForm = document.getElementById('login-form');
+  loginForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    alert('✅ Login successful!');
+
+    // Hide login container
+    document.getElementById('login-container').style.display = 'none';
+    document.getElementById('register-container').style.display = 'none';
+
+    // Show admin form
+    document.getElementById('admin-form-container').style.display = 'block';
+
+    // Optional: clear login form
+    loginForm.reset();
+  })
+  .catch((error) => {
+    alert("❌ Login failed: " + error.message);
+    document.getElementById('password').value = "";
+  });
+  // ---------------- BUTTONS ----------------
+  document.getElementById('register-btn').addEventListener('click', function() {
+    document.getElementById('login-container').style.display = 'none';
+    document.getElementById('register-container').style.display = 'block';
+  });
+
+  document.getElementById('forgot-btn').addEventListener('click', function() {
+    // Show forgot password form or alert
+    alert('Please enter your email to reset your password.');
+    // Optionally, implement a forgot password form or redirect here
+  });
+
+  document.getElementById('cancel-register').addEventListener('click', function() {
+    document.getElementById('register-container').style.display = 'none';
+    document.getElementById('login-container').style.display = 'block';
+  });
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      background-image: url(images/137.jpg); 
+      margin: 0;
+      padding: 0;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    main {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container { 
+      background: linear-gradient(to bottom, white, brown); 
+      padding: 30px; 
+      border-radius: 8px; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+      width: 700px; 
+      max-width: 100%; 
+    }
+    h2 { text-align: center; color: #004080; }
+    .section { margin-bottom: 20px; }
+    .section h3 { border-bottom: 1px solid #004080; padding-bottom: 5px; margin-bottom: 10px; color:#004080;}
+    label { display: block; margin: 8px 0 4px; font-weight: bold; color:#004080; }
+    input, select, textarea { width: 100%; padding: 8px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 4px; }
+    textarea { resize: vertical; height: 80px; }
+    .submit-button { background: #0073b1; color: white; border: none; padding: 12px; width: 100%; font-size: 16px; cursor: pointer; border-radius: 5px; }
+    .submit-button:hover { background: #005f8a; }
+    span{ color:red;}
+    h4{ font-size: 12px; color:#004080;}
+   
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="top-bar">
+        <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Kayingi Secondary School</div>
+        <div id="chat-container">
+            <div class="time"><b>Current Time: <span id="liveTime"></span></b>
+                <b>Current Date: <span id="liveDate"></span></b></div>
+        </div>
+        <div>+256 779905605 | kayingi@gmail.ac.ug</div>
+        <div class="right-section">
+            <div class="socials-icons img">
+              <a href="#footer-icons"><i class="fas fa-globe"></i></a>
+              <a href="#footer-icons"><i class="fab fa-instagram"></i></a>
+              <a href="#footer-icons"><i class="fab fa-facebook-f"></i></a>
+              <a href="#footer-icons"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <select id="language-select" class="language-selector">
+                <option value="en">English</option>
+                <option value="fr">French</option>
+                <option value="es">Spanish</option>
+            </select>
+        </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">History</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+          <div class="dropdown-submenu-content">
+            <a href="Catholic.html">Catholic</a>
+            <a href="Scripture-Union.html">Scripture Union</a>
+            <a href="muslim-comunity.html">Muslim community</a>
+            <a href="MDD.html">MDD</a>
+            <a href="Debating-Club.html">Debating Club</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a>
+    <div class="dropdown">
+      <a href="#">Apply Online &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+      </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+
+  <main>
+    <div class="container">
+      <h2>Kahinju Admission Form</h2>
+
+      <form id="admissionForm">
+        <!-- Personal Info -->
+        <div class="section">
+          <h3>Personal Information</h3>
+          <h4><span>NOTE:</span> * means the information is necessary in order to submit your credentials</h4>
+
+          <label for="fullName">Full Name<span>*</span></label>
+          <input type="text" id="fullName" required placeholder="Your name">
+
+          <label for="email">Email<span>*</span></label>
+          <input type="email" id="email" required placeholder="example@gmail.com">
+
+          <label for="phone">Phone Number<span>*</span></label>
+          <input type="tel" id="phone" required placeholder="E.g.,07********">
+
+          <label for="dob">Date of Birth<span>*</span></label>
+          <input type="date" id="dob" required>
+
+          <label for="gender">Gender<span>*</span></label>
+          <select id="gender" required>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+
+          <label for="nationality">Nationality<span>*</span></label>
+          <input type="text" id="nationality" required placeholder="E.g., Ugandan">
+
+          <label>Fill in your address</label>
+          <div>
+            <label for="country">Country<span>*</span></label>
+            <select id="country" required>
+              <option value="">Select your country</option>
+              <option value="uganda">Uganda</option>
+              <option value="s-sudan">S. Sudan</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="district">District<span>*</span></label>
+            <select id="district" required>
+              <option value="">Select your district</option>
+              <option value="terego">Terego</option>
+              <option value="maracha">Maracha</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="subcounty">Subcounty<span>*</span></label>
+            <select id="subcounty" required>
+              <option value="">Select your subcounty</option>
+              <option value="omugo">Omugo</option>
+              <option value="wefa">Wefa</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="parish">Parish<span>*</span></label>
+            <select id="parish" required>
+              <option value="">Select your parish</option>
+              <option value="yiddu">Yiddu</option>
+              <option value="omugo">Omugo</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="village">Village<span>*</span></label>
+            <select id="village" required>
+              <option value="">Select your village</option>
+              <option value="mugoma">Mugoma</option>
+              <option value="elepi">Elepi</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Academic Info -->
+        <div class="section">
+          <h3>Academic Background</h3>
+          <label for="resultsP7">P7 Results (Grades)<span>*</span></label>
+          <input type="text" id="resultsP7" placeholder="Enter your P7 results" required>
+          <label for="transcriptP7">Upload P7 Transcript<span>*</span></label>
+          <input type="file" id="transcriptP7" accept="application/pdf,image/*" required>
+
+          <label for="resultsS4">S.4 Results (Grades)<span>*</span></label>
+          <input type="text" id="resultsS4" placeholder="Enter your S.4 results" required>
+          <label for="transcriptS4">Upload S.4 Transcript<span>*</span></label>
+          <input type="file" id="transcriptS4" accept="application/pdf,image/*" required>
+
+          <label for="resultsS6">S.6 Results (Grades)<span>*</span></label>
+          <input type="text" id="resultsS6" placeholder="Enter your S.6 results" required>
+          <label for="transcriptS6">Upload S.6 Transcript<span>*</span></label>
+          <input type="file" id="transcriptS6" accept="application/pdf,image/*" required>
+
+          <label for="resultsOther">Other Qualifications (Optional)</label>
+          <label for="transcriptOther">Upload Other Qualifications Transcript</label>
+          <input type="file" id="transcriptOther" accept="application/pdf,image/*">
+        </div>
+
+        <!-- Program -->
+        <div class="section">
+          <h3>Program Selection (Class you want to join)</h3>
+          <label for="degreeLevel">Classes<span>*</span></label>
+          <select id="degreeLevel" required>
+            <option value="">Select</option>
+            <option value="senior1">Senior 1</option>
+            <option value="senior2">Senior 2</option>
+            <option value="senior3">Senior 3</option>
+            <option value="senior4">Senior 4</option>
+            <option value="senior5">Senior 5</option>
+            <option value="senior6">Senior 6</option>
+          </select>
+        </div>
+
+        <!-- Guardian Info -->
+        <div class="section">
+          <h3>Parent/Guardian Information</h3>
+          <label for="guardianName">Guardian's Name<span>*</span></label>
+          <input type="text" id="guardianName" required placeholder="Your Parent's/Guardian's name">
+          <label for="guardianPhone">Guardian's Phone Number<span>*</span></label>
+          <input type="tel" id="guardianPhone" required placeholder="E.g., 07********">
+          <label for="guardianEmail">Guardian's Email</label>
+          <input type="email" id="guardianEmail" placeholder="E.g., example@gmail.com">
+        </div>
+
+        <!-- Personal Statement -->
+        <div class="section">
+          <h3>Personal Statement</h3>
+          <label for="statement">Why do you want to join our school?</label>
+          <textarea id="statement" placeholder="Write in 200-300 words"></textarea>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="submit-button">Submit Application</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online (O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG9">Apply Online (A-Level)</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112, Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: kayingi@gmail.ac.ug</p>
+    </div>
+
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+
+    <div class="footer-bottom">
+      <marquee><p>&copy; 2025 Kayingi Secondary School. All rights reserved.<br>Designed by: ATUMA GILBERT<br>Email: gilbertatuma700@gmail.com<br>Phone: 0779905605</p></marquee>
+    </div>
+  </footer>
+
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <script src="script.js"></script>
+</body>
+</html>

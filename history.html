@@ -1,0 +1,320 @@
+sir<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>History</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #003366;
+      margin: 0;
+      padding: 0;
+    }
+    main {
+      max-width: 100%;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #ccc;
+    }
+    h1, h2, h3 {
+      color: #004080;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    p, ul {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    .flex-row {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+      margin-bottom: 40px;
+    }
+    .doctor-image {
+      flex: 1;
+      max-width: 300px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .doctor-details {
+      flex: 1;
+    }
+    .contact-section {
+      flex: 1;
+      max-width: 350px;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .get-in-touch {
+      margin-top: 20px;
+      font-size: 1.1rem;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+    }
+    textarea {
+      resize: vertical;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #004080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #003366;
+    }
+    .social-icons {
+      margin-top: 10px;
+    }
+    .social-icons a {
+      margin-right: 10px;
+      text-decoration: none;
+      color: #004080;
+      font-size: 1.5rem;
+    }
+    .mayobo{
+    
+      display: flex;
+    }
+    iframe{
+      padding: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+        <div class="time">
+          <b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b>
+        </div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Bishop Angelo Tarantino Memorial Secondary School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+      <div>+256 779905605 | bishopangelotarantino@gmail.ac.ug</div>
+      <div class="right-section">
+        <div class="socials-icons img">
+          <a href="#footer-icons"><i class="fas fa-globe"></i></a>
+          <a href="#footer-icons"><i class="fab fa-instagram"></i></a>
+          <a href="#footer-icons"><i class="fab fa-facebook-f"></i></a>
+          <a href="#footer-icons"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <select class="language-selector">
+          <option value="en">English</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-Brigadier-Noble-Mayobo.html">About Brigadier Noble Mayobo</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="script.js">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a>
+<div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+<div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!-- Brightness controls -->
+ <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+  <main>
+<div class="text-content" style="flex: 2; order: 2;">
+  <section style="margin-top: 40px;">
+    <h1>Our History: Bishop Angelo Tarantino Memorial Secondary School</h1>
+    <img style="width: 100%; height: auto;" src="images/construction.jpeg" alt="History of Bishop Angelo Tarantino Memorial Secondary School" />
+
+    <h2>Our Foundation</h2>
+    <p>Bishop Angelo Tarantino Memorial Secondary School was founded with a mission rooted in transformation, empowerment, and academic excellence. Inspired by the legacy of <strong>Bishop Angelo Tarantino</strong>, the school was established to serve as a beacon of hope and opportunity for learners in Uganda. The vision was clear—to create an inclusive, value-driven institution that nurtures both intellect and character.</p>
+
+    <h2>The Early Years</h2>
+    <p>What began as a modest institution with a few classrooms and a passionate team of educators quickly grew into a thriving center for academic excellence. The school opened its doors with the belief that every child deserves quality education regardless of their background. From its first graduating class, Bishop Angelo Tarantino Memorial Secondary School set high standards in discipline, academic performance, and leadership development.</p>
+
+    <h2>Growth and Milestones</h2>
+    <ul>
+      <li><strong>Year 1:</strong> School opens with both O-Level and a limited A-Level curriculum.</li>
+      <li><strong>Within 5 Years:</strong> Expansion of classrooms, science labs, and dormitory facilities.</li>
+      <li><strong>Year 10:</strong> Introduction of advanced A-Level subject combinations and a rise in national exam performance.</li>
+      <li><strong>Community Outreach:</strong> Partnered with local leaders to run mentorship programs and scholarships for disadvantaged students.</li>
+      <li><strong>Present Day:</strong> Recognized as one of the most respected academic institutions in the region, with a focus on innovation, ethics, and holistic education.</li>
+    </ul>
+
+    <h2>Legacy of Bishop Angelo Tarantino Memorial Secondary School</h2>
+    <p>The school proudly carries the name of Bishop Angelo Tarantino—a revered figure known for his integrity, patriotism, and dedication to Uganda’s progress. His values of discipline, service, and education form the ethical foundation of the school. Every student is encouraged to live by these principles and become responsible citizens of tomorrow.</p>
+
+    <h2>Our Educational Philosophy</h2>
+    <p>Throughout its journey, the school has remained committed to creating a balanced learning environment—where academic achievement is complemented by leadership, creativity, and community engagement. We believe that true success lies not only in exam results but also in nurturing compassionate, confident, and capable individuals.</p>
+
+    <h2>The Road Ahead</h2>
+    <p>As we look to the future, Bishop Angelo Tarantino Memorial Secondary School continues to grow—guided by tradition, fueled by innovation, and committed to shaping a new generation of learners and leaders. We honor our past while embracing the possibilities of tomorrow.</p>
+  </section>
+</div>
+
+
+      <div class="contact-section">
+        <h2>Contact Us</h2>
+        <form>
+          <label for="name">Enter your name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required />
+          <label for="email">Enter your email</label>
+          <input type="email" id="email" name="email" placeholder="Your email" required />
+          <label for="phone">Enter your phone number</label>
+          <input type="tel" id="phone" name="phone" placeholder="Your phone number" required />
+          <label for="message">Type your message here...</label>
+          <textarea id="message" name="message" rows="4" placeholder="Your message"></textarea>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+    <div class="mayobo">
+      <iframe width="400" height="400" src="https://www.youtube.com/embed/hQQ_FPZC29w?si=6dKkWPhL1K63-MSw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          <iframe width="400" height="400" src="https://www.youtube.com/embed/eoM_8Zv0cpg" title="Lifestories - Maj. Gen. Pecos Kutesa seg 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+     
+        <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+        
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+      <marquee><p>&copy; 2025 Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>Designed by:<br> ATUMA GILBERT <br>www.gilbertatuma700@gmail.com<br> 0779905605 </p></marquee>
+
+
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

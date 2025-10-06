@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>contact</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="contact-responsive.css" />
+  <style>
+    .heading{
+    padding-top: 20px;
+    color: white;
+    text-align: center;
+}
+.heading-contact{
+    color: white;
+    text-align: center
+}
+
+
+        /* Form Styling */
+        .contact-form {
+            display: none;
+            width: 60%;
+            margin: 50px auto;
+            padding: 20px;
+            background: #4d749b;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            
+        }
+        .contact-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: white;
+            
+        }
+        .contact-form input, .contact-form textarea {
+            width: 97%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            
+            
+        }
+        .inputs{
+            text-align: center;
+        }
+        .contact-form button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            
+        }
+        .submit-btn {
+            background-color: white;
+            color: #73879b;
+            text-align: center;
+            font-weight: bold;
+            margin-left: 30px;
+        }
+        .cancel-btn {
+            
+            background-color: white;
+            color: #4d749b;
+            margin-left:530px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Styling for submissions */
+        #submissions {
+            color: white;
+            margin-top: 30px;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #4d749b;
+            
+        }
+        .submission {
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+
+        .menu-toggle {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      background-color: #73879b;
+      padding: 1rem;
+      
+    }
+
+    .mobile-nav a {
+      padding: 0.5rem 0;
+    }
+    .Welcoming-remark{
+      color: #003366;
+      font-size: 30px;
+      font-weight: bold;
+    }
+    .Submissions-Details{
+      color: #003366;
+      font-size: 30px;
+      font-weight: bold;
+    }
+    .hading-map{
+      color: #003366;
+      font-size: 30px;
+      font-weight: bold;
+      text-align: center;
+    }
+    @media(min-width: 768){
+      iframe{
+        width: 80%;
+        height: auto;
+      }
+
+    }
+    
+    </style>
+</head>
+<body>
+
+  <header>
+    <div class="top-bar">
+        <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+
+        <div id="chat-container">
+          
+            <div class="time"><b>Current Time: <span id="liveTime"></span></b>
+                <b>Current Date: <span id="liveDate"></span></b></div>
+           <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Noble Mayombo Memorial seed School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+
+        <div>+256 779905605 | bishopangelotarantino@gmail.ac.ug</div>
+        <div class="right-section">
+            <div class="socials-icons img">
+              <a href="#footer-icons"><i class="fas fa-globe"></i></a>
+              <a href="#footer-icons"><i class="fab fa-instagram"></i></a>
+              <a href="#footer-icons"><i class="fab fa-facebook-f"></i></a>
+              <a href="#footer-icons"><i class="fab fa-whatsapp"></i></a>
+
+            </div>
+
+        <select class="language-selector">
+            <option value="en">English</option>
+            <option value="fr">French</option>
+            <option value="es">Spanish</option>
+        </select>
+    </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-Brigadier-Noble-Mayobo.html">About Brigadier Noble Mayobo</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a>
+<div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+ <!-----<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+ <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+  <BR><BR><BR>
+
+    <div id="namePrompt" style="color: #003366; font-size: 30PX;">
+        <label for="userName">Please enter your name:</label>
+        <input type="text" id="userName" placeholder="Enter your name">
+        <button style="color: #003366;" onclick="saveUserName()">Submit</button>
+    </div><br><br><br>
+
+    <div id="greeting" style="display: none;">
+        <marquee behavior="" direction="left"><h2 class="Welcoming-remark">Welcome to the Contact Us page, dear <span id="userGreeting"></span></h2></marquee>
+    </div>
+
+<!---<form class="contact-form" id="contactForm" action="form_handler.php" method="POST">
+        <h1 class="heading-contact"> CONTACT FORM</h1>
+        <label for="full-name">Full Name</label>
+        <input class="inputs" type="text" id="full-name" data-placeholder="E.g. Atuma Gilbert" name="full_name" value="" required>
+    
+        <label for="email">Email</label>
+        <input class="inputs" type="email" id="email" data-placeholder="E.g. example@gmail.com" name="email" value="" required>
+    
+        <label for="phone">Phone Number</label>
+        <input class="inputs" type="number" id="phone" data-placeholder="+256779905605" name="phone" value="" required>
+    
+        <label for="subject">Subject</label>
+        <input class="inputs" type="text" id="subject" data-placeholder="Title" name="subject" value="" required>
+    
+        <label for="message">Message</label>
+        <textarea class="inputs" id="message" data-placeholder="Your views and concerns are highly considered" name="message" rows="5" required></textarea>
+    <br><br>
+        <button type="submit" class="submit-btn">Submit</button>
+        <button type="reset" class="cancel-btn">Cancel</button>
+        <h2 class="Submissions-Details">Hello,Your Submissions Details will below:</h2>
+    </form>
+    <div id="submissions">
+        
+        <div id="submissionList"></div> 
+    </div>--->
+
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScYBo7cYFHxoReM7dtKE_IWchlyzQGl4TfB1crINEtspXvZMw/viewform?embedded=true" width="700" height="520" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+    
+    <!.......................map start................................>
+
+    
+    <div id="map-container">
+        <h2 class="hading-map">Find Us</h2>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3421.428362707456!2d74.6065439746715!3d30.958526074686823!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3919e9b6aaaaaaab%3A0xbeee4d896f4dc420!2sKalia%20Eye%20%26%20Maternity%20Hospital%20-%20Best%20maternity%20Hospital%2F%20Ultramodern%20NABH%20Accredited%20Eye%2F%20Best%20eye%20hospital%20in%20Ferozepur!5e0!3m2!1sen!2sug!4v1744971151600!5m2!1sen!2sug" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            
+    </div>
+
+    <!.......................map end................................>
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+      <marquee><p>&copy; 2025 Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>Designed by:<br> ATUMA GILBERT <br>www.gilbertatuma700@gmail.com<br> 0779905605 </p></marquee>
+
+
+    </div>
+  </footer>
+  <script>
+
+
+    let storedUsers = [];
+    
+    // Check if the user name is already saved in sessionStorage
+    if (sessionStorage.getItem("userName")) {
+        displayGreeting();
+    }
+    
+    function saveUserName() {
+        let userName = document.getElementById("userName").value;
+        if (userName === "") {
+            alert("Please enter your name.");
+            return;
+        }
+        sessionStorage.setItem("userName", userName); // Save the name in sessionStorage
+        displayGreeting(); // Show the greeting after the name is entered
+    }
+    
+    function displayGreeting() {
+        let userName = sessionStorage.getItem("userName");
+        document.getElementById("userGreeting").innerText = userName;
+        document.getElementById("namePrompt").style.display = "none"; // Hide name input form
+        document.getElementById("greeting").style.display = "block"; // Show greeting
+        document.getElementById("contactForm").style.display = "block"; // Show the form
+    }
+    
+            document.getElementById("contactForm").addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent form from reloading the page
+    
+                // Get form data
+                const fullName = document.getElementById("full-name").value;
+                const email = document.getElementById("email").value;
+                const phone = document.getElementById("phone").value;
+                const subject = document.getElementById("subject").value;
+                const message = document.getElementById("message").value;
+                const timestamp = new Date().toLocaleString(); // Get the current timestamp
+    
+                const submission = {
+                    full_name: fullName,
+                    email: email,
+                    phone: phone,
+                    subject: subject,
+                    message: message,
+                    timestamp: timestamp
+                };
+    
+                // Display the new submission below the form
+                displaySubmission(submission);
+    
+                // Clear the form after submission
+                document.getElementById("contactForm").reset();
+    
+                // Show success message
+                const responseMessage = document.getElementById("formResponse");
+                responseMessage.textContent = "Message sent successfully!";
+                responseMessage.style.color = "green";
+    
+                // Hide message after 3 seconds
+                setTimeout(() => {
+                    responseMessage.textContent = "";
+                }, 3000);
+            });
+    
+            function displaySubmission(submission) {
+                const submissionList = document.getElementById("submissionList");
+    
+                let div = document.createElement("div");
+                div.classList.add("submission");
+                div.innerHTML = `
+                    <p><strong>${submission.full_name}</strong> (${submission.email}) - ${submission.phone}</p>
+                    <p><strong>Subject:</strong> ${submission.subject}</p>
+                    <p>${submission.message}</p>
+                    <small>${submission.timestamp}</small>
+                `;
+                submissionList.appendChild(div);
+            }
+    
+            function animatePlaceholders() {
+                const inputs = document.querySelectorAll("[data-placeholder]");
+                
+                inputs.forEach(input => {
+                    let placeholderText = input.getAttribute("data-placeholder");
+                    let index = 0;
+                    
+                    function animate() {
+                        input.setAttribute("placeholder", placeholderText.substring(0, index));
+                        index++;
+    
+                        if (index > placeholderText.length) {
+                            index = 0; // Reset animation
+                        }
+    
+                        setTimeout(animate, 200);
+                    }
+    
+                    animate();
+                });
+            }
+    
+            animatePlaceholders();
+    
+    
+             // Handle the active link functionality
+        const navLinks = document.querySelectorAll('.nav-links a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                navLinks.forEach(link => link.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        </script>
+  <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Academic-performance</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+  <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+        
+        <div class="time"><b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b></div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Noble Mayombo Memorial seed School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+      <div>+256 779905605 | bishopangelotarantino@gmail.ac.ug</div>
+      <div class="right-section">
+        <div class="socials-icons img">
+          <a href="#footer-icons"><i class="fas fa-globe"></i></a>
+          <a href="#footer-icons"><i class="fab fa-instagram"></i></a>
+          <a href="#footer-icons"><i class="fab fa-facebook-f"></i></a>
+          <a href="#footer-icons"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <select class="language-selector">
+          <option value="en">English</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-Brigadier-Noble-Mayobo.html">About Brigadier Noble Mayobo</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a>
+    <div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+  <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!--<div class="brightness-controls">
+    <button onclick="setBrightness('low')">Low</button>
+    <button onclick="setBrightness('medium')">Medium</button>
+    <button onclick="setBrightness('high')">High</button>
+  </div>-->
+  <head>
+    <style>
+      main {
+        max-width: 100%;
+        margin: 20px auto;
+        padding: 20px;
+        font-family: 'Poppins', sans-serif;
+        color: #003366;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+      h1 {
+        color: #004080;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+      }
+      p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+      .section-title {
+        font-weight: 600;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: #004080;
+      }
+      ul {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+      /* Desktop Overrides */
+@media (max-width: 768px) {
+  main {
+    display: block;
+    max-width: 100%;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+    text-align: left; /* Left-align on desktop */
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+  }
+  
+  .section-title {
+    margin-top: 20px;
+    font-size: 1.5rem; /* Larger on desktop */
+  }
+}
+
+    </style>
+  </head>
+  <main style="padding: 40px; max-width: 100%; margin: auto; display: flex; justify-content: space-between; gap: 40px;">
+    <!---<form style="flex: 1; max-width: 400px; order: 1;">
+      <h2>Contact Us</h2>
+      <label for="name">Enter your name</label><br />
+      <input type="text" id="name" name="name" /><br /><br />
+      <label for="email">Enter your email</label><br />
+      <input type="email" id="email" name="email" /><br /><br />
+      <label for="phone">Enter your phone number</label><br />
+      <input type="tel" id="phone" name="phone" /><br /><br />
+      <label for="message">Type your message here...</label><br />
+      <textarea id="message" name="message" rows="4" cols="25"></textarea><br /><br />
+      <button type="submit">Submit</button>
+    </form>--->
+
+    <div class="text-content" style="flex: 2; order: 2;">
+  <h1>Academic Performance at Noble Mayombo Seed School</h1>
+  <img style="width: 100%; height: auto;" src="images/library.jpeg" alt="Academic Excellence at Noble Mayombo Seed School">
+
+  <h2 class="section-title">A Tradition of Excellence</h2>
+  <p>At Noble Mayombo Seed School, academic performance is at the core of our mission. We believe that education is a powerful tool to unlock potential, inspire confidence, and create opportunities. Over the years, our students have consistently excelled in national examinations and gone on to secure placements in top universities and institutions.</p>
+
+  <h2 class="section-title">O-Level Academic Strength</h2>
+  <p>Our O-Level learners benefit from a well-structured curriculum that emphasizes understanding, application, and discipline. With strong teacher support, regular assessments, and remedial sessions, our students are thoroughly prepared to perform well in the Uganda Certificate of Education (UCE) exams.</p>
+
+  <h3 class="section-title">Key Highlights:</h3>
+  <ul>
+    <li><strong>Consistent Top Grades:</strong> Year after year, our students achieve top grades across core subjects like Mathematics, English, Biology, Physics, and Geography.</li>
+    <li><strong>Competent Teaching Staff:</strong> Experienced and committed teachers who provide both in-class and after-class academic support.</li>
+    <li><strong>Academic Mentorship:</strong> Structured guidance to help learners set goals, track progress, and improve performance steadily.</li>
+  </ul>
+
+  <h2 class="section-title">A-Level Academic Excellence</h2>
+  <p>Our A-Level program is designed to build academic depth, research capacity, and readiness for university-level education. Learners are empowered to take leadership in their learning journey while being guided by dedicated faculty.</p>
+
+  <h3 class="section-title">Academic Focus Areas:</h3>
+  <ul>
+    <li><strong>Subject Mastery:</strong> Intensive preparation in major Arts and Science subjects for the Uganda Advanced Certificate of Education (UACE).</li>
+    <li><strong>Career Guidance:</strong> Ongoing support for university admissions, scholarships, and course selection.</li>
+    <li><strong>Research Projects:</strong> Learners are encouraged to develop research papers, presentations, and innovations that demonstrate deep understanding.</li>
+  </ul>
+
+  <h2 class="section-title">Assessment & Evaluation</h2>
+  <p>To ensure continuous improvement, Noble Mayombo Seed School uses a combination of formative and summative assessments. Students are evaluated through class tests, midterm exams, end-of-term assessments, and mock national exams.</p>
+
+  <h3 class="section-title">Academic Support Strategies:</h3>
+  <ul>
+    <li>Weekly quizzes and discussion groups</li>
+    <li>Holiday revision programs</li>
+    <li>One-on-one academic counseling</li>
+  </ul>
+
+  <h2 class="section-title">Outstanding Results</h2>
+  <p>We are proud of our track record of excellence. Our alumni have gone on to pursue degrees in medicine, engineering, law, education, and more. The school has consistently ranked among the top-performing institutions in the district and region.</p>
+
+  <p>Noble Mayombo Seed School is committed to helping every student achieve their academic best and prepare for a successful future. Join us and become part of a legacy of excellence.</p>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+      <marquee><p>&copy; 2025 Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>Designed by:<br> ATUMA GILBERT <br>www.gilbertatuma700@gmail.com<br> 0779905605 </p></marquee>
+
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

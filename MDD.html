@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MDD</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+        
+        <div class="time"><b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b></div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Bishop Angelo Tarantino Memorial Secondary School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+      <div>+256 779905605 | bishopangelotarantino@gmail.ac.ug</div>
+      <div class="right-section">
+        <div class="socials-icons img">
+          <a href="#footer-icons"><i class="fas fa-globe"></i></a>
+          <a href="#footer-icons"><i class="fab fa-instagram"></i></a>
+          <a href="#footer-icons"><i class="fab fa-facebook-f"></i></a>
+          <a href="#footer-icons"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <select class="language-selector">
+          <option value="en">English</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-Brigadier-Noble-Mayobo.html">About Brigadier Noble Mayobo</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a>
+ <div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+<!-- Loading Screen -->
+<!-- Loading Spinner -->
+
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+<div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+  <head>
+    <style>
+      main {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        font-family: 'Poppins', sans-serif;
+        color: #003366;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+      h1 {
+        color: #004080;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+      }
+      p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+      .section-title {
+        font-weight: 600;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: #004080;
+      }
+      ul {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+      @media (max-width: 767px) {
+  main {
+    flex-direction: column;
+    padding: 15px;
+    gap: 20px;
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+  
+  p {
+    font-size: 1rem;
+  }
+  
+  .section-title {
+    font-size: 1.2rem;
+  }
+  
+  section {
+    flex-direction: column;
+  }
+  
+  form {
+    order: 2 !important;
+    max-width: 100% !important;
+    margin-top: 20px;
+  }
+  
+  .text-content {
+    order: 1 !important;
+  }
+  }
+  
+    </style>
+  </head>
+  <!---<h1>Music, Dance & Drama (MDD) at Bishop Angelo Tarantino Memorial Secondary School</h1>--->
+  <main style="background-color: #f9f9f9; color: #003366; padding: 40px; max-width: 100%; margin: 0 auto;">
+    <section style="display: flex; justify-content: space-between; gap: 40px; margin-top: 40px; flex-wrap: wrap;">
+      <form style="flex: 1; max-width: 400px; order: 1;">
+        <h2>Contact Us</h2>
+        <label for="name">Enter your name</label><br />
+        <input type="text" id="name" name="name" placeholder="Your name" required /><br /><br />
+        <label for="email">Enter your email</label><br />
+        <input type="email" id="email" name="email" placeholder="Your email" required /><br /><br />
+        <label for="phone">Enter your phone number</label><br />
+        <input type="tel" id="phone" name="phone" placeholder="Your phone number" required /><br /><br />
+        <label for="message">Type your message here...</label><br />
+        <textarea id="message" name="message" rows="4" placeholder="Your message"></textarea><br /><br />
+        <button type="submit">Submit</button>
+      </form>
+      <div class="text-content" style="flex: 2; order: 2;">
+        <section style="margin-top: 40px;">
+          <h2>Music, Dance & Drama (MDD) at Bishop Angelo Tarantino Memorial Secondary School</h2>
+          <img style="width: 100%; height: auto;" src="images/a level block.jpeg" alt="MDD performance at Bishop Angelo Tarantino Memorial Secondary School">
+          <h3>Music, Dance & Drama (MDD)</h3>
+          <p>At Bishop Angelo Tarantino Memorial Secondary School, Music, Dance & Drama (MDD) is not just co-curricular—it's a vital part of how we shape confident, expressive, and culturally grounded students. MDD allows learners to celebrate Uganda's rich cultural heritage while developing their creativity and confidence.</p>
+          <h3>Nurturing Talent, Inspiring Expression</h3>
+          <p>MDD provides a powerful platform for students to express their talents, share their stories, and build essential life skills like teamwork, public speaking, and discipline. Through traditional and contemporary performances, our learners discover their voice and the joy of performing arts.</p>
+          <h3>Our MDD Focus Areas</h3>
+          <ul>
+            <li><strong>Music:</strong> Singing, instrumental skills, and song composition form the heart of our music program. Students participate in choir, solo vocals, and traditional instrument training.</li>
+            <li><strong>Dance:</strong> From energetic traditional dances like Bakisimba and Ekitaguriro to creative modern dance, our learners showcase culture and coordination on stage.</li>
+            <li><strong>Drama:</strong> Students engage in original skits and theatrical performances that raise awareness on societal issues, promote moral values, and sharpen their acting skills.</li>
+          </ul>
+          <h3>Opportunities for Performance</h3>
+          <ul>
+            <li><strong>School Festivals:</strong> Internal competitions and cultural days provide a stage for every student to shine in music, dance, or drama.</li>
+            <li><strong>District and National Competitions:</strong> Bishop Angelo Tarantino Memorial Secondary School actively participates in regional and national MDD competitions, earning recognition for excellence and originality.</li>
+            <li><strong>Special Events:</strong> End-of-term showcases, prize-giving days, and visitors’ days include MDD as a highlight of celebration and entertainment.</li>
+          </ul>
+          <h3>Values Promoted Through MDD</h3>
+          <ul>
+            <li><strong>Teamwork:</strong> Every performance depends on collaboration and unity.</li>
+            <li><strong>Cultural Identity:</strong> Through traditional art forms, students connect with their roots and build national pride.</li>
+            <li><strong>Confidence:</strong> Performing in front of peers and guests builds boldness and self-esteem.</li>
+            <li><strong>Creativity:</strong> MDD encourages students to write scripts, choreograph dances, and create music.</li>
+          </ul>
+          <h3>Leadership in the Arts</h3>
+          <p>MDD at our school is guided by talented teachers and mentors who help students identify their strengths and polish their performance. We also have student leaders and clubs dedicated to organizing practices and events.</p>
+          <h3>Be a Part of the Rhythm</h3>
+          <p>Whether you’re a gifted singer, a passionate dancer, a talented actor, or simply love performing, MDD at Bishop Angelo Tarantino Memorial Secondary School is the perfect place to grow. Join us and be part of something exciting, expressive, and empowering.</p>
+          <p><em>“Art speaks where words are unable to explain.”</em> – Let your voice, feet, and heart tell your story on our stage!</p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+      <marquee><p>&copy; 2025 Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>Designed by:<br> ATUMA GILBERT <br>www.gilbertatuma700@gmail.com<br> 0779905605 </p></marquee>
+
+
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A-level</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="contact-responsive.css" />
+  <style>
+    main {
+      max-width: 100%;
+      margin: 20px auto;
+      padding: 20px;
+      font-family: 'Poppins', sans-serif;
+      color: #003366;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #004080;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    .section-title {
+      font-weight: 600;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      color: #004080;
+    }
+
+    @media (min-width: 768px) {
+    main {
+      display: block;
+        max-width: 100%;
+        padding: 20px;
+        margin: 20px auto;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        text-align: left; /* Left-align on larger screens */
+    }
+
+    .flex-row {
+        flex-direction: row; /* Side-by-side on desktop */
+        gap: 40px;
+    }
+
+    .image-left {
+        max-width: 400px;
+    }
+
+    p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+}
+.Apply-Online{
+color: white;
+padding: 5px;
+border-radius: 5px;
+background-color: #004080;
+align-items: center;
+text-align: center;
+}
+.Apply-Online:hover{
+  background-color: white;
+  color: #004080;
+  transform: scale(1.2);
+}
+
+@media (max-width: 768px) {
+  .Apply-Online{
+color: white;
+border-radius: 5px;
+padding: 5px;
+background-color: #004080;
+margin-left: 180px;
+
+}
+.Apply-Online:hover{
+  background-color: white;
+  color: #004080;
+  transform: scale(1.1);
+}
+}
+</style>
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+       
+        <div class="time">
+          <b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b>
+        </div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+       <div id="chat-box">
+        <!---<div class="chat-header">
+          <span>Live Chat</span>
+          <button onclick="toggleChat()">✖</button>
+        </div>--->
+        <!---<div class="chat-body">
+          <p>Welcome to Noble Mayombo Memorial seed School! How can we help you?</p>
+          <input type="text" placeholder="Type your message..." /><br /><br />
+          <button onclick="toggleChat()">send</button>
+        </div>--->
+      </div>
+    </div>
+      <div>+256 779905605 | bishopangelotarantino@gmail.ac.ug</div>
+      <div class="right-section">
+        <div class="socials-icons img">
+          <a href="#footer-icons"><i class="fas fa-globe"></i></a>
+          <a href="#footer-icons"><i class="fab fa-instagram"></i></a>
+          <a href="#footer-icons"><i class="fab fa-facebook-f"></i></a>
+          <a href="#footer-icons"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <select class="language-selector">
+          <option value="en">English</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-Brigadier-Noble-Mayobo.html">About Brigadier Noble Mayobo</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a>
+    <div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+ <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!---<div class="brightness-controls">
+    <button onclick="setBrightness('low')">Low</button>
+    <button onclick="setBrightness('medium')">Medium</button>
+    <button onclick="setBrightness('high')">High</button>
+  </div>--->:
+
+  <main style="background-color: #f9f9f9; color: #003366; padding: 40px; max-width: 100%; margin: 0 auto;">
+    <h1>A-Level Excellence at Bishop Angelo Tarantino Memorial Secondary School</h1>
+   <section style="display: flex; justify-content: space-between; gap: 40px; margin-top: 40px; flex-wrap: wrap;">
+      <form style="flex: 1; max-width: 400px; order: 1;">
+        <h2>Contact Us</h2>
+        <label for="name">Enter your name</label><br />
+        <input type="text" id="name" name="name" placeholder="Your name" required /><br /><br />
+        <label for="email">Enter your email</label><br />
+        <input type="email" id="email" name="email" placeholder="Your email" required /><br /><br />
+        <label for="phone">Enter your phone number</label><br />
+        <input type="tel" id="phone" name="phone" placeholder="Your phone number" required /><br /><br />
+        <label for="message">Type your message here...</label><br />
+        <textarea id="message" name="message" rows="4" placeholder="Your message"></textarea><br /><br />
+        <button type="submit">Submit</button>
+      </form>
+
+    <div class="text-content" style="flex: 2; order: 2;">
+  <section style="margin-top: 40px;">
+    <h2>A-Level Excellence at Bishop Angelo Tarantino Memorial Secondary School</h2>
+    <img style="width: 100%; height: auto;" src="images/a level block.jpeg" alt="A-Level Students in Class">
+
+    <h3>Shaping Leaders of Tomorrow</h3>
+
+    <p>The A-Level program at Bishop Angelo Tarantino Memorial Secondary School is designed to challenge, inspire, and prepare learners for university and life beyond the classroom. Our experienced teachers and supportive environment ensure every student maximizes their academic potential while growing into responsible, confident leaders. We provide personalized academic guidance and mentorship so learners can choose subject combinations that align with their career paths.</p>
+
+    <h3>What is A-Level Education?</h3>
+    <p>Advanced Level (A-Level) is the final two years of secondary education in Uganda, designed for students who have successfully completed O-Level. It focuses on subject specialization and academic depth, preparing students for university admission, professional training, or entrepreneurial ventures. At Bishop Angelo Tarantino Memorial Secondary School, students choose from arts and sciences to suit their interests and future ambitions.</p>
+
+    <h3>Available Subject Combinations</h3>
+    <p>Our school offers a wide range of subject combinations tailored for both Arts and Science streams. Students are guided in selecting the right subjects based on their abilities and career goals.</p>
+    <ul>
+      <li><strong>Science Combinations:</strong> PCM, PCB, BCM, MEG, HEG, and more.</li>
+      <li><strong>Arts Combinations:</strong> HEG, HLD, HEL, HGK, HED, and more.</li>
+      <li><strong>Subsidiary Subjects:</strong> General Paper, ICT, and Sub-Maths (for non-math students).</li>
+    </ul>
+
+    <h3>Why Choose Our A-Level Program?</h3>
+    <ul>
+      <li><strong>Experienced Teaching Staff:</strong> Our teachers are passionate and experienced in delivering subject content in an engaging and exam-oriented manner.</li>
+      <li><strong>Career Guidance:</strong> We offer regular career talks, university prep, and guidance to help students make informed choices for their futures.</li>
+      <li><strong>Academic Rigor & Discipline:</strong> A focused, disciplined learning environment ensures students stay on track and exceed expectations.</li>
+      <li><strong>Laboratory & Research Work:</strong> Practical subjects are supported by well-equipped labs for Physics, Chemistry, Biology, and Computer Studies.</li>
+      <li><strong>ICT Integration:</strong> Our curriculum integrates ICT to enhance digital skills and improve research and learning efficiency.</li>
+      <li><strong>Mock Exams & UNEB Prep:</strong> Intensive revision, consultations, and mock exams ensure students are ready for UNEB A-Level exams.</li>
+    </ul>
+
+    <h3>Student Life & Support</h3>
+    <p>A-Level students at Bishop Angelo Tarantino Memorial Secondary School enjoy leadership opportunities, spiritual guidance, sports, and clubs such as Debate, Prefects’ Council, ICT Club, and Entrepreneurship Hub. Boarding facilities ensure a safe, nurturing space for focused academic achievement.</p>
+
+    <h3>Enrolment & Parent Engagement</h3>
+    <p>We believe in working hand-in-hand with parents. From admission to graduation, we keep guardians informed through academic reviews, visitation days, and counseling sessions. Enroll today and invest in your child’s bright future at Bishop Angelo Tarantino Memorial Secondary School — your trusted partner in academic excellence.</p>
+  </section>
+<a href="https://forms.gle/D8JgdH3MipwwjshG"><button class="Apply-Online">Apply Online</button></a>
+
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+      <marquee><p>&copy; 2025 Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>Designed by: ATUMA GILBERT : 0779905605 </p></marquee>
+
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

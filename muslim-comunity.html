@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Muslim-community</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+
+      <div id="chat-container">
+        
+        <div class="time"><b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b></div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Bishop Angelo Tarantino Memorial Secondary School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+      <div>+256 779905605 | bishopangelotarantino@gmail.ac.ug</div>
+      <div class="right-section">
+        <div class="socials-icons img">
+          <a href="#footer-icons"><i class="fas fa-globe"></i></a>
+          <a href="#footer-icons"><i class="fab fa-instagram"></i></a>
+          <a href="#footer-icons"><i class="fab fa-facebook-f"></i></a>
+          <a href="#footer-icons"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <select class="language-selector">
+          <option value="en">English</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+        </select>
+      </div>
+    </div>
+  </header>
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-Brigadier-Noble-Mayobo.html">About Brigadier Noble Mayobo</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a>
+<div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+ <!-- Loading Screen -->
+<!-- Loading Spinner -->
+<!---<div id="loading-spinner" class="d-flex justify-content-center align-items-center vh-100">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>--->
+
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+<div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+  <head>
+    <style>
+      main {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        font-family: 'Poppins', sans-serif;
+        color: #003366;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+      h1 {
+        color: #004080;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+      }
+      p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+      .section-title {
+        font-weight: 600;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: #004080;
+      }
+      ul {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+      @media (max-width: 768px) {
+  main {
+    flex-direction: column-reverse;
+    padding: 15px;
+  }
+
+  .text-content,
+  form {
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+
+  p {
+    font-size: 1rem;
+    text-align: justify;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+}
+
+    </style>
+  </head>
+  <!---<h1>Muslim Students' Association at Bishop Angelo Tarantino Memorial Secondary School</h1>--->
+  <main style="background-color: #f9f9f9; color: #003366; padding: 40px; max-width: 100%; margin: 0 auto;">
+    <section style="display: flex; justify-content: space-between; gap: 40px; margin-top: 40px; flex-wrap: wrap;">
+      <form style="flex: 1; max-width: 400px; order: 1;">
+        <h2>Contact Us</h2>
+        <label for="name">Enter your name</label><br />
+        <input type="text" id="name" name="name" placeholder="Your name" required /><br /><br />
+        <label for="email">Enter your email</label><br />
+        <input type="email" id="email" name="email" placeholder="Your email" required /><br /><br />
+        <label for="phone">Enter your phone number</label><br />
+        <input type="tel" id="phone" name="phone" placeholder="Your phone number" required /><br /><br />
+        <label for="message">Type your message here...</label><br />
+        <textarea id="message" name="message" rows="4" placeholder="Your message"></textarea><br /><br />
+        <button type="submit">Submit</button>
+      </form>
+      <div class="text-content" style="flex: 2; order: 2;">
+        <section style="margin-top: 40px;">
+          <h2>Muslim Students' Association at Bishop Angelo Tarantino Memorial Secondary School</h2>
+          <img style="width: 100%; height: auto;" src="images/a level block.jpeg" alt="Muslim Students' Association at Bishop Angelo Tarantino Memorial Secondary School">
+          <h3>Muslim Students' Association</h3>
+          <p>At Bishop Angelo Tarantino Memorial Secondary School, our Muslim community thrives on the values of faith, unity, and academic excellence. The Muslim Students' Association (MSA) is a supportive and inclusive fellowship for all Muslim learners to grow spiritually and morally while excelling in their education.</p>
+          <h3>Unity, Faith, and Knowledge</h3>
+          <p>The MSA aims to nurture the faith of Muslim students by offering a space where they can freely practice their religion, learn about Islamic teachings, and uphold strong moral character. We promote mutual respect, discipline, and brotherhood in line with Islamic principles.</p>
+          <h3>Activities and Programs</h3>
+          <h4>Daily Prayers (Salah)</h4>
+          <p>Students are encouraged and supported to perform their daily prayers on time. The school provides a clean and peaceful space for prayer and reflection during breaks and lunch hours.</p>
+          <h4>Friday Jumu'ah</h4>
+          <p>We facilitate the Jumu’ah (Friday) congregational prayer for boys and girls in line with Islamic guidelines. Sermons (khutbahs) are delivered by teachers or student leaders and focus on topics relevant to youth and faith.</p>
+          <h4>Qur’an Study and Memorization</h4>
+          <p>Weekly Qur’an sessions help students improve their recitation (Tajweed), memorize verses, and understand the meanings. We encourage learners to apply Qur’anic teachings in daily life.</p>
+          <h4>Islamic Debates and Discussions</h4>
+          <p>Interactive forums where students discuss contemporary issues through an Islamic lens, improving their confidence and deepening their knowledge of their faith.</p>
+          <h4>Ramadhan Activities</h4>
+          <p>During the holy month of Ramadhan, the MSA organizes Iftar gatherings, Qur’an competitions, and special Taraweeh prayers to support students in their fasting and spiritual growth.</p>
+          <h3>Our Values</h3>
+          <ul>
+            <li><strong>Faith:</strong> Strengthening personal connection with Allah (SWT) through worship and knowledge.</li>
+            <li><strong>Respect:</strong> Promoting tolerance, modesty, and good behavior towards others.</li>
+            <li><strong>Excellence:</strong> Striving for success in both religious and academic life.</li>
+            <li><strong>Community:</strong> Building unity and support among Muslim students in a diverse school environment.</li>
+          </ul>
+          <h3>Leadership and Guidance</h3>
+          <p>The MSA is guided by a Muslim teacher patron who mentors students and ensures that all programs align with Islamic principles and school policies. Student leaders are elected annually to organize activities and represent the voice of the Muslim community.</p>
+          <h3>Join Us</h3>
+          <p>Every Muslim learner is welcome to join and actively participate in the MSA. Together, we grow stronger in faith, help one another, and become proud ambassadors of Islam in our school and beyond.</p>
+          <p>“Indeed, the most honorable of you in the sight of Allah is the most righteous of you.” — Qur’an 49:13</p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+<ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+      <marquee><p>&copy; 2025 Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>Designed by:<br> ATUMA GILBERT <br>www.gilbertatuma700@gmail.com<br> 0779905605 </p></marquee>
+
+
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

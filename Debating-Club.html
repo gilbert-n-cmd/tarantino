@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Debating-Club</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<style>
+  main {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    color: #003366;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  h1 {
+    color: #004080;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #004080;
+  }
+@media (max-width: 767px) {
+  main {
+    flex-direction: column;
+    padding: 15px;
+    gap: 20px;
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+  
+  p {
+    font-size: 1rem;
+  }
+  
+  .section-title {
+    font-size: 1.2rem;
+  }
+  
+  section {
+    flex-direction: column;
+  }
+  
+  form {
+    order: 2 !important;
+    max-width: 100% !important;
+    margin-top: 20px;
+  }
+  
+  .text-content {
+    order: 1 !important;
+  }
+  }
+  
+</style>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+       
+        <div class="time">
+          <b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b>
+        </div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Bishop Angelo Tarantino Memorial Secondary School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+      <div>+256 779905605 | bishopangelotarantino@gmail.ac.ug</div>
+      <div class="right-section">
+        <div class="socials-icons img">
+          <a href="#footer-icons"><i class="fas fa-globe"></i></a>
+          <a href="#footer-icons"><i class="fab fa-instagram"></i></a>
+          <a href="#footer-icons"><i class="fab fa-facebook-f"></i></a>
+          <a href="#footer-icons"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <select class="language-selector">
+          <option value="en">English</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-Brigadier-Noble-Mayobo.html">About Brigadier Noble Mayobo</a>
+        <a href="Staff.html">Staff<A/a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a>
+<div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+ <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+  <!---<h1>Debating Club at Bishop Angelo Tarantino Memorial Secondary School</h1>--->
+  <main style="background-color: #f9f9f9; color: #003366; padding: 40px; max-width: 100%; margin: 0 auto;">
+    
+    <section style="display: flex; justify-content: space-between; gap: 40px; margin-top: 40px; flex-wrap: wrap;">
+      <form style="flex: 1; max-width: 400px; order: 1;">
+        <h2>Contact Us</h2>
+        <label for="name">Enter your name</label><br />
+        <input type="text" id="name" name="name" placeholder="Your name" required /><br /><br />
+        <label for="email">Enter your email</label><br />
+        <input type="email" id="email" name="email" placeholder="Your email" required /><br /><br />
+        <label for="phone">Enter your phone number</label><br />
+        <input type="tel" id="phone" name="phone" placeholder="Your phone number" required /><br /><br />
+        <label for="message">Type your message here...</label><br />
+        <textarea id="message" name="message" rows="4" placeholder="Your message"></textarea><br /><br />
+        <button type="submit">Submit</button>
+      </form>
+
+      <div class="text-content" style="flex: 2; order: 2;">
+  <section style="margin-top: 40px;">
+    <h2>Debating Club at Bishop Angelo Tarantino Memorial Secondary School</h2>
+    <img style="width: 100%; height: auto;" src="images/a level block.jpeg" alt="Debate Club in Action">
+    <h3>Welcome to the Debating Club</h3>
+    <h3>Sharpening Minds. Building Confidence. Inspiring Leaders.</h3>
+
+    <p>At Bishop Angelo Tarantino Memorial Secondary School, we believe in nurturing the power of critical thinking and eloquent expression. The Debating Club provides a vibrant platform for learners to explore current issues, construct logical arguments, and express their views confidently. Through structured debates and public speaking events, our learners become thoughtful, articulate, and socially aware individuals ready to lead in any field.</p>
+
+    <h3>What We Offer in Our Debating Club</h3>
+    <ul>
+      <li><strong>Regular Debate Sessions:</strong> Students meet weekly to engage in structured debates on a wide range of topics including education, environment, technology, politics, and social issues.</li>
+      <li><strong>Research & Argument Development:</strong> Members are trained to research thoroughly, evaluate multiple perspectives, and present their arguments convincingly.</li>
+      <li><strong>Public Speaking & Confidence Building:</strong> Our club emphasizes public speaking drills, confidence exercises, and language mastery, helping students overcome stage fear.</li>
+      <li><strong>Mentorship & Guidance:</strong> Teachers and invited guest speakers offer personalized mentorship to help students grow in their oratory and analytical skills.</li>
+      <li><strong>Mock Debates & Competitions:</strong> We host intra-school and inter-school debate competitions to expose learners to competitive debating formats and enhance teamwork and leadership.</li>
+      <li><strong>Theme Weeks:</strong> Special themes such as “Youth & Democracy” or “Climate Action” allow students to delve deeply into pressing global and local issues.</li>
+    </ul>
+
+    <h3>Benefits of Joining the Debating Club</h3>
+    <ul>
+      <li><strong>Improved Communication:</strong> Learners develop clarity of speech and persuasive language skills essential for academic and life success.</li>
+      <li><strong>Critical Thinking:</strong> Debating fosters logical reasoning, problem-solving, and the ability to understand multiple sides of an issue.</li>
+      <li><strong>Self-Confidence:</strong> Regular public speaking and performance improve student confidence and interpersonal skills.</li>
+      <li><strong>Leadership Development:</strong> Learners take initiative, lead discussions, and represent the school at public forums and competitions.</li>
+      <li><strong>Academic Enrichment:</strong> Debate supports learning across subjects, especially in language, social studies, and civic education.</li>
+    </ul>
+
+    <p>At Bishop Angelo Tarantino Memorial Secondary School, we understand that strong voices shape strong communities. Our Debating Club is not just a co-curricular activity — it is a leadership incubator. Whether a future lawyer, teacher, leader, or change-maker, our debaters carry forward the torch of reason, justice, and impactful dialogue.</p>
+
+    <p><strong>Let your voice be heard. Join the Debating Club and make a difference!</strong></p>
+  </section>
+</div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+      <marquee><p>&copy; 2025 Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>Designed by:<br> ATUMA GILBERT <br>www.gilbertatuma700@gmail.com<br> 0779905605 </p></marquee>
+
+
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
