@@ -3,132 +3,140 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Board-of-Governors</title>
+  <title>Staff</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      color: #003366;
-      margin: 0;
-      padding: 0;
-    }
     main {
       max-width: 100%;
-      margin: 40px auto;
-      padding: 20px;
-    }
-    h1, h2, h3 {
-      color: #004080;
-      font-weight: 600;
-      margin-bottom: 10px;
+      margin: auto;
+      padding: 40px;
+      font-family: 'Poppins', sans-serif;
+      color: #003366;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
     }
     h1 {
+      color: #004080;
       font-size: 2.5rem;
       margin-bottom: 20px;
     }
-    p, ul {
+    p {
       font-size: 1.1rem;
       line-height: 1.6;
       margin-bottom: 15px;
     }
-    ul {
-      padding-left: 20px;
-    }
-    .flex-row {
-      display: flex;
-      gap: 40px;
-      align-items: flex-start;
-      margin-bottom: 40px;
-      background-color: aliceblue;
+    .section-title {
+      font-weight: 600;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      color: #004080;
     }
     @media (max-width: 768px) {
-      .flex-row {
-      display: block;
-      text-align: center;
-      gap: 40px;
-      padding-top: 40px;
-      align-items: flex-start;
-      margin-bottom: 40px;
-      background-color: aliceblue;
-    }
-    }
-    .board-image {
-      flex: 1;
-      /*display: block; iwanted the images to be two and be displayed in block*/
-      max-width: 300px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .board-details {
-      flex: 1;
-    }
-    .contact-section {
-      flex: 1;
-      max-width: 350px;
-      border: 1px solid #ccc;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .get-in-touch {
-      margin-top: 20px;
-      font-size: 1.1rem;
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: 600;
-    }
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 1rem;
-      font-family: 'Poppins', sans-serif;
-    }
-    textarea {
-      resize: vertical;
-    }
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background-color: #004080;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 1.1rem;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #003366;
-    }
-    .social-icons {
-      margin-top: 10px;
-    }
-    .social-icons a {
-      margin-right: 10px;
-      text-decoration: none;
-      color: #004080;
-      font-size: 1.5rem;
-    }
-    iframe{
-      text-align: center;
+  main {
+    flex-direction: column;
+    padding: 15px;
+    gap: 20px;
+  }
 
+  h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+}
+
+
+.org-chart {
+  background-color: #f9f9f9;
+    font-family: Arial;
+    text-align: center;
+    font-size: 16px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .leader {
+    margin: 0 auto 40px;
+  }
+  .leader img {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+  }
+  .arrow {
+    margin: 0 auto 30px;
+    width: 3px;
+    height: 40px;
+    background: #555;
+  }
+  .departments {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    row-gap: 60px;
+  }
+  .department {
+    text-align: center;
+    max-width: 200px;
+    padding: 10px;
+  }
+  .department > img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+  }
+  .dept-title {
+    margin-top: 10px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  .unit-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .unit {
+    text-align: center;
+  }
+  .unit img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 4px;
+  }
+
+  @media (max-width: 600px) {
+    .departments {
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
     }
-    @media(max-width: 768px){
-      iframe{
-       width: 100%;
-       height: 100%;
-       text-align: center;
-      }
+    .department {
+      max-width: 90%;
     }
+    .leader img,
+    .department > img {
+      width: 70px;
+      height: 70px;
+    }
+    .unit img {
+      width: 50px;
+      height: 50px;
+    }
+  }
   </style>
 </head>
 <body>
@@ -136,24 +144,26 @@
     <div class="top-bar">
       <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
       <div id="chat-container">
+        
         <div class="time">
           <b>Current Time: <span id="liveTime"></span></b>
           <b>Current Date: <span id="liveDate"></span></b>
         </div>
-        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>=--->
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
         <div id="chat-box">
           <!---<div class="chat-header">
             <span>Live Chat</span>
             <button onclick="toggleChat()">✖</button>
-          </div>
-          <div class="chat-body">
-            <p>Welcome to Noble Mayombo Memorial seed School! How can we help you?</p>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Bishop Angelo Tarantino Memorial Secondary School! How can we help you?</p>
             <input type="text" placeholder="Type your message..." /><br /><br />
             <button onclick="toggleChat()">send</button>
           </div>--->
         </div>
       </div>
       <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
       <div class="right-section">
         <div class="socials-icons img">
           <!-- Twitter -->
@@ -210,7 +220,7 @@
           <a href="#">Clubs & Facilities</a>
             <div class="dropdown-submenu-content">
               <a href="Catholic.html">Catholic</a>
-              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="script.js">Scripture union</a>
               <a href="muslim-comunity.html">Muslim community</a>
               <a href="MDD.html">MDD</a>
               <a href="Debating-Club.html">Debating Club</a>
@@ -223,7 +233,7 @@
     <a href="news-updates.html">News & updates</a>
     <a href="calendar-event.html">Calendar & event</a>
     <a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a>
-    <div class="dropdown">
+<div class="dropdown">
     <a href="#">Apply Online &#x25BC;</a>
     <div class="dropdown-content">
         <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
@@ -234,11 +244,11 @@
       <i class="fas fa-search"></i>
     </button>
   </nav>
-  <!---<div id="splash-screen" class="splash">
+ <!-----<div id="splash-screen" class="splash">
         <img src="images/loading.gif" alt="About Us Introduction">
        
     </div>--->
-  <div class="search-bar" style="display:none;">
+ <div class="search-bar" style="display:none;">
     <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
       <input type="text" name="q" placeholder="Search..." required />
       <button type="submit">Search</button>
@@ -248,62 +258,174 @@
 <div class="gcse-search"></div>    
   </div>
   <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
-  <!-- Brightness controls -->
- <!---<div class="brightness-controls">
-  <button onclick="setBrightness('low')">Low</button>
-  <button onclick="setBrightness('medium')">Medium</button>
-  <button onclick="setBrightness('high')">High</button>
-</div>--->
-  <main style="background-color: #f9f9f9; color: #003366; padding: 40px; max-width: 100%; margin: auto;">
-    <h1>Board of Governors</h1>
-    <section style="display: flex; justify-content: space-between; gap: 40px; margin-top: 40px; flex-wrap: wrap;">
-      <div class="contact-section" style="flex: 1; max-width: 400px; order: 1;">
-        <h2>Contact Us</h2>
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSftZv4hWsYI9anxYHv0P2saH45e2WV6YGLgiS8H9G5UjYldWg/viewform?embedded=true" width="100%" height="600" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+  <!---<div class="brightness-controls">
+    <button onclick="setBrightness('low')">Low</button>
+    <button onclick="setBrightness('medium')">Medium</button>
+    <button onclick="setBrightness('high')">High</button>
+  </div>--->
+  <main>
+    <form style="flex: 1; max-width: 400px; order: 1; text-align: center;">
+      <h2>Contact Us</h2>
+      <label for="name">Enter your name</label><br />
+      <input type="text" id="name" name="name" placeholder="Your name" required /><br /><br />
+      <label for="email">Enter your email</label><br />
+      <input type="email" id="email" name="email" placeholder="Your email" required /><br /><br />
+      <label for="phone">Enter your phone number</label><br />
+      <input type="tel" id="phone" name="phone" placeholder="Your phone number" required /><br /><br />
+      <label for="message">Type your message here...</label><br />
+      <textarea id="message" name="message" rows="4" placeholder="Your message"></textarea><br /><br />
+      <button type="submit">Submit</button>
+    </form>
+
+  <div class="text-content" style="flex: 2; order: 2;">
+    <h1>Our Dedicated Staff</h1>
+    <img style="width: 100%; height: auto;" src="images/staff.jpeg" alt="Bishop Angelo Tarantino Memorial Secondary School Staff">
+
+    <h2 class="section-title">Meet the Heart of Bishop Angelo Tarantino Memorial Secondary School</h2>
+    <h3>Why Choose Bishop Angelo Tarantino Memorial Secondary School?</h3>
+    <p>
+        At Bishop Angelo Tarantino Memorial Secondary School, our strength lies in our exceptional team of dedicated educators and support staff.
+    </p>
+
+    <h3>What Makes Our Staff Outstanding?</h3>
+    <ul>
+      <li><strong>Qualified Teaching Team:</strong> Our teachers are highly trained, certified, and experienced in their respective subject areas. They bring innovation, creativity, and dedication into every lesson, making learning both engaging and impactful.</li>
+      
+      <li><strong>Supportive Administrative Staff:</strong> Our administration team works tirelessly behind the scenes to ensure the school runs smoothly. From admissions to operations, they provide structure and support to both students and staff.</li>
+      
+      <li><strong>Student-Centered Approach:</strong> Every staff member is focused on the well-being of our students. Our educators understand that every child learns differently and adapt their teaching methods to meet diverse needs.</li>
+      
+      <li><strong>Mentorship and Guidance:</strong> Beyond academics, our teachers act as mentors, guiding students in personal development, career exploration, and moral values, helping shape responsible future citizens.</li>
+      
+      <li><strong>Parental Engagement:</strong> Our team works closely with parents to maintain open communication and collaboration. We believe in a strong school-home partnership that benefits the child’s overall growth.</li>
+      
+      <li><strong>Continual Professional Development:</strong> Staff at Bishop Angelo Tarantino Memorial Secondary School participate in ongoing training programs and workshops to stay updated with modern teaching techniques and curriculum changes.</li>
+      
+      <li><strong>Community Involvement:</strong> Our staff members are actively involved in community-building events and outreach programs, reinforcing the school's role as a pillar of the community.</li>
+    </ul>
+
+    <h3>Benefits of Learning at Bishop Angelo Tarantino Memorial Secondary School</h3>
+    <p>Choosing Bishop Angelo Tarantino Memorial Secondary School means giving your child access to:</p>
+    <ul>
+      <li><strong>Holistic Education:</strong> Our staff go beyond textbooks, focusing on academics, character-building, and life skills.</li>
+      <li><strong>Safe and Nurturing Environment:</strong> Our caring staff provide a positive environment where students feel secure and supported.</li>
+      <li><strong>Inspirational Role Models:</strong> Teachers and staff lead by example, inspiring students to work hard, be respectful, and aim high.</li>
+      <li><strong>Personalized Attention:</strong> With our student-focused teaching, every child receives the attention and guidance they need to succeed.</li>
+      <li><strong>Preparation for Future Success:</strong> Our experienced educators prepare learners for further education, careers, and responsible citizenship.</li>
+    </ul>
+
+    <p>
+        Every member of the Bishop Angelo Tarantino Memorial Secondary School staff is committed to nurturing academic excellence, moral integrity, and lifelong learning.
+    </p>
+</div>
+
+  </main>
+<div class="org-chart">
+  <div class="leader">
+    <img src="images/staff-image/116docts_AnchinKalia(0).jpg" alt="Principal">
+    <div class="dept-title">Head Mistress</div>
+  </div>
+
+  <div class="arrow"></div>
+
+  <div class="departments">
+    <!-- Academics -->
+    <div class="department">
+      <img src="images/staff-image/Dr.Arun-Walia.png" alt="Academics">
+      <div class="dept-title">Academics</div>
+      <div class="unit-list">
+       <div class="unit">
+          <img src="images/staff-image/hq720.jpg" alt="Math"><br>
+          <div>Math</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/img-doic.jpg" alt="Science"><br>
+          <div>Science</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/Screenshot_20250323-172345_2.jpg" alt="English"><br>
+          <div>English</div>
+        </div>
       </div>
+    </div>
 
-      <div class="text-content" style="flex: 2; order: 2;">
-  <img src="images/staff members.jpeg" alt="Dr. Jyoti Kalia" class="board-image" />
+    <!-- Student Services -->
+    <div class="department">
+      <img src="images/staff-image/116docts_AnchinKalia(0).jpg" alt="Student Services">
+      <div class="dept-title">Student Services</div>
+      <div class="unit-list">
+        <div class="unit">
+          <img src="images/staff-image/Dr.Arun-Walia.png" alt="Guidance"><br>
+          <div>Guidance</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/hq720.jpg" alt="Health"><br>
+          <div>Health</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/img-doic.jpg" alt="Counseling"><br>
+          <div>Counseling</div>
+        </div>
+      </div>
+    </div>
 
-  <h2>Background</h2>
-  <p>The Board of Governors at Bishop Angelo Tarantino Memorial Secondary School plays a critical role in overseeing the strategic direction and governance of the institution. Comprising experienced professionals, educationists, community leaders, and dedicated stakeholders, the Board ensures that the school upholds its mission of providing quality education and maintaining high standards in all areas of academic and operational performance.</p>
+    <!-- Administration -->
+    <div class="department">
+      <img src="images/staff-image/Screenshot_20250323-172345_2.jpg" alt="Administration">
+      <div class="dept-title">Administration</div>
+      <div class="unit-list">
+        <div class="unit">
+          <img src="images/staff-image/116docts_AnchinKalia(0).jpg" alt="Registrar"><br>
+          <div>Registrar</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/Dr.Arun-Walia.png" alt="Finance"><br>
+          <div>Finance</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/hq720.jpg" alt="HR"><br>
+          <div>HR</div>
+        </div>
+      </div>
+    </div>
 
-  <h2>Leadership & Responsibility</h2>
-  <p><strong>Chairperson:</strong> Mr. John K. Mayombo<br />
-     <strong>Secretary to the Board:</strong> The Head Teacher (ex-officio)<br />
-     <strong>Other Members:</strong> Representatives from the PTA, Foundation Body, Staff, and Local Government</p>
-
-  <h3>Governance Structure</h3>
-  <p>The Board operates through various committees focused on finance, academics, welfare, infrastructure, and discipline. Each committee is tasked with guiding school policy, ensuring accountability, and supporting the implementation of government education guidelines and school development goals.</p>
-
-  <h3>Educational Oversight</h3>
-  <p>The Board ensures the school curriculum is effectively delivered, resources are properly allocated, and learning environments are continuously improved. They evaluate the performance of both teachers and learners, support teacher development programs, and promote innovations that enhance learning outcomes.</p>
-
-  <h3>Strategic Development</h3>
-  <p>As custodians of the school's long-term vision, the Board members work closely with the administration to plan and implement infrastructure projects, resource acquisition, staff recruitment, and partnerships. They are key to ensuring sustainability and academic excellence at Bishop Angelo Tarantino Memorial Secondary School.</p>
-
-  <h3>Community Involvement</h3>
-  <p>The Board represents the interests of the community and maintains a strong link between the school and parents, ensuring transparency, accountability, and mutual collaboration. They also promote co-curricular development, moral education, and inclusive practices within the school environment.</p>
-
-  <p>The Board of Governors is committed to shaping the future of Bishop Angelo Tarantino Memorial Secondary School through ethical leadership, educational stewardship, and unwavering dedication to student success.</p>
-
-  <div class="get-in-touch">
-    <h2>Get In Touch</h2>
-    <p><strong>Phone Number</strong><br />+256-700-000000</p>
-    <p><strong>Email</strong><br />bishopangelotarantino@gmail.ac.ug</p>
-    <p><strong>Address</strong><br />Bishop Angelo Tarantino Memorial Secondary School, Arua, Uganda</p>
-    <div class="social-icons">
-      <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-      <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+    <!-- Facilities -->
+    <div class="department">
+      <img src="images/staff-image/img-doic.jpg" alt="Facilities">
+      <div class="dept-title">Facilities</div>
+      <div class="unit-list">
+        <div class="unit">
+          <img src="images/staff-image/img-doic.jpg" alt="Maintenance"><br>
+          <div>Maintenance</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/Screenshot_20250323-172345_2.jpg" alt="Security"><br>
+          <div>Security</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/img-doic.jpg" alt="Janitorial"><br>
+          <div>Janitorial</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+<script>
+  const navLinks = document.querySelectorAll('.nav-link');
+  const loader = document.getElementById('loading-screen');
 
+  navLinks.forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault(); // Prevent default page change
+      loader.style.display = 'flex'; // Show loader
 
-    </section>
-  </main>
+      const targetUrl = this.href; // Get full URL of target
 
+      setTimeout(() => {
+        window.location.href = targetUrl; // Navigate after delay
+      }, 100); // Delay (in ms)
+    });
+  });</script>
   <footer class="footer">
     <div class="footer-column">
       <h3>Quick Links</h3>
@@ -311,7 +433,7 @@
         <li><a href="home.html">Home</a></li>
         <li><a href="#">Programs</a></li>
         <li><a href="history.html">About</a></li>
-        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a></li>
         <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
         <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
       </ul>
@@ -331,12 +453,10 @@
     <div class="footer-bottom">
       <marquee><p>&copy; 2025 Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>Designed by:<br> ATUMA GILBERT <br>www.gilbertatuma700@gmail.com<br> 0779905605 </p></marquee>
 
-
     </div>
   </footer>
 
   <script src="script.js"></script>
 </body>
 </html>
-
 
