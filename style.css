@@ -178,7 +178,7 @@ nav a {
 .time{
   background: #419efc;
   color: white;
-  padding: 5px 5px;
+  padding: 10px 10px;
   border: none;
   cursor: pointer;
   border-radius: 5px;
@@ -712,5 +712,6 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
 }
 
          
+
 
 
