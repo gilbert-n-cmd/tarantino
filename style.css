@@ -135,7 +135,7 @@ nav a {
 #chat-container {
   display: flex;
   position: fixed;
-  bottom: 100px;
+  bottom: 15px;
   right: 20px;
   z-index: 1000;
 }
@@ -712,4 +712,5 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
 }
 
          
+
 
