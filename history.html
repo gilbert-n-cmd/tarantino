@@ -106,24 +106,32 @@
       color: #004080;
       font-size: 1.5rem;
     }
-    .mayobo{
-    
-      display: flex;
-    }
-    iframe{
-      padding: 40px;
-    }
-    @media(max-width: 768px){
-.mayobo{
-    
-      display: block;
-    }
-    iframe{
-      padding: 40px;
-      width: 100%
-      height: 100%;
-    }
-    }
+.mayobo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; /* optional spacing */
+}
+
+iframe {
+  padding: 40px;
+  max-width: 100%;  /* makes iframe scale down */
+  height: auto;     /* keeps proportions */
+}
+
+/* On smaller screens */
+@media (max-width: 768px) {
+  .mayobo {
+    display: block;  /* stack instead of side-by-side */
+  }
+
+  iframe {
+    padding: 20px;
+    width: 100%;   /* take full width */
+    height: auto;  /* adjust height automatically */
+  }
+}
+
   </style>
 </head>
 <body>
@@ -341,6 +349,7 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
