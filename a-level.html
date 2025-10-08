@@ -9,7 +9,26 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="contact-responsive.css" />
   <style>
-    main {
+    html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  min-height: calc(100vh - 180px); /* full screen minus header+footer height */
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Poppins', sans-serif;
+  color: #003366;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+}
+
+    /*main {
       max-width: 100%;
       margin: 20px auto;
       padding: 20px;
@@ -18,7 +37,7 @@
       background-color: #f9f9f9;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
+    }*/
     h1 {
       color: #004080;
       font-size: 2.5rem;
@@ -310,6 +329,7 @@ margin-left: 180px;
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
