@@ -16,16 +16,26 @@
 }
 
 main {
-  min-height: 100%;/*calc(100vh - 180px); /* full screen minus header+footer height */
+  min-height: calc(100vh - 180px); /* adjust 180px to header+footer height */
   width: 100%;
-  margin: 0;
+  margin: 0;  /* remove any gap from top */
   padding: 40px 20px;
   font-family: 'Poppins', sans-serif;
   color: #003366;
   background-color: #f9f9f9;
-  border-radius: 10px;
+  /* remove border-radius if you want it flush with header */
+  border-radius: 0; 
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  main {
+    display: block;
+    max-width: 100%;
+    padding: 20px;
+    margin: 0; /* remove margin here too */
+  }
 }
 
     /*main {
@@ -56,12 +66,12 @@ main {
     }
 
     @media (min-width: 768px) {
-    main {
+   /* main {
       display: block;
         max-width: 100%;
         padding: 20px;
         margin: 20px auto;
-    }
+    }*/
 
     h1 {
         font-size: 2.5rem;
@@ -329,6 +339,7 @@ margin-left: 180px;
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
