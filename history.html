@@ -8,7 +8,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    body {
+    html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  min-height: 100vh;   /* full screen height */
+  width: 100%;         /* full width */
+  margin: 0;           /* remove margin so it stretches */
+  padding: 20px;
+  background-color: #ccc;
+  display: flex;
+  flex-direction: column; /* keeps content stacked */
+  box-sizing: border-box; /* ensures padding doesn’t break width */
+}
+
+/*    body {
       font-family: 'Poppins', sans-serif;
       color: #003366;
       margin: 0;
@@ -21,7 +38,7 @@
       margin: 40px auto;
       padding: 20px;
       background-color: #ccc;
-    }
+    }*/
     h1, h2, h3 {
       color: #004080;
       font-weight: 600;
@@ -352,6 +369,7 @@ iframe {
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
