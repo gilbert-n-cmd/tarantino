@@ -730,7 +730,72 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
   }
 
 
-         
+    /* ✅ Register / Sign out Button Style */
+    #registerBtn {
+      background: white;
+      color: #004080;
+      padding: 8px 15px;
+      border: 2px solid #004080;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    #registerBtn:hover {
+      background: #004080;
+      color: white;
+    }
+
+    #login-block {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      z-index: 1000;
+      width: 300px;
+      text-align: center;
+    }
+
+    #login-block input {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    #login-block button {
+      background: #004080;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    #login-block button:hover {
+      background: #002b5c;
+    }
+
+    #loginMessage {
+      color: #004080;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    #form-block {
+      display: none;
+      text-align: center;
+      margin: 30px auto;
+      }
+
 
 
 
