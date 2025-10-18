@@ -766,11 +766,7 @@ flex: 1 1 100%;
     </a>
   </div>
 
-        <select id="language-select" class="language-selector">
-            <option value="en">English</option>
-            <option value="fr">French</option>
-            <option value="es">Spanish</option>
-        </select>
+        <button id="registerBtn">register</button>
         <!--<h1 id="headline">Welcome</h1>
 <!--<p id="description">This is an example of dynamic language switching.</p>-->
     </div>
@@ -849,6 +845,29 @@ flex: 1 1 100%;
   <button onclick="setBrightness('medium')">Medium</button>
   <button onclick="setBrightness('high')">High</button>
 </div>--->
+
+
+   <!-- ✅ Firebase Login Popup -->
+  <div id="login-block">
+    <h3>Login to Continue</h3>
+    <input type="email" id="email" placeholder="Enter email" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button id="loginBtn">Login</button>
+    <p id="loginMessage"></p>
+  </div>
+
+  <!-- ✅ Google Form -->
+  <div id="form-block">
+    <iframe 
+      src=" https://forms.gle/PJU1jL4Lo9ZwpBd87" 
+      width="350" 
+      height="700" 
+      frameborder="0" 
+      marginheight="0" 
+      marginwidth="0">
+      Loading…
+    </iframe>
+  </div>
   <!-- Hero Slider Section -->
   <section class="slider">
     <div class="slides active">
@@ -1390,9 +1409,11 @@ flex: 1 1 100%;
 });
 
   </script>
+  <script type="module" src="termlyregister.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
