@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>School Map</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  h1 {
+    text-align: center;
+    padding: 10px;
+    color: #003366;
+  }
+
+  #map {
+    height: 90vh;
+    width: 100%;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>🏫 School Location Map</h1>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  // 📍 REAL SCHOOL LOCATION (UPDATED)
+  const schoolLocation = [3.016733138874593, 30.899142808208286];
+
+  // ⛪ Ediofe Cathedral (nearby landmark)
+  const cathedralLocation = [3.0192, 30.9038];
+
+  // Create map centered on school
+  const map = L.map('map').setView(schoolLocation, 16);
+
+  // Load OpenStreetMap tiles
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // 🏫 School marker
+  L.marker(schoolLocation)
+    .addTo(map)
+    .bindPopup(`
+      <b>Bishop Angelo Tarantino Memorial Secondary School</b><br>
+      📍 Oduparaka Area
+    `)
+    .openPopup();
+
+  // ⛪ Cathedral marker
+  L.marker(cathedralLocation)
+    .addTo(map)
+    .bindPopup(`
+      <b>Ediofe Roman Catholic Cathedral</b><br>
+      Nearby Landmark
+    `);
+
+</script>
+
+</body>
+</html>

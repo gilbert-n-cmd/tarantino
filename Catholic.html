@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Catholic</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+
+<style>
+:root{
+  --primary:#003366;
+  --secondary:#0059b3;
+  --gold:#d4af37;
+  --light:#f8fafc;
+  --dark:#1e293b;
+  --text:#64748b;
+  --white:#fff;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  margin:0;
+  background:#f8fafc;
+}
+
+/* HERO SECTION */
+.hero-section{
+  background:
+  linear-gradient(rgba(0,51,102,.85),rgba(0,51,102,.85)),
+  url("images/a level block.jpeg") center/cover;
+  min-height:70vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  color:white;
+  padding:40px 20px;
+}
+
+.hero-content{
+  max-width:850px;
+}
+
+.hero-badge{
+  display:inline-block;
+  padding:10px 20px;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(10px);
+  border-radius:50px;
+  margin-bottom:20px;
+}
+
+.hero-section h1{
+  font-size:4rem;
+  margin-bottom:20px;
+  color:white;
+}
+
+.hero-section p{
+  font-size:1.2rem;
+  line-height:1.8;
+}
+
+/* MAIN CONTENT */
+.catholic-container{
+  max-width:1200px;
+  margin:auto;
+  padding:80px 20px;
+}
+
+.feature-image{
+  width:100%;
+  border-radius:25px;
+  box-shadow:0 20px 40px rgba(0,0,0,.15);
+  margin-bottom:40px;
+}
+
+/* CARDS */
+.info-card{
+  background:white;
+  padding:35px;
+  border-radius:25px;
+  margin-bottom:25px;
+  box-shadow:0 10px 30px rgba(0,0,0,.05);
+  transition:.3s;
+}
+
+.info-card:hover{
+  transform:translateY(-8px);
+}
+
+.info-card h2,
+.info-card h3{
+  color:var(--primary);
+}
+
+.info-card p,
+.info-card li{
+  color:var(--text);
+  line-height:1.9;
+}
+
+/* QUOTE */
+.faith-quote{
+  background:linear-gradient(135deg,#003366,#0059b3);
+  color:white;
+  text-align:center;
+  padding:40px;
+  border-radius:25px;
+  margin-top:30px;
+}
+
+.faith-quote p{
+  color:white;
+  font-size:1.3rem;
+  font-style:italic;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+  .hero-section h1{
+    font-size:2.5rem;
+  }
+
+  .hero-section p{
+    font-size:1rem;
+  }
+
+  .catholic-container{
+    padding:50px 15px;
+  }
+
+  .info-card{
+    padding:25px;
+  }
+}
+</style>
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
+        
+        <div class="time"><b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b></div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Bishop Angelo Tarantino Memorial Secondary School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+              <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
+      <div class="right-section">
+  <div class="socials-icons img">
+    <!-- Twitter -->
+    <a href="https://twitter.com/yourprofile" target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/atuma743/" target="_blank">
+  <i class="fab fa-instagram"></i>
+</a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+  <i class="fab fa-facebook-f"></i>
+</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/256779905605" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
+        <button id="registerBtn">register</button>
+
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="contact.html">Contact</a>
+   <div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+  <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!-- Brightness controls -->
+ <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+
+      <!-- ✅ Firebase Login Popup -->
+  <div id="login-block">
+    <h3>Login to Continue</h3>
+    <input type="email" id="email" placeholder="Enter email" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button id="loginBtn">Login</button>
+    <p id="loginMessage"></p>
+  </div>
+
+  <!-- ✅ Google Form -->
+  <div id="form-block">
+    <iframe 
+      src=" https://forms.gle/PJU1jL4Lo9ZwpBd87" 
+      width="350" 
+      height="700" 
+      frameborder="0" 
+      marginheight="0" 
+      marginwidth="0">
+      Loading…
+    </iframe>
+  </div>  
+
+  <section class="hero-section">
+  <div class="hero-content">
+
+    <span class="hero-badge">
+      Faith • Education • Service
+    </span>
+
+    <h1>Catholic Faith & Values</h1>
+
+    <p>
+      Nurturing spiritually grounded, morally upright, and academically
+      excellent learners through Christ-centered education.
+    </p>
+
+  </div>
+</section>
+
+<main class="catholic-container">
+
+  <img src="images/a level block.jpeg"
+       alt="Catholic Community"
+       class="feature-image">
+
+  <div class="info-card">
+    <h2>Our Catholic Community</h2>
+
+    <p>
+      Bishop Angelo Tarantino Memorial Secondary School is rooted in Catholic
+      traditions and values. We strive to nurture the spiritual, moral, and
+      academic growth of every learner through a Christ-centered environment.
+    </p>
+  </div>
+
+  <div class="info-card">
+    <h3>Daily Spiritual Life</h3>
+
+    <p>
+      Prayer, reflection, worship, and participation in Holy Mass are central
+      to our school culture. Learners are encouraged to grow in faith and
+      develop a personal relationship with God.
+    </p>
+  </div>
+
+  <div class="info-card">
+    <h3>Catechism & Religious Education</h3>
+
+    <p>
+      Through Religious Education and Catechism classes, learners deepen their
+      understanding of Catholic teachings and prepare for important sacraments.
+    </p>
+  </div>
+
+  <div class="info-card">
+    <h3>Pastoral Care & Guidance</h3>
+
+    <p>
+      Our chaplain and teachers provide spiritual support, counseling, and
+      guidance to help learners grow emotionally, morally, and spiritually.
+    </p>
+  </div>
+
+  <div class="info-card">
+    <h3>Catholic Events & Celebrations</h3>
+
+    <ul>
+      <li>Ash Wednesday & Lenten Reflections</li>
+      <li>Holy Mass on Feast Days</li>
+      <li>Rosary Month & Marian Processions</li>
+      <li>Christmas & Easter Celebrations</li>
+      <li>Uganda Martyrs Day Commemoration</li>
+    </ul>
+  </div>
+
+  <div class="info-card">
+    <h3>Service & Outreach</h3>
+
+    <p>
+      Inspired by Catholic Social Teaching, learners participate in community
+      service, environmental stewardship, charity activities, and outreach
+      programs that foster compassion and responsibility.
+    </p>
+  </div>
+
+  <div class="info-card">
+    <h3>Inclusive & Welcoming</h3>
+
+    <p>
+      While proudly Catholic, we warmly welcome learners from all faith
+      backgrounds and promote mutual respect, unity, and peaceful coexistence.
+    </p>
+  </div>
+
+  <div class="faith-quote">
+    <h2>Our Guiding Scripture</h2>
+
+    <p>
+      “Train up a child in the way he should go; and when he is old,
+      he will not depart from it.”
+    </p>
+
+    <strong>— Proverbs 22:6</strong>
+  </div>
+
+</main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+           
+      <marquee>
+  <p>
+    &copy; <span id="year"></span> Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>
+    Designed by:<br>
+    ATUMA GILBERT <br>
+    www.gilbertatuma700@gmail.com<br>
+    0779905605
+  </p>
+</marquee>
+
+<script src="year.js"></script>
+
+    </div>
+  </footer>
+<script type="module" src="termlyregister.js"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

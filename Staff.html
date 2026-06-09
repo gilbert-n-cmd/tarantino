@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    nav {
+  position: relative;
+  z-index: 1000;
+}
+
+.top-bar {
+  position: relative;
+  z-index: 1001;
+}
+   .staff-main {
+  background: #f4f7fb;
+  padding: 40px 15px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.staff-container {
+  max-width: 1100px;
+  margin: auto;
+}
+
+/* HERO */
+.staff-hero {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.staff-hero h1 {
+  font-size: 2.5rem;
+  color: #003366;
+}
+
+.staff-hero p {
+  color: #555;
+}
+
+/* IMAGE */
+.staff-image img {
+  width: 100%;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+/* CARDS */
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+  color: #003366;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.feature {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: 0.3s;
+}
+
+.feature:hover {
+  transform: translateY(-5px);
+}
+
+.feature h3 {
+  color: #004080;
+}
+
+/* HIGHLIGHT */
+.highlight {
+  border-left: 6px solid #004080;
+}
+  .banner {
+  width: 100%;
+  height: 300px;
+  background-image: url('images/staff.jpeg'); /* CHANGE to your image */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  position: relative;
+}
+
+.banner::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+}
+
+.banner-text {
+  position: relative;
+  z-index: 1;
+}
+
+.banner-text h1 {
+  font-size: 2.5rem;
+}
+
+.org-chart {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+}
+
+/* ===== HEAD LEADER ===== */
+.leader {
+  display: inline-block;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  margin-bottom: 30px;
+  transition: 0.3s;
+}
+
+.leader:hover {
+  transform: translateY(-5px);
+}
+
+.leader img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #004080;
+}
+
+.dept-title {
+  margin-top: 10px;
+  font-weight: 600;
+  color: #003366;
+}
+
+/* ===== LINE CONNECTOR ===== */
+.arrow {
+  width: 3px;
+  height: 40px;
+  background: linear-gradient(#004080, #00aaff);
+  margin: 0 auto 30px;
+  border-radius: 10px;
+}
+
+/* ===== MAIN GRID ===== */
+.departments {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+/* ===== DEPARTMENT CARD ===== */
+.department {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.department:hover {
+  transform: translateY(-6px);
+}
+
+.department > img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #004080;
+}
+
+.dept-title {
+  margin: 10px 0;
+  font-size: 1.1rem;
+  color: #004080;
+}
+
+/* ===== UNITS ===== */
+.unit-list {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  background: #f7f9fc;
+  transition: 0.3s;
+}
+
+.unit:hover {
+  background: #e8f2ff;
+  transform: scale(1.03);
+}
+
+.unit img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  margin-bottom: 5px;
+}
+
+.unit div {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .leader img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .department > img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .unit img {
+    width: 55px;
+    height: 55px;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="top-bar">
+        <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+
+        <div id="chat-container">
+
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
+          
+            <div class="time"><b>Current Time: <span id="liveTime"></span></b>
+                <b>Current Date: <span id="liveDate"></span></b></div>
+            <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Noble Mayombo Memorial seed School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+
+              <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
+        <div class="right-section">
+  <div class="socials-icons img">
+    <!-- Twitter -->
+    <a href="https://twitter.com/yourprofile" target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/atuma743/" target="_blank">
+  <i class="fab fa-instagram"></i>
+</a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+  <i class="fab fa-facebook-f"></i>
+</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/256779905605" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+<button id="registerBtn">register</button>
+    </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
+        <a href="#">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="contact.html">Contact</a>
+<div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  <!----- <div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+      </div>-->
+    <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+      <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+      <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">--->
+       
+    <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+   <section class="banner">
+  <div class="banner-text">
+    <h1>Welcome to Our School</h1>
+    <p>Excellence • Discipline • Growth</p>
+  </div>
+</section>
+<main class="staff-main">
+
+  <div class="staff-container">
+
+    <!-- HERO SECTION -->
+    <div class="staff-hero">
+      <h1>Our Dedicated Staff</h1>
+      <p>Meet the heart of Bishop Angelo Tarantino Memorial Secondary School</p>
+    </div>
+
+    <!-- IMAGE SECTION -->
+    <!---<div class="staff-image">
+      <img src="images/staff.jpeg" alt="School Staff">
+    </div>--->
+
+    <!-- INTRO CARD -->
+    <div class="card">
+      <h2>Why Our Staff Stand Out</h2>
+      <p>
+        At Bishop Angelo Tarantino Memorial Secondary School, our strength lies in a passionate,
+        qualified, and student-focused team committed to excellence.
+      </p>
+    </div>
+
+    <!-- GRID FEATURES -->
+    <div class="grid">
+
+      <div class="feature">
+        <h3>🎓 Qualified Teachers</h3>
+        <p>Experienced and certified educators delivering high-quality learning experiences.</p>
+      </div>
+
+      <div class="feature">
+        <h3>🏫 Support Team</h3>
+        <p>Efficient administrative staff ensuring smooth school operations.</p>
+      </div>
+
+      <div class="feature">
+        <h3>🤝 Student Focus</h3>
+        <p>We adapt teaching to support every learner’s unique needs.</p>
+      </div>
+
+      <div class="feature">
+        <h3>🌱 Mentorship</h3>
+        <p>Guiding students in academics, morals, and career development.</p>
+      </div>
+
+      <div class="feature">
+        <h3>👨‍👩‍👧 Parent Engagement</h3>
+        <p>Strong communication between school and parents for better results.</p>
+      </div>
+
+      <div class="feature">
+        <h3>🌍 Community Impact</h3>
+        <p>Active involvement in outreach and community development programs.</p>
+      </div>
+
+    </div>
+
+    <!-- FINAL MESSAGE -->
+    <div class="card highlight">
+      <h2>Our Commitment</h2>
+      <p>
+        Every staff member is committed to nurturing academic excellence, discipline,
+        and lifelong success for all learners.
+      </p>
+    </div>
+
+  </div>
+
+</main>
+<div class="org-chart">
+  <div class="leader">
+    <img src="images/staff-image/116docts_AnchinKalia(0).jpg" alt="Principal">
+    <div class="dept-title">Head Mistress</div>
+  </div>
+
+  <div class="arrow"></div>
+
+  <div class="departments">
+    <!-- Academics -->
+    <div class="department">
+      <img src="images/staff-image/Dr.Arun-Walia.png" alt="Academics">
+      <div class="dept-title">Academics</div>
+      <div class="unit-list">
+       <div class="unit">
+          <img src="images/staff-image/hq720.jpg" alt="Math"><br>
+          <div>D.head teacher</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/img-doic.jpg" alt="Science"><br>
+          <div>Deputy Accademics</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/Screenshot_20250323-172345_2.jpg" alt="English"><br>
+          <div>Director of studies</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Services -->
+    <div class="department">
+      <img src="images/staff-image/116docts_AnchinKalia(0).jpg" alt="Student Services">
+      <div class="dept-title">Student Services</div>
+      <div class="unit-list">
+        <div class="unit">
+          <img src="images/staff-image/Dr.Arun-Walia.png" alt="Guidance"><br>
+          <div>Guidance</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/hq720.jpg" alt="Health"><br>
+          <div>Health</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/img-doic.jpg" alt="Counseling"><br>
+          <div>Counseling</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Administration -->
+    <div class="department">
+      <img src="images/staff-image/Screenshot_20250323-172345_2.jpg" alt="Administration">
+      <div class="dept-title">Administration</div>
+      <div class="unit-list">
+        <div class="unit">
+          <img src="images/staff-image/116docts_AnchinKalia(0).jpg" alt="Registrar"><br>
+          <div>Registrar</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/Dr.Arun-Walia.png" alt="Finance"><br>
+          <div>Finance</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/hq720.jpg" alt="HR"><br>
+          <div>HR</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Facilities -->
+    <div class="department">
+      <img src="images/staff-image/img-doic.jpg" alt="Facilities">
+      <div class="dept-title">Facilities</div>
+      <div class="unit-list">
+        <div class="unit">
+          <img src="images/staff-image/img-doic.jpg" alt="Maintenance"><br>
+          <div>Maintenance</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/Screenshot_20250323-172345_2.jpg" alt="Security"><br>
+          <div>Security</div>
+        </div>
+        <div class="unit">
+          <img src="images/staff-image/img-doic.jpg" alt="Janitorial"><br>
+          <div>Janitorial</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+         
+      <marquee>
+  <p>
+    &copy; <span id="year"></span> Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>
+    Designed by:<br>
+    ATUMA GILBERT <br>
+    www.gilbertatuma700@gmail.com<br>
+    0779905605
+  </p>
+</marquee>
+
+<script src="year.js"></script>
+
+    </div>
+  </footer>
+  <script type="module" src="termlyregister.js"></script>
+  <script src="script.js"></script>
+  <script>
+  const navLinks = document.querySelectorAll('.nav-link');
+  const loader = document.getElementById('loading-screen');
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault(); // Prevent default page change
+      loader.style.display = 'flex'; // Show loader
+
+      const targetUrl = this.href; // Get full URL of target
+
+      setTimeout(() => {
+        window.location.href = targetUrl; // Navigate after delay
+      }, 100); // Delay (in ms)
+    });
+  });</script>
+</body>
+</html>
+
+
+
+
+
+
+
+

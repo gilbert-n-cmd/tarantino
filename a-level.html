@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A-level</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="contact-responsive.css" />
+<style>
+
+/* ================= GLOBAL ================= */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  background:#f5f7fb;
+  color:#1f2d3d;
+}
+
+/* ================= HERO ================= */
+.hero-section{
+  height:85vh;
+  min-height:500px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:white;
+  position:relative;
+  overflow:hidden;
+}
+
+/* DARK OVERLAY */
+.hero-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, rgba(0,40,90,.85), rgba(0,100,200,.75));
+  z-index:1;
+}
+
+/* BACKGROUND IMAGE */
+.alevel-hero{
+  background:url("images/a level block.jpeg") center/cover no-repeat;
+}
+
+/* CONTENT */
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:850px;
+  padding:20px;
+}
+
+/* BADGE */
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 18px;
+  border-radius:50px;
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(10px);
+  font-size:0.9rem;
+  margin-bottom:20px;
+}
+
+/* TITLE */
+.hero-content h1{
+  font-size:3.5rem;
+  font-weight:700;
+  margin-bottom:15px;
+}
+
+/* TEXT */
+.hero-content p{
+  font-size:1.2rem;
+  line-height:1.8;
+  color:#e8f0ff;
+}
+
+/* BUTTONS */
+.hero-buttons{
+  margin-top:30px;
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.btn{
+  padding:14px 30px;
+  border-radius:50px;
+  text-decoration:none;
+  font-weight:600;
+  transition:0.3s ease;
+}
+
+.btn.primary{
+  background:white;
+  color:#004080;
+}
+
+.btn.secondary{
+  border:2px solid white;
+  color:white;
+}
+
+.btn:hover{
+  transform:translateY(-5px);
+}
+
+/* ================= MAIN ================= */
+main{
+  padding:80px 20px;
+  background:#f5f7fb;
+}
+
+/* CONTAINER */
+.container{
+  max-width:1200px;
+  margin:auto;
+}
+
+/* LAYOUT GRID */
+.layout{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px;
+  align-items:start;
+}
+
+/* CARD STYLE */
+.card, .highlight{
+  background:white;
+  border-radius:20px;
+  padding:30px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* IMAGE */
+.card img{
+  width:100%;
+  border-radius:15px;
+  margin:15px 0;
+}
+
+/* LEFT HIGHLIGHT */
+.highlight{
+  background:linear-gradient(135deg,#004080,#1e90ff);
+  color:white;
+}
+
+.highlight h3,
+.highlight p{
+  color:white;
+}
+
+/* LISTS */
+ul{
+  padding-left:20px;
+}
+
+li{
+  margin-bottom:10px;
+}
+
+/* BUTTON */
+.btn{
+  display:inline-block;
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .hero-content h1{
+    font-size:2.3rem;
+  }
+
+  .hero-content p{
+    font-size:1rem;
+  }
+}
+  :root{
+    --primary:#0a3d62;
+    --accent:#1e90ff;
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --text:#1f2d3d;
+    --muted:#6b7c93;
+  }
+
+  main{
+    background: var(--bg);
+    padding: 60px 20px;
+    font-family: "Poppins", sans-serif;
+    color: var(--text);
+  }
+
+  .container{
+    max-width: 1100px;
+    margin: auto;
+  }
+
+  h1{
+    font-size: 2.2rem;
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 40px;
+  }
+
+  .layout{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: start;
+  }
+
+  @media (max-width: 900px){
+    .layout{
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .card{
+    background: var(--card);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  }
+
+  .card img{
+    width: 100%;
+    border-radius: 12px;
+    margin: 15px 0;
+  }
+
+  h2, h3{
+    color: var(--primary);
+  }
+
+  p, li{
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  ul{
+    padding-left: 18px;
+  }
+
+  .btn{
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 22px;
+    background: var(--accent);
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s ease;
+  }
+
+  .btn:hover{
+    background: #0d6efd;
+    transform: translateY(-2px);
+  }
+
+  /* Left highlight panel */
+  .highlight{
+    background: linear-gradient(135deg, #0a3d62, #1e90ff);
+    color: white;
+    border-radius: 16px;
+    padding: 25px;
+  }
+
+  .highlight h3{
+    color: white;
+  }
+
+  .highlight p{
+    color: rgba(255,255,255,0.85);
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+       
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
+        
+        <div class="time">
+          <b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b>
+        </div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+       <div id="chat-box">
+        <!---<div class="chat-header">
+          <span>Live Chat</span>
+          <button onclick="toggleChat()">✖</button>
+        </div>--->
+        <!---<div class="chat-body">
+          <p>Welcome to Noble Mayombo Memorial seed School! How can we help you?</p>
+          <input type="text" placeholder="Type your message..." /><br /><br />
+          <button onclick="toggleChat()">send</button>
+        </div>--->
+      </div>
+    </div>
+              <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
+      <div class="right-section">
+  <div class="socials-icons img">
+    <!-- Twitter -->
+    <a href="https://twitter.com/yourprofile" target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/atuma743/" target="_blank">
+  <i class="fab fa-instagram"></i>
+</a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+  <i class="fab fa-facebook-f"></i>
+</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/256779905605" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+        <button id="registerBtn">register</button>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="contact.html">Contact</a>
+    <div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o level application form.html">O Level</a>
+        <a href="a level apllication form.html">A Level</a>
+          </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+ <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!---<div class="brightness-controls">
+    <button onclick="setBrightness('low')">Low</button>
+    <button onclick="setBrightness('medium')">Medium</button>
+    <button onclick="setBrightness('high')">High</button>
+  </div>--->:
+
+   <!-- ✅ Firebase Login Popup -->
+  <div id="login-block">
+    <h3>Login to Continue</h3>
+    <input type="email" id="email" placeholder="Enter email" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button id="loginBtn">Login</button>
+    <p id="loginMessage"></p>
+  </div>
+
+  <!-- ✅ Google Form -->
+  <div id="form-block">
+    <iframe 
+      src=" https://forms.gle/PJU1jL4Lo9ZwpBd87" 
+      width="350" 
+      height="700" 
+      frameborder="0" 
+      marginheight="0" 
+      marginwidth="0">
+      Loading…
+    </iframe>
+  </div>
+
+<section class="hero-section alevel-hero">
+  <div class="hero-content">
+
+    <span class="hero-badge">
+      <i class="fas fa-user-graduate"></i>
+      Advanced Level Programme
+    </span>
+
+    <h1>A-Level Excellence</h1>
+
+    <p>
+      Preparing future doctors, engineers, teachers, innovators and leaders
+      through academic excellence and discipline.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="https://forms.gle/D8JgdH3MipwwjshG" class="btn primary">Apply Now</a>
+      <a href="#main-content" class="btn secondary">Explore More</a>
+    </div>
+
+  </div>
+</section>
+  
+
+  <main>
+  <div class="container">
+
+    <h1>A-Level Excellence at Bishop Angelo Tarantino Memorial Secondary School</h1>
+
+    <div class="layout">
+
+      <!-- LEFT SIDE -->
+      <div class="highlight">
+        <h3>Why Our A-Level Program Stands Out</h3>
+        <p>
+          We prepare students for university success through discipline, mentorship, and academic excellence.
+          Our environment builds leaders, innovators, and responsible citizens.
+        </p>
+
+        <a href="https://forms.gle/D8JgdH3MipwwjshG" class="btn">Apply Online</a>
+
+        <!-- FEATURE STRIP -->
+<div style="margin-top:25px; display:grid; gap:12px;">
+
+  <div style="background:rgba(255,255,255,0.15); padding:12px 15px; border-radius:12px; backdrop-filter:blur(10px);">
+    <strong>🎓 Academic Excellence</strong><br>
+    <small>Consistent high performance in UNEB exams</small>
+  </div>
+
+  <div style="background:rgba(255,255,255,0.15); padding:12px 15px; border-radius:12px; backdrop-filter:blur(10px);">
+    <strong>🧑‍🏫 Expert Teachers</strong><br>
+    <small>Qualified staff with strong subject mastery</small>
+  </div>
+
+  <div style="background:rgba(255,255,255,0.15); padding:12px 15px; border-radius:12px; backdrop-filter:blur(10px);">
+    <strong>💡 Career Guidance</strong><br>
+    <small>We prepare students for university & careers</small>
+  </div>
+
+</div>
+
+<div style="margin-top:25px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+
+  <div style="background:rgba(255,255,255,0.15); padding:15px; border-radius:14px;">
+    🎓 <strong>Academic Excellence</strong><br>
+    <small>Top UNEB performance</small>
+  </div>
+
+  <div style="background:rgba(255,255,255,0.15); padding:15px; border-radius:14px;">
+    🧑‍🏫 <strong>Skilled Teachers</strong><br>
+    <small>Experienced educators</small>
+  </div>
+
+  <div style="background:rgba(255,255,255,0.15); padding:15px; border-radius:14px;">
+    🔬 <strong>Science Labs</strong><br>
+    <small>Modern practical learning</small>
+  </div>
+
+  <div style="background:rgba(255,255,255,0.15); padding:15px; border-radius:14px;">
+    🚀 <strong>University Ready</strong><br>
+    <small>Career-focused training</small>
+  </div>
+
+</div>
+        
+      </div>
+      
+
+      <!-- RIGHT SIDE -->
+      <div class="card">
+        <h2>About A-Level Program</h2>
+
+        <img src="images/a level block.jpeg" alt="A-Level Students">
+
+        <h3>Shaping Leaders of Tomorrow</h3>
+        <p>
+          The A-Level program is designed to challenge and prepare learners for university and life beyond school.
+        </p>
+
+        <h3>Subject Combinations</h3>
+        <ul>
+          <li><strong>Science:</strong> PCM, PCB, BCM, MEG, HEG</li>
+          <li><strong>Arts:</strong> HLD, HEL, HGK, HED</li>
+          <li><strong>Subsidiary:</strong> General Paper, ICT, Sub-Maths</li>
+        </ul>
+
+        <h3>Why Choose Us</h3>
+        <ul>
+          <li>Experienced teachers</li>
+          <li>Career guidance & mentorship</li>
+          <li>Well-equipped science labs</li>
+          <li>ICT-integrated learning</li>
+          <li>UNEB exam preparation</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <a href="o level application form.html">O Level</a>
+        <a href="a level apllication form.html">A Level</a>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+           
+      <marquee>
+  <p>
+    &copy; <span id="year"></span> Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>
+    Designed by:<br>
+    ATUMA GILBERT <br>
+    www.gilbertatuma700@gmail.com<br>
+    0779905605
+  </p>
+</marquee>
+
+<script src="year.js"></script>
+    </div>
+  </footer>
+<script type="module" src="termlyregister.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

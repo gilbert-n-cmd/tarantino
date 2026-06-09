@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Board-of-Governors</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+<style>
+:root{
+  --primary:#003366;
+  --secondary:#0059b3;
+  --accent:#00b4d8;
+  --light:#f8fafc;
+  --dark:#1e293b;
+  --text:#64748b;
+  --white:#ffffff;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  margin:0;
+  padding:0;
+  background:var(--light);
+  color:var(--dark);
+}
+
+/* HERO SECTION */
+.hero-section{
+  background:
+  linear-gradient(rgba(0,51,102,.85),rgba(0,89,179,.85)),
+  url("images/staff members.jpeg") center/cover;
+  min-height:70vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:white;
+  padding:40px 20px;
+}
+
+.hero-content{
+  max-width:850px;
+}
+
+.hero-badge{
+  display:inline-block;
+  padding:10px 20px;
+  border-radius:50px;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(10px);
+  font-size:.9rem;
+  letter-spacing:1px;
+  margin-bottom:20px;
+}
+
+.hero-section h1{
+  font-size:4rem;
+  margin:0;
+}
+
+.hero-section p{
+  font-size:1.2rem;
+  line-height:1.8;
+  opacity:.95;
+}
+
+/* MAIN CONTENT */
+.board-container{
+  max-width:1200px;
+  margin:auto;
+  padding:80px 20px;
+}
+
+/* IMAGE */
+.board-image{
+  width:100%;
+  border-radius:25px;
+  box-shadow:0 20px 40px rgba(0,0,0,.15);
+  margin-bottom:40px;
+}
+
+/* CONTENT CARDS */
+.info-card{
+  background:white;
+  padding:35px;
+  border-radius:25px;
+  margin-bottom:25px;
+  box-shadow:0 10px 30px rgba(0,0,0,.05);
+  transition:.4s;
+}
+
+.info-card:hover{
+  transform:translateY(-8px);
+}
+
+.info-card h2,
+.info-card h3{
+  color:var(--primary);
+  margin-top:0;
+}
+
+.info-card p{
+  color:var(--text);
+  line-height:1.9;
+}
+
+/* CONTACT CARD */
+.contact-card{
+  background:linear-gradient(135deg,#003366,#0059b3);
+  color:white;
+  padding:35px;
+  border-radius:25px;
+  margin-top:40px;
+}
+
+.contact-card h2{
+  color:white;
+}
+
+.contact-card p{
+  color:rgba(255,255,255,.9);
+}
+
+/* SOCIALS */
+.social-icons{
+  margin-top:20px;
+}
+
+.social-icons a{
+  width:50px;
+  height:50px;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  background:rgba(255,255,255,.15);
+  color:white;
+  border-radius:50%;
+  margin-right:10px;
+  transition:.3s;
+  text-decoration:none;
+}
+
+.social-icons a:hover{
+  transform:translateY(-5px);
+  background:white;
+  color:#003366;
+}
+
+/* STATS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:25px;
+  margin:60px 0;
+}
+
+.stat-card{
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.05);
+}
+
+.stat-card h2{
+  color:#003366;
+  font-size:2.5rem;
+  margin:0;
+}
+
+.stat-card p{
+  color:#64748b;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+  .hero-section h1{
+    font-size:2.5rem;
+  }
+
+  .hero-section p{
+    font-size:1rem;
+  }
+
+  .board-container{
+    padding:50px 15px;
+  }
+}
+</style>
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+        <div class="time">
+
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
+          <b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b>
+        </div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>=--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>
+          <div class="chat-body">
+            <p>Welcome to Noble Mayombo Memorial seed School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+      <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+      <div class="right-section">
+        <div class="socials-icons img">
+          <!-- Twitter -->
+          <a href="https://twitter.com/yourprofile" target="_blank">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <!-- Instagram -->
+          <a href="https://www.instagram.com/atuma743/" target="_blank">
+  <i class="fab fa-instagram"></i>
+</a>
+
+          <!-- Facebook -->
+          <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <!-- WhatsApp -->
+          <a href="https://wa.me/256779905605" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </div>
+        <button id="registerBtn">register </button>
+      </div>
+   <!--- </div>--->
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="contact.html">Contact</a>
+    <div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+  <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!-- Brightness controls -->
+ <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+
+<!-- ✅ Firebase Login Popup -->
+  <div id="login-block">
+    <h3>Login to Continue</h3>
+    <input type="email" id="email" placeholder="Enter email" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button id="loginBtn">Login</button>
+    <p id="loginMessage"></p>
+  </div>
+
+  <!-- ✅ Google Form -->
+  <div id="form-block">
+    <iframe 
+      src=" https://forms.gle/PJU1jL4Lo9ZwpBd87" 
+      width="350" 
+      height="700" 
+      frameborder="0" 
+      marginheight="0" 
+      marginwidth="0">
+      Loading…
+    </iframe>
+  </div>
+
+  <section class="hero-section">
+  <div class="hero-content">
+    <span class="hero-badge">Leadership & Governance</span>
+
+    <h1>Board of Governors</h1>
+
+    <p>
+      Guiding the vision, excellence, accountability, and sustainable growth of
+      Bishop Angelo Tarantino Memorial Secondary School.
+    </p>
+  </div>
+</section>
+
+<main class="board-container">
+
+  <div class="stats">
+    <div class="stat-card">
+      <h2>20+</h2>
+      <p>Years of Service</p>
+    </div>
+
+    <div class="stat-card">
+      <h2>1000+</h2>
+      <p>Students Impacted</p>
+    </div>
+
+    <div class="stat-card">
+      <h2>50+</h2>
+      <p>Teaching Staff</p>
+    </div>
+  </div>
+
+  <img src="images/staff members.jpeg"
+       alt="Board Members"
+       class="board-image">
+
+  <div class="info-card">
+    <h2>Background</h2>
+    <p>
+      The Board of Governors provides strategic leadership and governance,
+      ensuring that the school remains committed to academic excellence,
+      integrity, innovation, and holistic student development.
+    </p>
+  </div>
+
+  <div class="info-card">
+    <h2>Leadership & Responsibility</h2>
+    <p>
+      <strong>Chairperson:</strong> Mr. John K. Mayombo<br>
+      <strong>Secretary:</strong> Head Teacher (Ex-Officio)<br>
+      <strong>Members:</strong> Representatives from PTA, Foundation Body,
+      Staff and Local Government.
+    </p>
+  </div>
+
+  <div class="info-card">
+    <h3>Governance Structure</h3>
+    <p>
+      Specialized committees oversee finance, academics, welfare,
+      infrastructure, discipline, and strategic planning to ensure
+      accountability and effective decision-making.
+    </p>
+  </div>
+
+  <div class="info-card">
+    <h3>Educational Oversight</h3>
+    <p>
+      The Board continuously monitors academic performance, resource allocation,
+      teacher development, and innovation initiatives to enhance educational
+      outcomes.
+    </p>
+  </div>
+
+  <div class="info-card">
+    <h3>Strategic Development</h3>
+    <p>
+      Working closely with school leadership, the Board supports infrastructure
+      projects, partnerships, staff recruitment, and long-term sustainability.
+    </p>
+  </div>
+
+  <div class="contact-card">
+    <h2>Contact Information</h2>
+
+    <p><strong>Email:</strong><br>
+    bishopangelotarantino@gmail.ac.ug</p>
+
+    <p><strong>Phone:</strong><br>
+    +256 779 905 605</p>
+
+    <p><strong>Address:</strong><br>
+    P.O Box 112, Arua, Uganda</p>
+
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+
+</main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+           
+      <marquee>
+  <p>
+    &copy; <span id="year"></span> Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>
+    Designed by:<br>
+    ATUMA GILBERT <br>
+    www.gilbertatuma700@gmail.com<br>
+    0779905605
+  </p>
+</marquee>
+
+<script src="year.js"></script>
+
+    </div>
+  </footer>
+<script src="termlyregister.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+

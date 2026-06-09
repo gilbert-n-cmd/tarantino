@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Events - Admin</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body{font-family:'Poppins',sans-serif; background:#f9f9f9; margin:0;}
+    main{max-width:900px; margin:30px auto; padding:20px; background:#fff; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,.08);}
+    h1{color:#004080; margin-top:0;}
+    label{font-weight:600;}
+    input,textarea{width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; margin-top:6px; margin-bottom:14px;}
+    button{padding:10px 14px; border:none; border-radius:8px; cursor:pointer; background:#4d749b; color:#fff; font-weight:600;}
+    .back{background:transparent; color:#4d749b; border:1px solid #4d749b;}
+  </style>
+</head>
+<body>
+<header>
+  <div class="top-bar">
+    <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+    <div class="right-section">
+      <a class="back" href="admin.html" style="text-decoration:none; padding:8px 12px; border-radius:8px;">← Back</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <h1>Upload Events</h1>
+  <div>
+    <label for="eventTitle">Title</label>
+    <input id="eventTitle" type="text" placeholder="Enter event title" required />
+
+    <label for="eventDate">Date</label>
+    <input id="eventDate" type="date" required />
+
+    <label for="eventDescription">Description</label>
+    <textarea id="eventDescription" rows="6" placeholder="Enter event description" required></textarea>
+
+    <label for="eventExpiry">Expiry Date</label>
+<input id="eventExpiry" type="date" required />
+
+    <button id="saveEvent">Save Event</button>
+    <p id="status" style="margin-top:12px; color:#004080; font-weight:600;"></p>
+  </div>
+</main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDpRkkp6fdlmVQM5xnLsRkRPS5awu0YSmc",
+    authDomain: "website-database-d75ea.firebaseapp.com",
+    databaseURL: "https://website-database-d75ea-default-rtdb.firebaseio.com",
+    projectId: "website-database-d75ea",
+    storageBucket: "website-database-d75ea.firebasestorage.app",
+    messagingSenderId: "61842953615",
+    appId: "1:61842953615:web:e255cb2ca96184bb0767fa"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  document.getElementById('saveEvent').addEventListener('click', async () => {
+    const status = document.getElementById('status');
+    status.textContent = 'Saving...';
+    try {
+await addDoc(collection(db, 'events'), {
+  title: document.getElementById('eventTitle').value,
+  date: document.getElementById('eventDate').value,
+  expiryDate: document.getElementById('eventExpiry').value,
+  description: document.getElementById('eventDescription').value,
+  createdAt: new Date()
+});
+      status.textContent = '✅ Event saved successfully.';
+      document.getElementById('eventTitle').value = '';
+      document.getElementById('eventDate').value = '';
+      document.getElementById('eventExpiry').value = '';
+      document.getElementById('eventDescription').value = '';
+    } catch (e) {
+      console.error(e);
+      status.textContent = '❌ Failed to save event.';
+    }
+  });
+</script>
+</body>
+</html>
+

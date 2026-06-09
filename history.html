@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>History</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4f8;
+      color: #003366;
+    }
+
+    /* MAIN CONTAINER */
+    main {
+  display: block !important;
+  max-width: 1100px;
+  margin: 40px auto 40px auto; /* IMPORTANT: pushes below fixed header */
+  padding: 2px;
+}
+
+    /* CONTENT CARD */
+    .content {
+  display: block;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  width: 100%;
+}
+
+    h1 {
+      color: #004080;
+      font-size: 2.3rem;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      color: #004080;
+      margin-top: 25px;
+    }
+
+    p {
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    /* IMAGE */
+    .content img {
+      width: 100%;
+      border-radius: 10px;
+      margin: 20px 0;
+      object-fit: cover;
+    }
+
+    /* HERO HEADER STYLE */
+    .page-title {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      main {
+        margin: 20px 10px;
+        padding: 10px;
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+
+    .banner {
+  height: 300px;
+  width:100%;
+  background: linear-gradient(rgba(0,64,128,0.7), rgba(0,64,128,0.7)),
+              url("images/construction.jpeg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  border-radius: 12px;
+  margin-bottom: 30px;
+
+}
+
+.banner-content h1 {
+  font-size: 2.8rem;
+  margin: 0;
+}
+
+.banner-content p {
+  font-size: 1.2rem;
+}
+
+@media (max-width:768px){
+
+  main{
+    width:100%;
+    max-width:100%;
+    margin:0;
+    padding:0;
+  }
+
+  .content{
+    width:100%;
+    box-sizing:border-box;
+    padding:15px;
+    border-radius:0;
+  }
+
+  .banner{
+    height:220px;
+    border-radius:0;
+    margin-bottom:15px;
+  }
+
+  .banner-content h1{
+    font-size:1.8rem;
+  }
+
+  .banner-content p{
+    font-size:1rem;
+  }
+
+  h1{
+    font-size:1.7rem;
+  }
+
+  h2{
+    font-size:1.3rem;
+  }
+
+  p,
+  li{
+    font-size:0.95rem;
+    line-height:1.7;
+  }
+}
+
+
+.history-stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:20px;
+  margin:40px 0;
+}
+
+.stat-box{
+  background:linear-gradient(135deg,#003366,#0059b3);
+  color:white;
+  padding:30px;
+  border-radius:15px;
+  text-align:center;
+}
+
+.stat-box h3{
+  font-size:2rem;
+  margin:0;
+  color:white;
+}
+
+.stat-box p{
+  color:white;
+  margin-top:10px;
+}
+
+.stats-grid,
+.mv-grid,
+.achievement-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+  margin:30px 0;
+}
+
+.stat-card,
+.mv-card,
+.achievement-card{
+  background:white;
+  padding:25px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  transition:.3s;
+}
+
+.stat-card:hover,
+.mv-card:hover,
+.achievement-card:hover{
+  transform:translateY(-8px);
+}
+
+.stat-card i{
+  font-size:2.5rem;
+  color:#004080;
+  margin-bottom:15px;
+}
+
+.history-card,
+.future-card{
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  margin:25px 0;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.wave-divider svg{
+  display:block;
+  width:100%;
+  height:80px;
+}
+
+.timeline-section{
+  margin:40px 0;
+}
+
+.section-title{
+  text-align:center;
+  margin-bottom:30px;
+  color:#004080;
+}
+
+.timeline{
+  border-left:4px solid #004080;
+  padding-left:25px;
+}
+
+.timeline-item{
+  background:white;
+  padding:20px;
+  margin-bottom:20px;
+  border-radius:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,.08);
+  position:relative;
+}
+
+.timeline-item::before{
+  content:"";
+  position:absolute;
+  width:16px;
+  height:16px;
+  background:#004080;
+  border-radius:50%;
+  left:-34px;
+  top:25px;
+}
+
+.quote-box{
+  background:linear-gradient(135deg,#003366,#0059b3);
+  color:white;
+  text-align:center;
+  padding:50px 30px;
+  border-radius:25px;
+  margin:40px 0;
+}
+
+.quote-box h2,
+.quote-box p{
+  color:white;
+}
+
+@media(max-width:768px){
+
+  .timeline{
+    padding-left:18px;
+  }
+
+  .timeline-item::before{
+    left:-27px;
+  }
+
+  .quote-box{
+    padding:35px 20px;
+  }
+}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+        <div class="time">
+
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
+          <b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b>
+        </div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Bishop Angelo Tarantino Memorial Secondary School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+              <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
+      <div class="right-section">
+  <div class="socials-icons img">
+    <!-- Twitter -->
+    <a href="https://twitter.com/yourprofile" target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/atuma743/" target="_blank">
+  <i class="fab fa-instagram"></i>
+</a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+  <i class="fab fa-facebook-f"></i>
+</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/256779905605" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+        <button id="registerBtn">register</button>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="script.js">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="contact.html">Contact</a>
+<div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+<div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!-- Brightness controls -->
+ <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+
+ <!-- ✅ Firebase Login Popup -->
+  <div id="login-block">
+    <h3>Login to Continue</h3>
+    <input type="email" id="email" placeholder="Enter email" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button id="loginBtn">Login</button>
+    <p id="loginMessage"></p>
+  </div>
+
+  <!-- ✅ Google Form -->
+  <div id="form-block">
+    <iframe 
+      src=" https://forms.gle/PJU1jL4Lo9ZwpBd87" 
+      width="350" 
+      height="700" 
+      frameborder="0" 
+      marginheight="0" 
+      marginwidth="0">
+      Loading…
+    </iframe>
+  </div>
+  
+
+  <section class="banner">
+  <div class="banner-content">
+    <h1>School History</h1>
+    <p>Bishop Angelo Tarantino Memorial Secondary School</p>
+  </div>
+</section>
+
+<main>
+<div class="content">
+
+<div class="page-title">
+  <h1>Our History</h1>
+  <p>Bishop Angelo Tarantino Memorial Secondary School</p>
+</div>
+
+<!-- HISTORY INTRO -->
+<div class="history-card">
+  <h2>📖 Our Foundation</h2>
+  <p>
+    Bishop Angelo Tarantino Memorial Secondary School was founded with a mission
+    of providing quality education, moral formation, leadership development,
+    and service to the community. The school was established to empower young
+    people with knowledge, discipline, and Christian values.
+  </p>
+</div>
+
+<!-- STATS CARDS -->
+<div class="stats-grid">
+
+  <div class="stat-card">
+    <i class="fas fa-school"></i>
+    <h3>Growing Campus</h3>
+    <p>Modern classrooms and learning facilities.</p>
+  </div>
+
+  <div class="stat-card">
+    <i class="fas fa-user-graduate"></i>
+    <h3>Student Success</h3>
+    <p>Excellent academic and moral formation.</p>
+  </div>
+
+  <div class="stat-card">
+    <i class="fas fa-award"></i>
+    <h3>Achievements</h3>
+    <p>Strong performance in academics and co-curricular activities.</p>
+  </div>
+
+</div>
+
+<!-- WAVE -->
+<div class="wave-divider">
+<svg viewBox="0 0 1440 120">
+<path fill="#004080"
+d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L0,120Z">
+</path>
+</svg>
+</div>
+
+<!-- TIMELINE -->
+<section class="timeline-section">
+
+<h2 class="section-title">School Journey</h2>
+
+<div class="timeline">
+
+<div class="timeline-item">
+<h3>The Beginning</h3>
+<p>
+The school started with a vision of providing affordable and quality education
+to students from different communities.
+</p>
+</div>
+
+<div class="timeline-item">
+<h3>Expansion</h3>
+<p>
+New classrooms, offices, laboratories and learning resources were added
+to accommodate growing enrolment.
+</p>
+</div>
+
+<div class="timeline-item">
+<h3>Academic Excellence</h3>
+<p>
+The school continuously improved its academic performance and discipline
+standards.
+</p>
+</div>
+
+<div class="timeline-item">
+<h3>Today</h3>
+<p>
+The school stands as a center of academic excellence, character formation,
+leadership and innovation.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- MISSION VISION -->
+<div class="mv-grid">
+
+<div class="mv-card">
+<h2>🎯 Our Mission</h2>
+<p>
+To provide quality education that nurtures academic excellence,
+discipline, leadership and moral values.
+</p>
+</div>
+
+<div class="mv-card">
+<h2>👁 Our Vision</h2>
+<p>
+To be a leading institution producing responsible, skilled and
+God-fearing citizens.
+</p>
+</div>
+
+</div>
+
+<!-- ACHIEVEMENTS -->
+<section class="achievement-section">
+
+<h2 class="section-title">Major Milestones</h2>
+
+<div class="achievement-grid">
+
+<div class="achievement-card">
+<h3>🏫 O-Level Program</h3>
+<p>Successful establishment and growth of O-Level studies.</p>
+</div>
+
+<div class="achievement-card">
+<h3>🎓 A-Level Program</h3>
+<p>Expansion into advanced secondary education.</p>
+</div>
+
+<div class="achievement-card">
+<h3>🔬 Science Development</h3>
+<p>Improved science laboratories and practical learning.</p>
+</div>
+
+<div class="achievement-card">
+<h3>🤝 Community Service</h3>
+<p>Participation in outreach and social responsibility programs.</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- QUOTE -->
+<div class="quote-box">
+<h2>“Education is the foundation upon which we build our future.”</h2>
+<p>Bishop Angelo Tarantino Memorial Secondary School</p>
+</div>
+
+<!-- FUTURE -->
+<div class="future-card">
+<h2>🚀 Looking Ahead</h2>
+<p>
+The future of our school is focused on innovation, technology,
+academic excellence, infrastructure development and preparing
+students to become leaders in Uganda and beyond.
+</p>
+</div>
+
+</div>
+
+<div class="history-stats">
+  <div class="stat-box">
+    <h3>500+</h3>
+    <p>Students</p>
+  </div>
+
+  <div class="stat-box">
+    <h3>30+</h3>
+    <p>Teaching Staff</p>
+  </div>
+
+  <div class="stat-box">
+    <h3>10+</h3>
+    <p>Years of Service</p>
+  </div>
+
+  <div class="stat-box">
+    <h3>100%</h3>
+    <p>Commitment</p>
+  </div>
+</div>
+</main>
+
+
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+     
+        <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+        
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+           
+      <marquee>
+  <p>
+    &copy; <span id="year"></span> Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>
+    Designed by:<br>
+    ATUMA GILBERT <br>
+    www.gilbertatuma700@gmail.com<br>
+    0779905605
+  </p>
+</marquee>
+
+<script src="year.js"></script>
+
+    </div>
+  </footer>
+<script type="module" src="termlyregister.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

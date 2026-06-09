@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calendar-event</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+   /* Base layout */
+main {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 40px;
+  width: 94%;
+  min-height: 1200px;
+  max-width: 1600px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  color: #003366;
+  font-family: 'Poppins', sans-serif;
+  flex-wrap: wrap;
+}
+
+main > form,
+main > .text-content {
+  min-width: 280px;
+  flex: 1 1 350px; /* flexible for small screens */
+}
+
+main img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+main iframe {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: none;
+  margin-bottom: 20px;
+}
+
+/* Small screens */
+@media (max-width: 767px) {
+  main {
+    flex-direction: column;
+    align-items: center; /* center content */
+    padding: 20px;
+    gap: 20px;
+  }
+
+  main > form,
+  main > .text-content {
+    flex: 1 1 100%; /* full width on mobile */
+  }
+
+  main img {
+    max-width: 100%;
+    padding-right: 0;
+  }
+
+  main iframe {
+    width: 70%;
+    height: auto; /* keeps aspect ratio flexible */
+  }
+}
+
+.responsive-iframe {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.responsive-iframe iframe {
+  width: 100%;
+  min-height: 1200px; /* adjust based on form length */
+  border: 0;
+}
+
+.calendar {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7,1fr);
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.day {
+  border: 1px solid #ddd;
+  min-height: 70px;
+  padding: 5px;
+}
+
+.event-day {
+  background: #4d749b;
+  color: white;
+  border-radius: 5px;
+}
+    
+.event-card{
+  background:#fff;
+  border-left:5px solid #4d749b;
+  padding:15px;
+  margin-bottom:15px;
+  border-radius:8px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+.event-card h3{
+  margin-top:0;
+  color:#4d749b;
+}
+
+/* HERO */
+
+.news-hero{
+  background:
+  linear-gradient(
+    rgba(0,64,128,.75),
+    rgba(0,64,128,.75)
+  ),
+  url('images/construction.jpeg');
+
+  background-size:cover;
+  background-position:center;
+  color:white;
+  text-align:center;
+  padding:90px 20px;
+}
+
+.news-hero h1{
+  font-size:3rem;
+  margin-bottom:10px;
+  color:white;
+}
+
+.news-hero p{
+  color:white;
+  max-width:700px;
+  margin:auto;
+  font-size:1.1rem;
+}
+
+/* PAGE LAYOUT */
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+       
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
+        <div class="time"><b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b></div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Noble Mayombo Memorial seed School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+              <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
+      <div class="right-section">
+  <div class="socials-icons img">
+    <!-- Twitter -->
+    <a href="https://twitter.com/yourprofile" target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/atuma743/" target="_blank">
+  <i class="fab fa-instagram"></i>
+</a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+  <i class="fab fa-facebook-f"></i>
+</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/256779905605" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+        <button id="registerBtn">register</button>
+      </div>
+    </div>
+  </header>
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="contact.html">Contact</a>
+<div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  <!--<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+    <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+
+ <!-- ✅ Firebase Login Popup -->
+  <div id="login-block">
+    <h3>Login to Continue</h3>
+    <input type="email" id="email" placeholder="Enter email" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button id="loginBtn">Login</button>
+    <p id="loginMessage"></p>
+  </div>
+
+  <!-- ✅ Google Form -->
+  <div id="form-block">
+    <iframe 
+      src=" https://forms.gle/PJU1jL4Lo9ZwpBd87" 
+      width="350" 
+      height="700" 
+      frameborder="0" 
+      marginheight="0" 
+      marginwidth="0">
+      Loading…
+    </iframe>
+  </div>
+
+          <!-- HERO SECTION -->
+<section class="news-hero">
+  <h1>Calendar & Events</h1>
+  <p>
+    Stay informed about Upcoming school activities, and important events.
+  </p>
+</section>
+
+  <main>
+
+  
+      <div id="calendar"></div>
+
+<div id="eventDetails" style="
+  margin-top:20px;
+  padding:20px;
+  background:white;
+  border-radius:10px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+">
+
+
+
+  <h3>For More Information</h3>
+
+  <p>
+    <strong>Email</strong><br>
+    bishopangelotarantino@gmail.ac.ug
+  </p>
+
+  <p>
+    <strong>Phone</strong><br>
+    +256 779 905 605
+  </p>
+
+  <p>
+    <strong>Address</strong><br>
+    P.O Box 112, Arua, Uganda
+  </p>
+
+  <p>
+    <strong>Work Hours</strong><br>
+    Monday - Friday: 8:00 AM - 6:00 PM<br>
+    Saturday: 9:00 AM - 4:00 PM<br>
+    Sunday: Closed
+  </p>
+
+  <p>
+    <strong>Follow Us</strong><br>
+    Facebook<br>
+    Instagram<br>
+    Twitter<br>
+    WhatsApp
+  </p>
+
+</div>
+  
+
+</div>
+
+<div class="text-content" style="flex: 2; order: 2;">
+  <h1>School Calendar & Events</h1>
+
+  <!-- Firebase events will appear here -->
+  <div id="eventsContainer"></div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+           
+      <marquee>
+  <p>
+    &copy; <span id="year"></span> Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>
+    Designed by:<br>
+    ATUMA GILBERT <br>
+    www.gilbertatuma700@gmail.com<br>
+    0779905605
+  </p>
+</marquee>
+
+<script src="year.js"></script>
+
+    </div>
+  </footer>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDpRkkp6fdlmVQM5xnLsRkRPS5awu0YSmc",
+  authDomain: "website-database-d75ea.firebaseapp.com",
+  projectId: "website-database-d75ea",
+  storageBucket: "website-database-d75ea.firebasestorage.app",
+  messagingSenderId: "61842953615",
+  appId: "1:61842953615:web:e255cb2ca96184bb0767fa"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let events = [];
+
+async function getActiveEvents() {
+  const snapshot = await getDocs(collection(db, "events"));
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  events = [];
+
+  snapshot.forEach(doc => {
+    const event = doc.data();
+
+    // Skip old events
+    if (event.expiryDate) {
+      const expiry = new Date(event.expiryDate);
+
+      if (expiry < today) {
+        return;
+      }
+    }
+
+    events.push(event);
+  });
+}
+
+async function loadCalendar() {
+
+  await getActiveEvents();
+
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const totalDays = new Date(year, month + 1, 0).getDate();
+
+  let html = `
+    <div class="calendar">
+      <h2>
+        ${now.toLocaleString("default", { month: "long" })}
+        ${year}
+      </h2>
+
+      <div class="calendar-grid">
+        <div><b>Sun</b></div>
+        <div><b>Mon</b></div>
+        <div><b>Tue</b></div>
+        <div><b>Wed</b></div>
+        <div><b>Thu</b></div>
+        <div><b>Fri</b></div>
+        <div><b>Sat</b></div>
+  `;
+
+  for (let i = 0; i < firstDay; i++) {
+    html += "<div></div>";
+  }
+
+  for (let day = 1; day <= totalDays; day++) {
+
+    const dateString =
+      `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+    const event = events.find(e => e.date === dateString);
+
+    html += `
+      <div
+        class="day ${event ? 'event-day' : ''}"
+        ${event ? `
+          onclick="showEvent(
+            '${event.title}',
+            '${event.date}',
+            \`${event.description}\`
+          )"
+        ` : ''}
+      >
+        <strong>${day}</strong>
+        ${event ? `<br>${event.title}` : ''}
+      </div>
+    `;
+  }
+
+  html += `
+      </div>
+    </div>
+  `;
+
+  document.getElementById("calendar").innerHTML = html;
+}
+
+async function loadEvents() {
+
+  await getActiveEvents();
+
+  const container = document.getElementById("eventsContainer");
+
+  container.innerHTML = "<h2>Upcoming Events</h2>";
+
+  if (events.length === 0) {
+    container.innerHTML += "<p>No upcoming events available.</p>";
+    return;
+  }
+
+  events.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  events.forEach(event => {
+
+    container.innerHTML += `
+      <div class="event-card">
+        <h3>${event.title}</h3>
+        <p><strong>Date:</strong> ${event.date}</p>
+        <p>${event.description}</p>
+      </div>
+    `;
+  });
+}
+
+loadCalendar();
+loadEvents();
+</script>
+
+<script type="module" src="termlyregister.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

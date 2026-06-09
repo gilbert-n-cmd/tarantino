@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Messages - Admin</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body{font-family:'Poppins',sans-serif; background:#f9f9f9; margin:0;}
+    main{max-width:1100px; margin:30px auto; padding:20px; background:#fff; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,.08);}
+    h1{color:#004080; margin-top:0;}
+    table{width:100%; border-collapse:collapse;}
+    th,td{padding:10px; border-bottom:1px solid #eee; text-align:left;}
+    th{background:#f4f7fb;}
+    .back{background:transparent; color:#4d749b; border:1px solid #4d749b;}
+  </style>
+</head>
+<body>
+<header>
+  <div class="top-bar">
+    <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+    <div class="right-section">
+      <a class="back" href="admin.html" style="text-decoration:none; padding:8px 12px; border-radius:8px;">← Back</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <h1>View Messages</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Message</th>
+      </tr>
+    </thead>
+    <tbody id="messagesTable"></tbody>
+  </table>
+</main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDpRkkp6fdlmVQM5xnLsRkRPS5awu0YSmc",
+    authDomain: "website-database-d75ea.firebaseapp.com",
+    databaseURL: "https://website-database-d75ea-default-rtdb.firebaseio.com",
+    projectId: "website-database-d75ea",
+    storageBucket: "website-database-d75ea.firebasestorage.app",
+    messagingSenderId: "61842953615",
+    appId: "1:61842953615:web:e255cb2ca96184bb0767fa"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  async function loadMessages(){
+    const table = document.getElementById('messagesTable');
+    table.innerHTML = '';
+    const snapshot = await getDocs(collection(db,'messages'));
+    snapshot.forEach(doc => {
+      const d = doc.data();
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${d.name ?? ''}</td>
+        <td>${d.email ?? ''}</td>
+        <td>${d.message ?? ''}</td>
+      `;
+      table.appendChild(tr);
+    });
+  }
+
+  loadMessages();
+</script>
+</body>
+</html>
+

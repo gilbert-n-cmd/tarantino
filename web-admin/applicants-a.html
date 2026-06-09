@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A-Level Applicants - Admin</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body{font-family:'Poppins',sans-serif; background:#f9f9f9; margin:0;}
+    main{max-width:1100px; margin:30px auto; padding:20px; background:#fff; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,.08);}
+    h1{color:#004080; margin-top:0;}
+    table{width:100%; border-collapse:collapse;}
+    th,td{padding:10px; border-bottom:1px solid #eee; text-align:left;}
+    th{background:#f4f7fb;}
+    .back{background:transparent; color:#4d749b; border:1px solid #4d749b;}
+  </style>
+</head>
+<body>
+<header>
+  <div class="top-bar">
+    <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+    <div class="right-section">
+      <a class="back" href="admin.html" style="text-decoration:none; padding:8px 12px; border-radius:8px;">← Back</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <h1>A-Level Applicants</h1>
+  <table>
+    <thead>
+      <tr>
+  <th>Name</th>
+  <th>Phone</th>
+  <th>Class/Program</th>
+  <th>Actions</th>
+</tr>
+    </thead>
+    <tbody id="applicantsTable"></tbody>
+  </table>
+</main>
+<div id="detailsModal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.6);
+justify-content:center;
+align-items:center;
+z-index:1000;
+">
+  <div style="
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  width:90%;
+  max-width:700px;
+  max-height:80vh;
+  overflow:auto;
+  ">
+    <h2>Applicant Details</h2>
+
+    <div id="detailsContent"></div>
+
+    <button onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDpRkkp6fdlmVQM5xnLsRkRPS5awu0YSmc",
+    authDomain: "website-database-d75ea.firebaseapp.com",
+    databaseURL: "https://website-database-d75ea-default-rtdb.firebaseio.com",
+    projectId: "website-database-d75ea",
+    storageBucket: "website-database-d75ea.firebasestorage.app",
+    messagingSenderId: "61842953615",
+    appId: "1:61842953615:web:e255cb2ca96184bb0767fa"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  async function loadApplicants(){
+    const table = document.getElementById('applicantsTable');
+    table.innerHTML = '';
+
+    // Filter for A-Level
+const q = query(collection(db,'a-level-applicants'));
+    const snapshot = await getDocs(q);
+
+    snapshot.forEach(doc => {
+      const d = doc.data();
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+  <td>${d.fullName ?? ''}</td>
+  <td>${d.phone ?? ''}</td>
+  <td>${d.degreeLevel ?? ''}</td>
+  <td>
+    <button class="viewBtn">View Details</button>
+  </td>
+`;
+tr.querySelector(".viewBtn").addEventListener("click", () => {
+  showDetails(d);
+});
+      table.appendChild(tr);
+    });
+  }
+
+  loadApplicants();
+  window.showDetails = function(data){
+
+  document.getElementById("detailsContent").innerHTML = `
+    <p><strong>Full Name:</strong> ${data.fullName || ''}</p>
+    <p><strong>Email:</strong> ${data.email || ''}</p>
+    <p><strong>Phone:</strong> ${data.phone || ''}</p>
+    <p><strong>Date of Birth:</strong> ${data.dob || ''}</p>
+    <p><strong>Gender:</strong> ${data.gender || ''}</p>
+    <p><strong>Nationality:</strong> ${data.nationality || ''}</p>
+
+    <hr>
+
+    <p><strong>Country:</strong> ${data.country || ''}</p>
+    <p><strong>District:</strong> ${data.district || ''}</p>
+    <p><strong>Subcounty:</strong> ${data.subcounty || ''}</p>
+    <p><strong>Parish:</strong> ${data.parish || ''}</p>
+    <p><strong>Village:</strong> ${data.village || ''}</p>
+
+    <hr>
+
+    <p><strong>P7 Results:</strong> ${data.resultsP7 || ''}</p>
+    <p><strong>S4 Results:</strong> ${data.resultsS4 || ''}</p>
+
+    <p><strong>Class Applied For:</strong> ${data.degreeLevel || ''}</p>
+
+    <hr>
+
+    <p><strong>Guardian:</strong> ${data.guardianName || ''}</p>
+    <p><strong>Guardian Phone:</strong> ${data.guardianPhone || ''}</p>
+    <p><strong>Guardian Email:</strong> ${data.guardianEmail || ''}</p>
+
+    <hr>
+
+    <p><strong>Statement:</strong></p>
+    <p>${data.statement || 'None'}</p>
+  `;
+
+  document.getElementById("detailsModal").style.display = "flex";
+}
+
+window.closeModal = function(){
+  document.getElementById("detailsModal").style.display = "none";
+}
+</script>
+</body>
+</html>
+

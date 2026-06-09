@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> About Bishop Angelo Tarantino</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+main{
+    width: 100%;
+    max-width: 100%;
+    margin: auto;
+    padding: 0 0;
+    background: #f8fafc;
+}
+
+/* Section spacing */
+main section{
+    margin-bottom: 100px;
+}
+
+/* Modern section title */
+.section-title{
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-title h2{
+    font-size: 2.8rem;
+    color: #0f172a;
+    margin-bottom: 15px;
+    font-weight: 800;
+}
+
+.section-title p{
+    color: #64748b;
+    max-width: 700px;
+    margin: auto;
+    font-size: 1.1rem;
+}
+
+/* Modern cards */
+.main-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+    gap: 30px;
+}
+
+.main-card{
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    /*box-shadow: 0 10px 30px rgba(0,0,0,.06);*/
+    transition: .4s;
+}
+
+.main-card:hover{
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0,0,0,.12);
+}
+
+.main-card img{
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.main-card-content{
+    padding: 25px;
+}
+
+.main-card h3{
+    color: #003366;
+    margin-bottom: 15px;
+}
+
+.main-card p{
+    color: #64748b;
+    line-height: 1.8;
+}
+  /* HERO SECTION */
+.bishop-hero{
+  min-height: 85vh;
+  background:
+    linear-gradient(
+      rgba(0,40,85,0.75),
+      rgba(0,40,85,0.85)
+    ),
+    url('images/angelo1.jpg') center/cover;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:white;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.hero-content{
+  max-width:800px;
+  padding:40px;
+}
+
+.hero-tag{
+  display:inline-block;
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(10px);
+  padding:10px 20px;
+  border-radius:50px;
+  margin-bottom:20px;
+  font-size:14px;
+  letter-spacing:1px;
+}
+
+.hero-content h1{
+  font-size:4rem;
+  margin-bottom:20px;
+  line-height:1.1;
+}
+
+.hero-content p{
+  font-size:1.2rem;
+  line-height:1.8;
+  opacity:0.95;
+}
+
+.hero-buttons{
+  margin-top:30px;
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  flex-wrap:wrap;
+}
+
+.btn-primary,
+.btn-secondary{
+  padding:14px 28px;
+  border-radius:50px;
+  text-decoration:none;
+  font-weight:600;
+  transition:.3s;
+}
+
+.btn-primary{
+  background:white;
+  color:#003366;
+}
+
+.btn-primary:hover{
+  transform:translateY(-4px);
+}
+
+.btn-secondary{
+  border:2px solid white;
+  color:white;
+}
+
+.btn-secondary:hover{
+  background:white;
+  color:#003366;
+}
+
+/* INTRO SECTION */
+.intro-section{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:40px;
+  padding:80px 5%;
+  background:white;
+}
+
+.intro-text h2{
+  color:#003366;
+  font-size:2.5rem;
+  margin-bottom:20px;
+}
+
+.intro-text p{
+  line-height:1.9;
+  color:#555;
+}
+
+.intro-card{
+  background:white;
+  border-radius:20px;
+  padding:30px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.08);
+}
+
+.intro-card h3{
+  color:#003366;
+  margin-bottom:25px;
+}
+
+.fact{
+  display:flex;
+  justify-content:space-between;
+  padding:15px 0;
+  border-bottom:1px solid #eee;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+  .hero-content h1{
+    font-size:2.5rem;
+  }
+
+  .hero-content p{
+    font-size:1rem;
+  }
+
+  .intro-section{
+    grid-template-columns:1fr;
+  }
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:25px;
+    margin-top:-60px;
+    padding:0 8%;
+    position:relative;
+    z-index:5;
+}
+
+.stat{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,.08);
+}
+
+.stat h2{
+    color:#003366;
+    font-size:2.5rem;
+}
+
+.quote-section{
+    background:#00274d;
+    color:white;
+    text-align:center;
+    padding:120px 10%;
+}
+
+.quote-section blockquote{
+    font-size:2rem;
+    max-width:900px;
+    margin:auto;
+    line-height:1.6;
+    font-style:italic;
+}
+
+/* ===== MODERN TIMELINE SECTION ===== */
+.timeline {
+    position: relative;
+    max-width: 1000px;
+    margin: 80px auto;
+    padding: 80px 20px;
+
+    background:
+      linear-gradient(rgba(81, 92, 194, 0.95),
+      rgba(34, 40, 68, 0.95)),
+      url("images/angelo1.jpg") center/cover no-repeat;
+
+    /*background: linear-gradient(135deg,#f8fbff,#eef5ff);*/
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+    
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 120px;
+    transform: translateX(-50%);
+    width: 4px;
+    height: calc(100% - 150px);
+    background: linear-gradient(
+        to bottom,
+        #004080,
+        #4da6ff,
+        #ffd700
+    );
+    border-radius: 20px;
+}
+
+.timeline h2 {
+    text-align: center;
+    font-size: 3rem;
+    color: #003366;
+    margin-bottom: 70px;
+    position: relative;
+}
+
+.timeline h2::after {
+    content: "";
+    width: 120px;
+    height: 4px;
+    background: #ffd700;
+    display: block;
+    margin: 15px auto;
+    border-radius: 20px;
+}
+
+/* Timeline Cards */
+.timeline-item {
+    position: relative;
+    width: 45%;
+    padding: 25px;
+    margin-bottom: 50px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.4s ease;
+}
+
+.timeline-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,64,128,0.2);
+}
+
+/* Left Side */
+.timeline-item:nth-child(even) {
+    left: 0;
+}
+
+/* Right Side */
+.timeline-item:nth-child(odd) {
+    left: 55%;
+}
+
+/* Circle Marker */
+.timeline-item::before {
+    content: "";
+    position: absolute;
+    top: 30px;
+    width: 22px;
+    height: 22px;
+    background: #ffd700;
+    border: 4px solid #004080;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.timeline-item:nth-child(even)::before {
+    right: -58px;
+}
+
+.timeline-item:nth-child(odd)::before {
+    left: -58px;
+}
+
+/* Date / Stage */
+.timeline-item span {
+    display: inline-block;
+    background: linear-gradient(135deg,#004080,#0066cc);
+    color: white;
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+/* Description */
+.timeline-item p {
+    margin: 0;
+    color: #444;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+/* Decorative Glow */
+.timeline-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    padding: 1px;
+    background: linear-gradient(
+        135deg,
+        rgba(0,64,128,0.3),
+        rgba(255,215,0,0.3)
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+}
+
+/* Mobile Design */
+@media (max-width: 768px) {
+
+    .timeline::before {
+        left: 25px;
+    }
+
+    .timeline-item {
+        width: calc(100% - 60px);
+        left: 50px !important;
+        margin-bottom: 30px;
+    }
+
+    .timeline-item::before {
+        left: -38px !important;
+    }
+
+    .timeline h2 {
+        font-size: 2rem;
+    }
+}
+
+/* ====================================
+   MOBILE RESPONSIVE FIXES
+==================================== */
+@media screen and (max-width:768px){
+
+  main{
+    overflow-x:hidden;
+  }
+
+  /* HERO */
+  .bishop-hero{
+    min-height:70vh;
+    border-radius:0;
+    padding:20px;
+  }
+
+  .hero-content{
+    padding:20px;
+  }
+
+  .hero-content h1{
+    font-size:2rem;
+    line-height:1.2;
+  }
+
+  .hero-content p{
+    font-size:0.95rem;
+    line-height:1.7;
+  }
+
+  .hero-buttons{
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .btn-primary,
+  .btn-secondary{
+    width:100%;
+    max-width:250px;
+    text-align:center;
+  }
+
+  /* INTRO SECTION */
+  .intro-section{
+    grid-template-columns:1fr;
+    gap:20px;
+    padding:40px 20px;
+  }
+
+  .intro-text h2{
+    font-size:2rem;
+  }
+
+  .intro-card{
+    padding:20px;
+  }
+
+  .fact{
+    flex-direction:column;
+    gap:5px;
+  }
+
+  /* TIMELINE */
+  .timeline{
+    padding:50px 15px;
+    margin:40px 10px;
+  }
+
+  .timeline h2{
+    font-size:1.8rem;
+    margin-bottom:40px;
+    color:white;
+  }
+
+  .timeline::before{
+    left:20px;
+    top:100px;
+  }
+
+  .timeline-item{
+    width:calc(100% - 50px);
+    left:35px !important;
+    padding:18px;
+    margin-bottom:25px;
+  }
+
+  .timeline-item::before{
+    left:-28px !important;
+    width:18px;
+    height:18px;
+  }
+
+  .timeline-item span{
+    font-size:0.8rem;
+    padding:6px 14px;
+  }
+
+  .timeline-item p{
+    font-size:0.9rem;
+  }
+
+  /* STATS */
+  .stats{
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin-top:20px;
+    padding:0 15px;
+  }
+
+  .stat{
+    padding:20px;
+  }
+
+  .stat h2{
+    font-size:1.5rem;
+  }
+
+  .stat p{
+    font-size:0.9rem;
+  }
+
+  /* QUOTE */
+  .quote-section{
+    padding:60px 20px;
+  }
+
+  .quote-section blockquote{
+    font-size:1.2rem;
+    line-height:1.7;
+  }
+
+}
+
+@media screen and (max-width:768px){
+
+  .timeline{
+    width:100%;
+    margin:40px 0;
+    padding:50px 15px;
+    box-sizing:border-box;
+  }
+
+  .timeline::before{
+    left:20px;
+    top:100px;
+  }
+
+  .timeline-item{
+    width:100%;
+    left:0 !important;
+    margin-left:35px;
+    margin-bottom:25px;
+    box-sizing:border-box;
+  }
+
+  .timeline-item::before{
+    left:-26px !important;
+    width:18px;
+    height:18px;
+  }
+
+}
+    </style>
+</head>
+<body>
+
+  <header>
+    <div class="top-bar">
+        <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+
+        <div id="chat-container">
+          
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
+            <div class="time"><b>Current Time: <span id="liveTime"></span></b>
+                <b>Current Date: <span id="liveDate"></span></b></div>
+            <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+       <div id="chat-box">
+        <!---<div class="chat-header">
+          <span>Live Chat</span>
+          <button onclick="toggleChat()">✖</button>
+        </div>--->
+        <!---<div class="chat-body">
+          <p>Welcome to Noble Mayombo Memorial seed School! How can we help you?</p>
+          <input type="text" placeholder="Type your message..." /><br /><br />
+          <button onclick="toggleChat()">send</button>
+        </div>--->
+      </div>
+    </div>
+                <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
+        <div class="right-section">
+  <div class="socials-icons img">
+    <!-- Twitter -->
+    <a href="https://twitter.com/yourprofile" target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/atuma743/" target="_blank">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+  <i class="fab fa-facebook-f"></i>
+</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/256779905605" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
+
+<button id="registerBtn" onsubmit="return false;">Register</button>
+    </div>
+    </div>
+  </header>
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="contact.html">Contact</a>
+    <div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+  <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!--<div class="brightness-controls">
+    <button onclick="setBrightness('low')">Low</button>
+    <button onclick="setBrightness('medium')">Medium</button>
+    <button onclick="setBrightness('high')">High</button>
+  </div>-->
+  
+  <!-- ✅ Firebase Login Popup -->
+  <div id="login-block">
+    <h3>Login to Continue</h3>
+    <input type="email" id="email" placeholder="Enter email" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button id="loginBtn">Login</button>
+    <p id="loginMessage"></p>
+  </div>
+
+  <!-- ✅ Google Form -->
+  <div id="form-block">
+    <iframe 
+      src=" https://forms.gle/PJU1jL4Lo9ZwpBd87" 
+      width="350" 
+      height="700" 
+      frameborder="0" 
+      marginheight="0" 
+      marginwidth="0">
+      Loading…
+    </iframe>
+  </div>
+  
+
+
+<main>
+
+  <!-- HERO SECTION -->
+  <section class="bishop-hero">
+    <div class="hero-overlay">
+      <div class="hero-content">
+        <span class="hero-tag">Faith • Service • Legacy</span>
+
+        <h1>Bishop Angelo Tarantino</h1>
+
+        <p>
+          A visionary shepherd whose life was dedicated to faith,
+          education, community development, and spiritual leadership.
+          His legacy continues to inspire generations across Uganda.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#biography" class="btn-primary">Explore Legacy</a>
+          <a href="#timeline" class="btn-secondary">View History</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTRODUCTION -->
+  <section class="intro-section" id="biography">
+    <div class="intro-text">
+      <h2>A Life of Service</h2>
+
+      <p>
+        Bishop Angelo Tarantino devoted his life to spreading faith,
+        empowering communities, and strengthening education.
+        His leadership transformed countless lives and left a lasting
+        impact throughout the region.
+      </p>
+
+      <p>
+        Through compassion, wisdom, and dedication, he became a symbol
+        of hope and inspiration for many generations.
+      </p>
+    </div>
+
+    <div class="intro-card">
+      <h3>Quick Facts</h3>
+
+      <div class="fact">
+        <strong>Born</strong>
+        <span>1908</span>
+      </div>
+
+      <div class="fact">
+        <strong>Passed Away</strong>
+        <span>1990</span>
+      </div>
+
+      <div class="fact">
+        <strong>Mission</strong>
+        <span>Faith, Education & Community Development</span>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="timeline">
+
+<h2>Journey Through Time</h2>
+
+<div class="timeline-item">
+    <span>1908</span>
+    <p>Born</p>
+</div>
+
+<div class="timeline-item">
+    <span>Priesthood</span>
+    <p>Dedicated life to ministry.</p>
+</div>
+
+<div class="timeline-item">
+    <span>Episcopal Service</span>
+    <p>Leadership and community development.</p>
+</div>
+
+<div class="timeline-item">
+    <span>1990</span>
+    <p>Entered eternal rest.</p>
+</div>
+
+</section>
+
+
+  <section class="stats">
+    <div class="stat">
+        <h2>82</h2>
+        <p>Years of Life</p>
+    </div>
+
+    <div class="stat">
+        <h2>Thousands</h2>
+        <p>Lives Inspired</p>
+    </div>
+
+    <div class="stat">
+        <h2>Faith</h2>
+        <p>Spiritual Leadership</p>
+    </div>
+
+    <div class="stat">
+        <h2>Legacy</h2>
+        <p>Living On Today</p>
+    </div>
+</section>
+
+<section class="quote-section">
+    <blockquote>
+        "A life devoted to serving God and humanity leaves a legacy that never fades."
+    </blockquote>
+</section>
+
+
+
+</main>
+
+
+  </script>
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+           
+      <marquee>
+  <p>
+    &copy; <span id="year"></span> Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>
+    Designed by:<br>
+    ATUMA GILBERT <br>
+    www.gilbertatuma700@gmail.com<br>
+    0779905605
+  </p>
+</marquee>
+
+<script src="year.js"></script>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { 
+      getAuth, 
+      signInWithEmailAndPassword, 
+      onAuthStateChanged,
+      signOut 
+    } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD2g8x-tvOkFI0mi0gTzU2vFLo4aj8wB0s",
+      authDomain: "noble-register.firebaseapp.com",
+      projectId: "noble-register",
+      storageBucket: "noble-register.firebasestorage.app",
+      messagingSenderId: "280367520296",
+      appId: "1:280367520296:web:29b32c0f9669bdfae6731d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const registerBtn = document.getElementById("registerBtn");
+    const loginBlock = document.getElementById("login-block");
+    const formBlock = document.getElementById("form-block");
+    const loginBtn = document.getElementById("loginBtn");
+    const message = document.getElementById("loginMessage");
+
+    let isLoginVisible = false;
+    let loggedIn = false;
+
+    // ✅ Toggle Login Form or Sign Out
+    registerBtn.addEventListener("click", () => {
+      if (loggedIn) {
+        signOut(auth).then(() => {
+          alert("You have been signed out.");
+          window.history.back(); // Go to previous page
+        });
+        return;
+      }
+
+      isLoginVisible = !isLoginVisible;
+      if (isLoginVisible) {
+        loginBlock.style.display = "block";
+        registerBtn.textContent = "❌";
+      } else {
+        loginBlock.style.display = "none";
+        registerBtn.textContent = "Register";
+      }
+    });
+
+    // ✅ Login Function
+    loginBtn.addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          message.textContent = "✅ Login successful!";
+          setTimeout(() => {
+            loginBlock.style.display = "none";
+            formBlock.style.display = "block";
+            registerBtn.textContent = "Sign out";
+            loggedIn = true;
+            isLoginVisible = false;
+          }, 1000);
+        })
+        .catch((error) => {
+          message.textContent = "❌ " + error.message;
+        });
+    });
+
+    // ✅ Auth State Change
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        loginBlock.style.display = "none";
+        formBlock.style.display = "block";
+        registerBtn.textContent = "Sign out";
+        loggedIn = true;
+        isLoginVisible = false;
+      } else {
+        formBlock.style.display = "none";
+        registerBtn.textContent = "Register";
+        loggedIn = false;
+      }
+    });
+</script>
+  
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+

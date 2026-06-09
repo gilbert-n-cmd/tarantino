@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>contact</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="contact-responsive.css" />
+  <style>
+    body{
+      background-color: whitesmoke;
+    }
+    .heading{
+    padding-top: 20px;
+    color: white;
+    text-align: center;
+}
+.heading-contact{
+    color: white;
+    text-align: center
+}
+
+
+        /* Form Styling */
+        .contact-form {
+            display: none;
+            width: 60%;
+            margin: 50px auto;
+            padding: 20px;
+            background: #4d749b;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            
+        }
+        .contact-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: white;
+            
+        }
+        .contact-form input, .contact-form textarea {
+            width: 97%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            
+            
+        }
+        .inputs{
+            text-align: center;
+        }
+        .contact-form button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            
+        }
+        .submit-btn {
+            background-color: white;
+            color: #73879b;
+            text-align: center;
+            font-weight: bold;
+            margin-left: 30px;
+        }
+        .cancel-btn {
+            
+            background-color: white;
+            color: #4d749b;
+            margin-left:530px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Styling for submissions */
+        #submissions {
+            color: white;
+            margin-top: 30px;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #4d749b;
+            
+        }
+        .submission {
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+
+        .menu-toggle {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      background-color: #73879b;
+      padding: 1rem;
+      
+    }
+
+    .mobile-nav a {
+      padding: 0.5rem 0;
+    }
+    .Welcoming-remark{
+      color: #003366;
+      font-size: 30px;
+      font-weight: bold;
+    }
+    .Submissions-Details{
+      color: #003366;
+      font-size: 30px;
+      font-weight: bold;
+    }
+    .hading-map{
+      color: #003366;
+      font-size: 30px;
+      font-weight: bold;
+      text-align: center;
+    }
+    @media(min-width: 768){
+      iframe{
+        width: 80%;
+        height: auto;
+      }
+
+    }
+/* CONTACT SECTION */
+
+.contact-container{
+    width:90%;
+    max-width:1200px;
+    margin:50px auto;
+    display:flex;
+    gap:40px;
+    align-items:flex-start;
+}
+
+/* LEFT SIDE FORM */
+
+.left-side{
+    flex:1;
+}
+
+.real-contact-form{
+    background:#4d749b;
+    padding:35px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.real-contact-form h2{
+    text-align:center;
+    color:white;
+    margin-bottom:25px;
+}
+
+.real-contact-form input,
+.real-contact-form textarea{
+    width:100%;
+    padding:14px;
+    margin-bottom:18px;
+    border:none;
+    border-radius:6px;
+    font-size:15px;
+    font-family:'Poppins',sans-serif;
+}
+
+.real-contact-form textarea{
+    resize:none;
+}
+
+.real-contact-form button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:6px;
+    background:white;
+    color:#4d749b;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.real-contact-form button:hover{
+    background:#003366;
+    color:white;
+}
+
+#successMessage{
+    margin-top:15px;
+    text-align:center;
+    color:white;
+    font-weight:bold;
+}
+
+/* RIGHT SIDE */
+
+.right-side{
+    flex:1;
+    background:white;
+    padding:35px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.right-side h2{
+    color:#003366;
+    margin-bottom:20px;
+}
+
+.contact-box{
+    margin-bottom:20px;
+}
+
+.contact-box h3{
+    color:#004080;
+    margin-bottom:8px;
+}
+
+.contact-box p{
+    color:#555;
+    line-height:1.7;
+}
+
+.social-links{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+    margin-top:20px;
+}
+
+.social-item{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    text-decoration:none;
+    color:#003366;
+    font-weight:500;
+    transition:0.3s;
+}
+
+.social-item i{
+    background:#e6f0ff;
+    padding:12px;
+    border-radius:50%;
+    transition:0.3s;
+}
+
+.social-item:hover{
+    transform:translateX(5px);
+}
+
+.social-item:hover i{
+    background:#003366;
+    color:white;
+}
+
+@media (max-width: 768px) {
+  .contact-container{
+    display: block;
+  }
+
+}
+
+/* MAP */
+
+.map-section{
+    width:90%;
+    max-width:1200px;
+    margin:0 auto 50px;
+}
+
+.map-section h2{
+    text-align:center;
+    margin-bottom:20px;
+    color:#003366;
+}
+
+.map-section iframe{
+    width:100%;
+    height:450px;
+    border:none;
+    border-radius:12px;
+}
+
+/* HERO */
+
+.news-hero{
+  background:
+  linear-gradient(
+    rgba(0,64,128,.75),
+    rgba(0,64,128,.75)
+  ),
+  url('images/construction.jpeg');
+
+  background-size:cover;
+  background-position:center;
+  color:white;
+  text-align:center;
+  padding:90px 20px;
+}
+
+.news-hero h1{
+  font-size:3rem;
+  margin-bottom:10px;
+  color:white;
+}
+
+.news-hero p{
+  color:white;
+  max-width:700px;
+  margin:auto;
+  font-size:1.1rem;
+}
+
+    </style>
+</head>
+<body>
+
+  <header>
+    <div class="top-bar">
+        <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+
+        <div id="chat-container">
+          
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
+            <div class="time"><b>Current Time: <span id="liveTime"></span></b>
+                <b>Current Date: <span id="liveDate"></span></b></div>
+           <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Noble Mayombo Memorial seed School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+
+                <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
+        <div class="right-section">
+  <div class="socials-icons img">
+    <!-- Twitter -->
+    <a href="https://twitter.com/yourprofile" target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/atuma743/" target="_blank">
+  <i class="fab fa-instagram"></i>
+</a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+  <i class="fab fa-facebook-f"></i>
+</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/256779905605" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
+        <button id="registerBtn">register</button>
+    </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="contact.html">Contact</a>
+<div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o level application form.html">O Level</a>
+        <a href="a level apllication form.html">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+ <!-----<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+ <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+
+ 
+
+<style>
+
+
+</style>
+</head>
+
+          <!-- HERO SECTION -->
+<section class="news-hero">
+  <h1>Get in Touch</h1>
+  <p>
+   Have a question or need assistance? Our team is ready to hear from you and provide the support you need.
+    </p>
+</section>
+
+<body>
+
+<!-- CONTACT SECTION -->
+
+<div class="contact-container">
+
+    <!-- LEFT SIDE -->
+
+    <div class="left-side">
+
+        <form id="contactForm" class="real-contact-form">
+
+            <h2>Send Us a Message</h2>
+
+            <input type="text" id="full-name" placeholder="Full Name" required>
+
+            <input type="email" id="email" placeholder="Email Address" required>
+
+            <input type="tel" id="phone" placeholder="Phone Number" required>
+
+            <input type="text" id="subject" placeholder="Subject" required>
+
+            <textarea id="message" rows="6" placeholder="Your Message" required></textarea>
+
+            <button type="submit">Send Message</button>
+
+            <p id="successMessage"></p>
+            <p id="formResponse"></p>
+
+        </form>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+
+    <div class="right-side">
+
+        <h2>Contact Information</h2>
+
+        <div class="contact-box">
+            <h3>Email</h3>
+            <p>bishopangelotarantino@gmail.ac.ug</p>
+        </div>
+
+        <div class="contact-box">
+            <h3>Phone</h3>
+            <p>+256 779 905 605</p>
+        </div>
+
+        <div class="contact-box">
+            <h3>Address</h3>
+            <p>P.O Box 112, Arua, Uganda</p>
+        </div>
+
+        <div class="contact-box">
+            <h3>Business Hours</h3>
+            <p>
+                Monday - Friday: 8:00 AM - 6:00 PM<br>
+                Saturday: 9:00 AM - 4:00 PM<br>
+                Sunday: Closed
+            </p>
+        </div>
+
+        <h2>Follow Us</h2>
+
+        <div class="social-links">
+
+            <a href="https://facebook.com" target="_blank" class="social-item">
+                <i class="fab fa-facebook-f"></i>
+                <span>Facebook</span>
+            </a>
+
+            <a href="https://instagram.com/atuma743/" target="_blank" class="social-item">
+                <i class="fab fa-instagram"></i>
+                <span>Instagram</span>
+            </a>
+
+            <a href="https://twitter.com" target="_blank" class="social-item">
+                <i class="fab fa-twitter"></i>
+                <span>Twitter</span>
+            </a>
+
+            <a href="https://wa.me/256779905605" target="_blank" class="social-item">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp</span>
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- MAP -->
+
+<div class="map-section">
+
+    <h2>Find Us</h2>
+
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3421.428362707456!2d74.6065439746715!3d30.958526074686823!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3919e9b6aaaaaaab%3A0xbeee4d896f4dc420!2sKalia%20Eye%20%26%20Maternity%20Hospital%20-%20Best%20maternity%20Hospital%2F%20Ultramodern%20NABH%20Accredited%20Eye%2F%20Best%20eye%20hospital%20in%20Ferozepur!5e0!3m2!1sen!2sug!4v1744971151600!5m2!1sen!2sug" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+
+</div>
+
+    <!.......................map end................................>
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <a href="o level application form.html">O Level</a>
+        <a href="a level apllication form.html">A Level</a>
+      </ul>
+    </div>
+    
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+           
+      <marquee>
+  <p>
+    &copy; <span id="year"></span> Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>
+    Designed by:<br>
+    ATUMA GILBERT <br>
+    www.gilbertatuma700@gmail.com<br>
+    0779905605
+  </p>
+</marquee>
+
+<script src="year.js"></script>
+    </div>
+  </footer>
+  <script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDmmymCzUxvhh1mw5BNfI3LfSQDZR8NXI0",
+  authDomain: "atuma-fd5d5.firebaseapp.com",
+  projectId: "atuma-fd5d5",
+  storageBucket: "atuma-fd5d5.firebasestorage.app",
+  messagingSenderId: "508388975095",
+  appId: "1:508388975095:web:56a80608f1b7760cdb0ef2"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const form = document.getElementById("contactForm");
+
+const responseMessage = document.getElementById("formResponse");
+
+form.addEventListener("submit", async (e) => {
+
+  e.preventDefault();
+
+  responseMessage.innerHTML = "Sending...";
+
+  try {
+
+    const fullName = document.getElementById("full-name").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
+    const subject = document.getElementById("subject").value;
+    const message = document.getElementById("message").value;
+
+    await addDoc(collection(db, "contactMessages"), {
+      full_name: fullName,
+      email: email,
+      phone: phone,
+      subject: subject,
+      message: message,
+      createdAt: serverTimestamp()
+    });
+
+    responseMessage.innerHTML = "Message sent successfully!";
+    responseMessage.style.color = "lime";
+
+    form.reset();
+
+  } catch (error) {
+
+    console.error("Firebase Error:", error);
+
+    responseMessage.innerHTML = error.message;
+    responseMessage.style.color = "red";
+
+  }
+
+});</script>
+  <script type="module" src="termlyregister.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+

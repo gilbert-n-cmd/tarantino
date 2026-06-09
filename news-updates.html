@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>news-updates</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<style>
+  main {
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    color: #003366;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  h1 {
+    color: #004080;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #004080;
+  }
+  @media (max-width: 767px) {
+  main {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  main > form,
+  main > .text-content {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* HERO */
+
+.news-hero{
+  background:
+  linear-gradient(
+    rgba(0,64,128,.75),
+    rgba(0,64,128,.75)
+  ),
+  url('images/construction.jpeg');
+
+  background-size:cover;
+  background-position:center;
+  color:white;
+  text-align:center;
+  padding:90px 20px;
+}
+
+.news-hero h1{
+  font-size:3rem;
+  margin-bottom:10px;
+  color:white;
+}
+
+.news-hero p{
+  color:white;
+  max-width:700px;
+  margin:auto;
+  font-size:1.1rem;
+}
+
+/* PAGE LAYOUT */
+
+.news-layout{
+  display:flex;
+  gap:30px;
+  padding:30px;
+  background:#f5f7fa;
+}
+
+.news-section{
+  flex:3;
+}
+
+.sidebar{
+  flex:1;
+}
+
+/* SECTION HEADER */
+
+.section-header{
+  margin-bottom:20px;
+}
+
+.section-header h2{
+  color:#004080;
+  border-left:5px solid #004080;
+  padding-left:10px;
+}
+
+/* NEWS CARD */
+
+.news-card{
+  background:white;
+  border-radius:15px;
+  overflow:hidden;
+  margin-bottom:25px;
+  box-shadow:0 5px 15px rgba(0,0,0,.1);
+  transition:.3s;
+}
+
+.news-card:hover{
+  transform:translateY(-5px);
+}
+
+.news-card img{
+  width:100%;
+  height:320px;
+  object-fit:cover;
+}
+
+.news-content{
+  padding:20px;
+}
+
+.news-date{
+  color:#777;
+  font-size:.9rem;
+  margin-bottom:10px;
+}
+
+.news-title{
+  color:#004080;
+  margin-bottom:10px;
+}
+
+.latest-badge{
+  display:inline-block;
+  background:red;
+  color:white;
+  padding:4px 10px;
+  border-radius:20px;
+  font-size:.75rem;
+  margin-bottom:10px;
+}
+
+/* SIDEBAR */
+
+.sidebar-card{
+  background:white;
+  padding:20px;
+  border-radius:15px;
+  margin-bottom:20px;
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+
+.sidebar-card h3{
+  color:#004080;
+  margin-top:0;
+}
+
+.sidebar-card a{
+  display:block;
+  text-decoration:none;
+  color:#333;
+  padding:8px 0;
+}
+
+.sidebar-card a:hover{
+  color:#004080;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  /* Hero Section */
+  .hero-section{
+    min-height: 35vh;
+    padding: 40px 15px;
+  }
+
+  .hero-section h1{
+    font-size: 1.8rem;
+    line-height: 1.3;
+  }
+
+  .hero-section p{
+    font-size: 0.95rem;
+  }
+
+  .hero-badge{
+    font-size: 0.8rem;
+    padding: 8px 15px;
+  }
+
+  /* Main Content */
+  .community-container{
+    padding: 20px 10px;
+  }
+
+  .feature-image{
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+
+  .info-card{
+    padding: 18px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+  }
+
+  .info-card h2{
+    font-size: 1.3rem;
+  }
+
+  .info-card p,
+  .info-card li{
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .info-card ul{
+    padding-left: 18px;
+  }
+
+  /* Quote Card */
+  .quote-card{
+    padding: 25px 15px;
+    border-radius: 15px;
+  }
+
+  .quote-card h2{
+    font-size: 1.4rem;
+  }
+
+  .quote-card p{
+    font-size: 0.95rem;
+  }
+
+  /* Fix Header Logo */
+  .logo{
+    font-size: 16px !important;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* Login Popup */
+  #login-block{
+    width: 90%;
+    max-width: 320px;
+    padding: 15px;
+  }
+
+  #login-block input,
+  #login-block button{
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Google Form */
+  #form-block iframe{
+    width: 100%;
+    height: 500px;
+  }
+
+  /* Footer */
+  .footer-column{
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .footer-column h3{
+    font-size: 1.1rem;
+  }
+
+  .footer-column p,
+  .footer-column li,
+  .footer-column a{
+    font-size: 0.9rem;
+  }
+}
+
+
+</style>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+        
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
+        <div class="time">
+          <b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b>
+        </div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+          <p>Welcome to Bishop Angelo Tarantino Memorial Secondary School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+              <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
+      <div class="right-section">
+  <div class="socials-icons img">
+    <!-- Twitter -->
+    <a href="https://twitter.com/yourprofile" target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/atuma743/" target="_blank">
+  <i class="fab fa-instagram"></i>
+</a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+  <i class="fab fa-facebook-f"></i>
+</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/256779905605" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+        <button id="registerBtn">register</button>
+      </div>
+    </div>
+  </header>
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="contact.html">Contact</a>
+<div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  
+
+ <!----- <div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+<div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+
+
+    <!-- HERO SECTION -->
+<section class="news-hero">
+  <h1>Latest News & School Updates</h1>
+  <p>
+   Keep up with the latest events, achievements, and announcements from Bishop Tarantino Memorial Schools. From academic excellence to community activities, find all our recent updates in one place.
+  </p>
+</section>
+
+<main class="news-layout">
+
+  <!-- NEWS AREA -->
+  <section class="news-section">
+
+    <div class="section-header">
+      <h2>Latest School News</h2>
+    </div>
+
+    <div id="newsContainer">
+      <p>Loading news...</p>
+    </div>
+
+  </section>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-card">
+      <h3>Quick Links</h3>
+
+      <a href="calendar-event.html">
+        📅 Upcoming Events
+      </a>
+
+      <a href="contact.html">
+        📞 Contact School
+      </a>
+
+      <a href="gallery.html">
+        🖼 School Gallery
+      </a>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Apply Online</h3>
+
+      <a href="o level application form.html">
+        O-Level Admission
+      </a>
+
+      <a href="a level apllication form.html">
+        A-Level Admission
+      </a>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>School Contacts</h3>
+
+      <p><strong>Phone:</strong><br>
+      +256 779 905 605</p>
+
+      <p><strong>Email:</strong><br>
+      bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+
+  </aside>
+
+</main>
+
+
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+           
+      <marquee>
+  <p>
+    &copy; <span id="year"></span> Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>
+    Designed by:<br>
+    ATUMA GILBERT <br>
+    www.gilbertatuma700@gmail.com<br>
+    0779905605
+  </p>
+</marquee>
+
+<script src="year.js"></script>
+
+    </div>
+  </footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDpRkkp6fdlmVQM5xnLsRkRPS5awu0YSmc",
+  authDomain: "website-database-d75ea.firebaseapp.com",
+  databaseURL: "https://website-database-d75ea-default-rtdb.firebaseio.com",
+  projectId: "website-database-d75ea",
+  storageBucket: "website-database-d75ea.firebasestorage.app",
+  messagingSenderId: "61842953615",
+  appId: "1:61842953615:web:e255cb2ca96184bb0767fa"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const newsContainer = document.getElementById("newsContainer");
+
+async function loadNews() {
+  try {
+
+    const q = query(
+      collection(db, "news"),
+      orderBy("createdAt", "desc")
+    );
+
+    const snapshot = await getDocs(q);
+
+    newsContainer.innerHTML = "";
+
+    if (snapshot.empty) {
+      newsContainer.innerHTML = "<p>No news available.</p>";
+      return;
+    }
+
+    const now = new Date();
+    let visibleNews = 0;
+
+    snapshot.forEach((doc) => {
+
+      const news = doc.data();
+
+      // Skip expired news
+      if (
+        news.expiryDate &&
+        news.expiryDate.toDate() < now
+      ) {
+        return;
+      }
+
+      visibleNews++;
+
+      const badge = visibleNews === 1
+  ? '<div class="latest-badge">LATEST NEWS</div>'
+  : '';
+
+newsContainer.innerHTML += `
+<div class="news-card">
+
+  ${news.image ? `
+    <img src="${news.image}" alt="${news.title}">
+  ` : ''}
+
+  <div class="news-content">
+
+    ${badge}
+
+    <div class="news-date">
+      📅 ${news.createdAt?.toDate().toLocaleDateString() || ''}
+    </div>
+
+    <h2 class="news-title">
+      ${news.title || ''}
+    </h2>
+
+    <p>
+      ${news.content || ''}
+    </p>
+
+  </div>
+
+</div>
+`;
+    });
+
+    if (visibleNews === 0) {
+      newsContainer.innerHTML = "<p>No current news available.</p>";
+    }
+
+  } catch (error) {
+    console.error(error);
+    newsContainer.innerHTML =
+      "<p>Failed to load news.</p>";
+  }
+}
+
+loadNews();
+</script>
+
+<script type="module" src="termlyregister.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+

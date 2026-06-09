@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>O-level</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+/* ===== HERO SECTION ===== */
+
+.page-hero{
+  height:65vh;
+  min-height:400px;
+  background:url("images/student wellbeing.jpeg") center/cover;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.hero-overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+      rgba(0,51,102,.85),
+      rgba(0,51,102,.65)
+  );
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  color:white;
+  padding:20px;
+}
+
+.hero-overlay h1{
+  font-size:3.5rem;
+  margin-bottom:15px;
+  color:white;
+}
+
+.hero-overlay p{
+  max-width:800px;
+  font-size:1.2rem;
+  color:#f2f2f2;
+}
+
+/* ===== MAIN SECTION ===== */
+
+main{
+  background:#f4f8fc;
+  padding:80px 25px;
+}
+
+.content-wrapper{
+  max-width:1200px;
+  margin:auto;
+}
+
+/* ===== STATS ===== */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:25px;
+  margin-top:-80px;
+  margin-bottom:60px;
+}
+
+.stat-card{
+  background:white;
+  border-radius:18px;
+  padding:30px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  transition:.4s;
+}
+
+.stat-card:hover{
+  transform:translateY(-10px);
+}
+
+.stat-card i{
+  font-size:2.5rem;
+  color:#004080;
+  margin-bottom:15px;
+}
+
+.stat-card h3{
+  font-size:2rem;
+  color:#004080;
+}
+
+.stat-card p{
+  margin:0;
+}
+
+/* ===== INTRO SECTION ===== */
+
+.intro-section{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:50px;
+  align-items:center;
+  margin-bottom:70px;
+}
+
+.intro-section img{
+  width:100%;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+.intro-text h2{
+  font-size:2.3rem;
+  color:#004080;
+  margin-bottom:20px;
+}
+
+.intro-text p{
+  line-height:1.9;
+  color:#444;
+}
+
+/* ===== FEATURE CARDS ===== */
+
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;
+  margin-top:40px;
+}
+
+.feature-card{
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+  transition:.4s;
+}
+
+.feature-card:hover{
+  transform:translateY(-8px);
+}
+
+.feature-card h3{
+  color:#004080;
+  margin-bottom:15px;
+}
+
+.feature-card p{
+  color:#555;
+  line-height:1.8;
+}
+
+/* ===== APPLY BUTTON ===== */
+
+.apply-container{
+  text-align:center;
+  margin-top:70px;
+}
+
+.Apply-Online{
+  background:linear-gradient(135deg,#004080,#0077cc);
+  color:white;
+  border:none;
+  padding:18px 40px;
+  border-radius:50px;
+  font-size:1.1rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:.4s;
+  box-shadow:0 10px 20px rgba(0,64,128,.3);
+}
+
+.Apply-Online:hover{
+  transform:translateY(-5px);
+  box-shadow:0 15px 30px rgba(0,64,128,.4);
+}
+
+/* ===== MOBILE ===== */
+
+@media(max-width:768px){
+
+.hero-overlay h1{
+  font-size:2.2rem;
+}
+
+.hero-overlay p{
+  font-size:1rem;
+}
+
+.intro-section{
+  grid-template-columns:1fr;
+}
+
+main{
+  padding:50px 15px;
+}
+
+.Apply-Online{
+  width:100%;
+  max-width:320px;
+}
+}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+        
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
+        <div class="time">
+          <b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b>
+        </div>
+       <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+       <div id="chat-box">
+        <!---<div class="chat-header">
+          <span>Live Chat</span>
+          <button onclick="toggleChat()">✖</button>
+        </div>--->
+        <!---<div class="chat-body">
+          <p>Welcome to Bishop Angelo Tarantino Memorial Secondary School! How can we help you?</p>
+          <input type="text" placeholder="Type your message..." /><br /><br />
+          <button onclick="toggleChat()">send</button>
+        </div>--->
+      </div>
+    </div>
+              <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
+     <div class="right-section">
+  <div class="socials-icons img">
+    <!-- Twitter -->
+    <a href="https://twitter.com/yourprofile" target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/atuma743/" target="_blank">
+  <i class="fab fa-instagram"></i>
+</a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+  <i class="fab fa-facebook-f"></i>
+</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/256779905605" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+        <button id="registerBtn">register </button>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="contact.html">Contact</a>
+<div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+<div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!---<div class="brightness-controls">
+    <button onclick="setBrightness('low')">Low</button>
+    <button onclick="setBrightness('medium')">Medium</button>
+    <button onclick="setBrightness('high')">High</button>
+  </div>--->
+
+ <!-- ✅ Firebase Login Popup -->
+  <div id="login-block">
+    <h3>Login to Continue</h3>
+    <input type="email" id="email" placeholder="Enter email" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button id="loginBtn">Login</button>
+    <p id="loginMessage"></p>
+  </div>
+
+  <!-- ✅ Google Form -->
+  <div id="form-block">
+    <iframe 
+      src=" https://forms.gle/PJU1jL4Lo9ZwpBd87" 
+      width="350" 
+      height="700" 
+      frameborder="0" 
+      marginheight="0" 
+      marginwidth="0">
+      Loading…
+    </iframe>
+  </div>
+
+  <!-- HERO SECTION -->
+<section class="page-hero">
+  <div class="hero-overlay">
+
+    <div class="hero-badge">
+      <i class="fas fa-graduation-cap"></i>
+      O-Level Programme
+    </div>
+
+    <h1>Excellence in O-Level Education</h1>
+
+    <p>
+      Building strong academic foundations, nurturing character,
+      and preparing learners for success in higher education and life.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="https://forms.gle/ETV3e5VFoF3JrhD86" class="hero-btn primary">
+        Apply Now
+      </a>
+
+      <a href="#program-details" class="hero-btn secondary">
+        Learn More
+      </a>
+    </div>
+
+  </div>
+</section>
+  
+  <main>
+
+<div class="content-wrapper">
+
+<div class="stats">
+
+<div class="stat-card">
+<i class="fas fa-book"></i>
+<h3>15+</h3>
+<p>Subjects Offered</p>
+</div>
+
+<div class="stat-card">
+<i class="fas fa-user-graduate"></i>
+<h3>500+</h3>
+<p>O-Level Learners</p>
+</div>
+
+<div class="stat-card">
+<i class="fas fa-chalkboard-teacher"></i>
+<h3>30+</h3>
+<p>Qualified Teachers</p>
+</div>
+
+<div class="stat-card">
+<i class="fas fa-award"></i>
+<h3>Excellent</h3>
+<p>Academic Performance</p>
+</div>
+
+</div>
+
+<div class="intro-section">
+
+<img src="images/student wellbeing.jpeg">
+
+<div class="intro-text">
+
+<h2>O-Level Education Excellence</h2>
+
+<p>
+At Bishop Angelo Tarantino Memorial Secondary School, we provide a strong academic foundation through a learner-centered O-Level curriculum designed to nurture critical thinking, creativity, discipline, and innovation.
+</p>
+
+<p>
+Our students are equipped with the knowledge, skills, and values required for higher education and future careers.
+</p>
+
+</div>
+
+</div>
+
+<h2 style="text-align:center;color:#004080;">
+Why Choose Our O-Level Program?
+</h2>
+
+<div class="features-grid">
+
+<div class="feature-card">
+<h3>Academic Excellence</h3>
+<p>
+Comprehensive curriculum delivered by experienced and passionate teachers.
+</p>
+</div>
+
+<div class="feature-card">
+<h3>Technology Integration</h3>
+<p>
+Digital learning tools, online resources, and computer literacy programs.
+</p>
+</div>
+
+<div class="feature-card">
+<h3>Student Mentorship</h3>
+<p>
+Academic guidance, counseling, and career development programs.
+</p>
+</div>
+
+<div class="feature-card">
+<h3>Modern Facilities</h3>
+<p>
+Science laboratories, computer labs, library, and a conducive learning environment.
+</p>
+</div>
+
+<div class="feature-card">
+<h3>Vision</h3>
+<p>
+Empowering learners with knowledge, skills, values, and leadership qualities.
+</p>
+</div>
+
+<div class="feature-card">
+<h3>Mission</h3>
+<p>
+Providing quality education that develops responsible and productive citizens.
+</p>
+</div>
+
+</div>
+
+<div class="apply-container">
+<a href="https://forms.gle/ETV3e5VFoF3JrhD86">
+<button class="Apply-Online">
+Apply Online Now
+</button>
+</a>
+</div>
+
+</div>
+
+</main>
+
+
+
+  <!--https://formsgle/tt7xfRzFnCJY6Kx56 to be checked--->
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+         
+      <marquee>
+  <p>
+    &copy; <span id="year"></span> Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>
+    Designed by:<br>
+    ATUMA GILBERT <br>
+    www.gilbertatuma700@gmail.com<br>
+    0779905605
+  </p>
+</marquee>
+
+<script src="year.js"></script>
+      
+    </div>
+  </footer>
+<script type="module" src="termlyregister.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+

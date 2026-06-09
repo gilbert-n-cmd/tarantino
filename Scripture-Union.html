@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>scripture-union</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<style>
+  .su-page{
+    max-width:1100px;
+    margin:auto;
+    padding:40px 20px;
+}
+
+.page-header{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.page-header h1{
+    font-size:3rem;
+    color:#003366;
+    margin-bottom:10px;
+}
+
+.page-header p{
+    color:#64748b;
+    font-size:1.1rem;
+}
+
+.su-image{
+    width:100%;
+    border-radius:20px;
+    margin-bottom:30px;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+.content-card{
+    background:white;
+    padding:30px;
+    margin-bottom:25px;
+    border-radius:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.content-card h2{
+    color:#003366;
+}
+
+.verse-card{
+    background:#003366;
+    color:white;
+    padding:40px;
+    text-align:center;
+    border-radius:20px;
+}
+
+.verse-card h2,
+.verse-card p,
+.verse-card strong{
+    color:white;
+}
+
+@media(max-width:768px){
+
+    .page-header h1{
+        font-size:2rem;
+    }
+
+    .content-card{
+        padding:20px;
+    }
+}
+
+.hero-section{
+  background:
+  linear-gradient(rgba(0,51,102,.80),rgba(0,89,179,.80)),
+  url("images/a level block.jpeg");
+  background-size:cover;
+  background-position:center;
+  min-height:45vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:white;
+  padding:60px 20px;
+}
+
+.hero-content{
+  max-width:800px;
+}
+
+.hero-badge{
+  display:inline-block;
+  padding:8px 18px;
+  border-radius:50px;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(10px);
+  margin-bottom:15px;
+  font-size:14px;
+}
+
+.hero-section h1{
+  font-size:3rem;
+  color:white;
+  margin-bottom:15px;
+}
+
+.hero-section p{
+  font-size:1.1rem;
+  line-height:1.8;
+  margin:0 auto;
+}
+
+@media(max-width:768px){
+
+  .hero-section{
+    min-height:35vh;
+    padding:40px 15px;
+  }
+
+  .hero-section h1{
+    font-size:2rem;
+  }
+
+  .hero-section p{
+    font-size:1rem;
+  }
+}
+
+.wave svg{
+  display:block;
+  width:100%;
+  height:70px;
+}
+
+/* =========================
+   MOBILE RESPONSIVE FIXES
+========================= */
+
+*{
+  box-sizing:border-box;
+}
+
+img{
+  max-width:100%;
+  height:auto;
+}
+
+iframe{
+  width:100% !important;
+  max-width:100%;
+  height:600px;
+  border:none;
+}
+
+/* Header */
+@media (max-width:768px){
+
+  .top-bar{
+    flex-direction:column;
+    text-align:center;
+    gap:12px;
+    padding:10px;
+  }
+
+  .logo{
+    font-size:18px !important;
+    line-height:1.4;
+  }
+
+  #chat-container{
+    width:100%;
+  }
+
+  .time{
+    font-size:13px;
+  }
+
+  .header-contact{
+    width:100%;
+    font-size:13px;
+    word-break:break-word;
+  }
+
+  .header-contact a{
+    display:block;
+    margin:5px 0;
+  }
+
+  .right-section{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+
+  .socials-icons{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  #registerBtn{
+    width:90%;
+    max-width:250px;
+  }
+
+  /* Hero Section */
+
+  .hero-section{
+    min-height:40vh;
+    padding:30px 15px;
+  }
+
+  .hero-content{
+    width:100%;
+  }
+
+  .hero-badge{
+    font-size:12px;
+    padding:8px 14px;
+  }
+
+  .hero-section h1{
+    font-size:2rem;
+    line-height:1.2;
+  }
+
+  .hero-section p{
+    font-size:0.95rem;
+    line-height:1.7;
+  }
+
+  /* Main Content */
+
+  .su-page{
+    padding:20px 12px;
+  }
+
+  .content-card{
+    padding:20px 15px;
+    border-radius:15px;
+  }
+
+  .content-card h2{
+    font-size:1.3rem;
+  }
+
+  .content-card ul{
+    padding-left:20px;
+  }
+
+  .content-card li{
+    margin-bottom:8px;
+  }
+
+  .verse-card{
+    padding:25px 15px;
+  }
+
+  .verse-card h2{
+    font-size:1.5rem;
+  }
+
+  .verse-card p{
+    font-size:0.95rem;
+  }
+
+  .su-image{
+    border-radius:15px;
+  }
+
+  .wave svg{
+    height:40px;
+  }
+
+  /* Footer */
+
+  .footer{
+    text-align:center;
+  }
+
+  .footer-column{
+    width:100%;
+    margin-bottom:25px;
+  }
+
+  .footer-column ul{
+    padding-left:0;
+  }
+
+  .footer-column li{
+    list-style:none;
+  }
+
+  .footer-bottom p{
+    font-size:13px;
+  }
+
+  /* Login Form */
+
+  #login-block{
+    width:95%;
+    max-width:350px;
+    margin:auto;
+  }
+
+  #login-block input,
+  #loginBtn{
+    width:100%;
+  }
+
+  /* Google Form */
+
+  #form-block{
+    width:100%;
+    overflow:hidden;
+  }
+
+  #form-block iframe{
+    width:100% !important;
+    height:650px;
+  }
+}
+
+/* Extra Small Phones */
+@media (max-width:480px){
+
+  .hero-section h1{
+    font-size:1.7rem;
+  }
+
+  .hero-section p{
+    font-size:0.9rem;
+  }
+
+  .content-card{
+    padding:15px;
+  }
+
+  .verse-card{
+    padding:20px 12px;
+  }
+
+  .logo{
+    font-size:16px !important;
+  }
+
+  .time{
+    font-size:12px;
+  }
+}
+
+</style>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+        
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
+        <div class="time">
+          <b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b>
+        </div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Bishop Angelo Tarantino Memorial Secondary School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+              <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
+      <div class="right-section">
+  <div class="socials-icons img">
+    <!-- Twitter -->
+    <a href="https://twitter.com/yourprofile" target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/atuma743/" target="_blank">
+  <i class="fab fa-instagram"></i>
+</a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+  <i class="fab fa-facebook-f"></i>
+</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/256779905605" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+        <button id="registerBtn">register</button>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="contact.html">Contact</a>
+    <div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+ <!-----<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+ <div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!---<div class="brightness-controls">
+    <button onclick="setBrightness('low')">Low</button>
+    <button onclick="setBrightness('medium')">Medium</button>
+    <button onclick="setBrightness('high')">High</button>
+  </div>--->
+
+ <!-- ✅ Firebase Login Popup -->
+  <div id="login-block">
+    <h3>Login to Continue</h3>
+    <input type="email" id="email" placeholder="Enter email" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button id="loginBtn">Login</button>
+    <p id="loginMessage"></p>
+  </div>
+
+  <!-- ✅ Google Form -->
+  <div id="form-block">
+    <iframe 
+      src=" https://forms.gle/PJU1jL4Lo9ZwpBd87" 
+      width="350" 
+      height="700" 
+      frameborder="0" 
+      marginheight="0" 
+      marginwidth="0">
+      Loading…
+    </iframe>
+  </div>
+  <section class="hero-section">
+
+  <div class="hero-content">
+
+    <span class="hero-badge">
+      Scripture Union Ministry
+    </span>
+
+    <h1>Scripture Union</h1>
+
+    <p>
+      Building Christ-centered learners through prayer,
+      fellowship, leadership, and the transformative power
+      of God's Word.
+    </p>
+
+    <p>
+            Growing in Faith, Fellowship and Service Through God's Word.
+        </p>
+
+  </div>
+
+</section>
+        
+  <main class="su-page">
+
+
+    <img src="images/a level block.jpeg"
+         alt="Scripture Union"
+         class="su-image">
+
+         <div class="wave">
+  <svg viewBox="0 0 1440 120">
+    <path fill="#f8fafc"
+      d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L0,120Z">
+    </path>
+  </svg>
+</div>
+
+    <div class="content-card">
+        <h2>Living by the Word of God</h2>
+        <p>
+            Welcome to the Scripture Union (SU) Club at Bishop Angelo
+            Tarantino Memorial Secondary School...
+        </p>
+    </div>
+
+    <div class="content-card">
+        <h2>Our Purpose</h2>
+
+        <ul>
+            <li>Encourage Bible reading.</li>
+            <li>Promote Christian values.</li>
+            <li>Build faith in Jesus Christ.</li>
+            <li>Develop servant leadership.</li>
+        </ul>
+    </div>
+
+    <div class="content-card">
+        <h2>Activities We Conduct</h2>
+
+        <ul>
+            <li>Weekly Fellowship Meetings</li>
+            <li>Bible Study Sessions</li>
+            <li>Prayer Meetings</li>
+            <li>Christian Debates</li>
+            <li>Community Outreach</li>
+        </ul>
+    </div>
+
+    <div class="verse-card">
+        <h2>Guiding Scripture</h2>
+
+        <p>
+            "Let no one despise your youth, but be an example..."
+        </p>
+
+        <strong>1 Timothy 4:12</strong>
+    </div>
+
+</main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+         
+      <marquee>
+  <p>
+    &copy; <span id="year"></span> Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>
+    Designed by:<br>
+    ATUMA GILBERT <br>
+    www.gilbertatuma700@gmail.com<br>
+    0779905605
+  </p>
+</marquee>
+
+<script src="year.js"></script>
+
+    </div>
+  </footer>
+<script type="module" src="termlyregister.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

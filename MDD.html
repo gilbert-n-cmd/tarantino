@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MDD</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div id="chat-container">
+        
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
+        <div class="time"><b>Current Time: <span id="liveTime"></span></b>
+          <b>Current Date: <span id="liveDate"></span></b></div>
+        <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Bishop Angelo Tarantino Memorial Secondary School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+              <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
+      <div class="right-section">
+  <div class="socials-icons img">
+    <!-- Twitter -->
+    <a href="https://www.instagram.com/atuma743/" target="_blank">
+  <i class="fab fa-instagram"></i>
+</a>
+
+    <!-- Instagram -->
+    <a href="https://instagram.com/yourprofile" target="_blank">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+  <i class="fab fa-facebook-f"></i>
+</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/256779905605" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+      <button id="registerBtn">register</button>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">School history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="https://forms.gle/QkhdYqyWvCrTrn8Q9">Contact</a>
+ <div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+<!-- Loading Screen -->
+<!-- Loading Spinner -->
+
+  <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+    </div>--->
+<div class="search-bar" style="display:none;">
+    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
+      <input type="text" name="q" placeholder="Search..." required />
+      <button type="submit">Search</button>
+    </form>--->
+    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
+    </script>
+<div class="gcse-search"></div>    
+  </div>
+  <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+  <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+
+ <!-- ✅ Firebase Login Popup -->
+  <div id="login-block">
+    <h3>Login to Continue</h3>
+    <input type="email" id="email" placeholder="Enter email" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button id="loginBtn">Login</button>
+    <p id="loginMessage"></p>
+  </div>
+
+  <!-- ✅ Google Form -->
+  <div id="form-block">
+    <iframe 
+      src=" https://forms.gle/PJU1jL4Lo9ZwpBd87" 
+      width="350" 
+      height="700" 
+      frameborder="0" 
+      marginheight="0" 
+      marginwidth="0">
+      Loading…
+    </iframe>
+  </div>
+  
+  <head>
+    <style>
+      .hero-section{
+  background:
+  linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.65)),
+  url("images/a level block.jpeg");
+  background-size:cover;
+  background-position:center;
+  min-height:50vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  color:white;
+  padding:60px 20px;
+}
+
+.hero-content{
+  max-width:800px;
+}
+
+.hero-badge{
+  display:inline-block;
+  background:rgba(255,255,255,.15);
+  padding:10px 20px;
+  border-radius:50px;
+  backdrop-filter:blur(10px);
+  margin-bottom:15px;
+}
+
+.hero-section h1{
+  color:white;
+  font-size:3rem;
+  margin-bottom:15px;
+}
+
+.hero-section p{
+  font-size:1.15rem;
+}
+
+.mdd-container{
+  max-width:1200px;
+  margin:auto;
+  padding:60px 20px;
+}
+
+.intro-card,
+.info-card{
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  margin-bottom:25px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;
+  margin-bottom:30px;
+}
+
+.mdd-card{
+  background:white;
+  padding:35px 25px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  transition:.3s;
+}
+
+.mdd-card:hover{
+  transform:translateY(-8px);
+}
+
+.mdd-card i{
+  font-size:3rem;
+  color:#0059b3;
+  margin-bottom:15px;
+}
+
+.mdd-card h3{
+  color:#003366;
+}
+
+.quote-card{
+  background:linear-gradient(135deg,#003366,#0059b3);
+  color:white;
+  padding:50px;
+  text-align:center;
+  border-radius:20px;
+}
+
+.quote-card h2,
+.quote-card p{
+  color:white;
+}
+
+@media(max-width:768px){
+
+  .hero-section{
+    min-height:40vh;
+  }
+
+  .hero-section h1{
+    font-size:2rem;
+  }
+
+  .mdd-container{
+    padding:30px 15px;
+  }
+
+  .intro-card,
+  .info-card,
+  .mdd-card{
+    padding:20px;
+  }
+
+}
+
+/* =========================
+   MOBILE RESPONSIVE DESIGN
+========================= */
+@media screen and (max-width:768px){
+
+  body{
+    overflow-x:hidden;
+  }
+
+  .hero-section{
+    min-height:35vh;
+    padding:40px 15px;
+  }
+
+  .hero-content{
+    width:100%;
+  }
+
+  .hero-badge{
+    font-size:0.8rem;
+    padding:8px 16px;
+  }
+
+  .hero-section h1{
+    font-size:2rem;
+    line-height:1.2;
+    margin-bottom:10px;
+  }
+
+  .hero-section p{
+    font-size:0.95rem;
+    line-height:1.6;
+  }
+
+  .mdd-container{
+    width:100%;
+    max-width:100%;
+    padding:20px 10px;
+    box-sizing:border-box;
+  }
+
+  .intro-card,
+  .info-card,
+  .mdd-card{
+    padding:20px 15px;
+    border-radius:15px;
+    margin-bottom:15px;
+  }
+
+  .intro-card h2,
+  .info-card h2,
+  .quote-card h2{
+    font-size:1.4rem;
+  }
+
+  .intro-card p,
+  .info-card p,
+  .info-card li,
+  .mdd-card p{
+    font-size:0.95rem;
+    line-height:1.7;
+  }
+
+  .cards-grid{
+    grid-template-columns:1fr;
+    gap:15px;
+  }
+
+  .mdd-card i{
+    font-size:2.5rem;
+  }
+
+  .mdd-card h3{
+    font-size:1.2rem;
+  }
+
+  .quote-card{
+    padding:30px 20px;
+    border-radius:15px;
+  }
+
+  .quote-card p{
+    font-size:1rem;
+    line-height:1.7;
+  }
+
+  ul{
+    padding-left:20px;
+  }
+}
+
+/* EXTRA SMALL PHONES */
+@media screen and (max-width:480px){
+
+  .hero-section{
+    min-height:30vh;
+  }
+
+  .hero-section h1{
+    font-size:1.7rem;
+  }
+
+  .hero-section p{
+    font-size:0.9rem;
+  }
+
+  .hero-badge{
+    font-size:0.75rem;
+  }
+
+  .intro-card h2,
+  .info-card h2,
+  .quote-card h2{
+    font-size:1.2rem;
+  }
+
+  .mdd-card{
+    padding:18px 12px;
+  }
+}
+  
+    </style>
+  </head>
+  <section class="hero-section">
+
+  <div class="hero-content">
+
+    <span class="hero-badge">
+      Music • Dance • Drama
+    </span>
+
+    <h1>Music, Dance & Drama</h1>
+
+    <p>
+      Discover, develop, and showcase your talents through creativity,
+      culture, performance, and artistic excellence.
+    </p>
+
+  </div>
+
+</section>
+
+<main class="mdd-container">
+
+  <div class="intro-card">
+
+    <h2>Music, Dance & Drama (MDD)</h2>
+
+    <p>
+      At Bishop Angelo Tarantino Memorial Secondary School, Music, Dance &
+      Drama is a vibrant platform where learners discover their talents,
+      celebrate culture, and build confidence through performance.
+    </p>
+
+  </div>
+
+  <div class="cards-grid">
+
+    <div class="mdd-card">
+      <i class="fas fa-music"></i>
+      <h3>Music</h3>
+      <p>
+        Choir training, instrumental skills, songwriting, solo performances,
+        and musical creativity.
+      </p>
+    </div>
+
+    <div class="mdd-card">
+      <i class="fas fa-person-dancing"></i>
+      <h3>Dance</h3>
+      <p>
+        Traditional and modern dances that celebrate culture, teamwork,
+        and artistic expression.
+      </p>
+    </div>
+
+    <div class="mdd-card">
+      <i class="fas fa-masks-theater"></i>
+      <h3>Drama</h3>
+      <p>
+        Stage plays, skits, storytelling, and creative performances that
+        educate and entertain.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="info-card">
+
+    <h2>Performance Opportunities</h2>
+
+    <ul>
+      <li>School Cultural Festivals</li>
+      <li>Visitors' Day Presentations</li>
+      <li>District Competitions</li>
+      <li>National MDD Festivals</li>
+      <li>End of Term Celebrations</li>
+    </ul>
+
+  </div>
+
+  <div class="info-card">
+
+    <h2>Values Promoted Through MDD</h2>
+
+    <ul>
+      <li><strong>Confidence</strong> – Expressing talents boldly.</li>
+      <li><strong>Teamwork</strong> – Working together for success.</li>
+      <li><strong>Creativity</strong> – Exploring new ideas.</li>
+      <li><strong>Cultural Pride</strong> – Preserving our heritage.</li>
+    </ul>
+
+  </div>
+
+  <div class="quote-card">
+
+    <h2>Talent in Action</h2>
+
+    <p>
+      Art speaks where words are unable to explain.
+    </p>
+
+  </div>
+
+</main>
+
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+          
+      <marquee>
+  <p>
+    &copy; <span id="year"></span> Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>
+    Designed by:<br>
+    ATUMA GILBERT <br>
+    www.gilbertatuma700@gmail.com<br>
+    0779905605
+  </p>
+</marquee>
+
+<script src="year.js"></script>
+
+    </div>
+  </footer>
+<script type="module" src="termlyregister.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
