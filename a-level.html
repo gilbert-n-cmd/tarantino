@@ -290,6 +290,72 @@ li{
   .highlight p{
     color: rgba(255,255,255,0.85);
   }
+    .admission-banner{
+    background: linear-gradient(135deg,#0B2C4A,#1E3A8A);
+    border-radius: 15px;
+    padding: 40px 20px;
+    margin: 30px 0;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.admission-content h1{
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.admission-content p{
+    max-width: 700px;
+    margin: 0 auto 20px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.9);
+}
+
+.admission-buttons{
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.admission-btn{
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.apply-btn{
+    background: #F4B400;
+    color: #000;
+}
+
+.contact-btn{
+    background: #fff;
+    color: #0B2C4A;
+}
+
+.course-btn{
+    border: 2px solid #fff;
+    color: #fff;
+}
+
+.admission-btn:hover{
+    transform: translateY(-3px);
+}
+
+@media(max-width:768px){
+    .admission-content h1{
+        font-size: 1.5rem;
+    }
+
+    .admission-buttons{
+        flex-direction: column;
+    }
+}
 </style>
 </head>
 <body>
@@ -558,6 +624,38 @@ li{
     </div>
   </div>
 </main>
+
+  
+<section class="admission-banner">
+
+  <div class="admission-content">
+
+    <h1>Shape Your Future at Bishop Angelo Tarantino Memorial Secondary School</h1>
+
+    <p>
+      Join a community of excellence, discipline, and innovation. We prepare students
+      for success in academics, leadership, and life.
+    </p>
+
+    <div class="admission-buttons">
+
+      <a href="a level apllication form.html" class="admission-btn apply-btn">
+        Apply Now
+      </a>
+
+      <a href="contact.html" class="admission-btn contact-btn">
+        Contact Us
+      </a>
+
+      <a href="#academics" class="admission-btn course-btn">
+        View Courses
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
 
   <footer class="footer">
     <div class="footer-column">
