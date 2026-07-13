@@ -59,25 +59,29 @@ body{
       }
     }
     #backToTopBtn {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      z-index: 999;
-      background-color: #007BFF;
-      color: white;
-      padding: 12px 18px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      display: none;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      transition: background-color 0.3s ease;
-    }
-  
-    #backToTopBtn:hover {
-      background-color: #0056b3;
-    }
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    background: #007bff;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    box-shadow: 0 5px 15px rgba(0,0,0,.3);
+    transition: .3s;
+}
+
+#backToTopBtn:hover {
+    background: #0056b3;
+    transform: translateY(-3px);
+}
 
 .top-bar {
   background: linear-gradient(to bottom, #00274d, hsl(208, 98%, 34%));
