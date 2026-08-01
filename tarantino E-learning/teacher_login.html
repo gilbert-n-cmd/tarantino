@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #4a69bd, #6a89cc);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+    .login-container {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+    h2 {
+      color: #4a69bd;
+      margin-bottom: 20px;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+    button {
+      width: 95%;
+      background: #4a69bd;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #3b5398;
+    }
+    p {
+      margin-top: 15px;
+      font-size: 0.9em;
+    }
+    a {
+      color: #4a69bd;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 480px) {
+      h2 { font-size: 1.3em; }
+      input, button { font-size: 0.95em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Teacher Login</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <a href="teacher-register.html">Register here</a></p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDv0wNHZl4wSXd10B7tr9Br-7phWidLDaU",
+  authDomain: "tarantino-e-learning.firebaseapp.com",
+  projectId: "tarantino-e-learning",
+  storageBucket: "tarantino-e-learning.firebasestorage.app",
+  messagingSenderId: "501202693775",
+  appId: "1:501202693775:web:fabc3af9989542c9a18afa"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const form = document.getElementById("loginForm");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("Login successful!");
+        window.location.href = "teacher.html"; // Redirect to teacher dashboard
+      } catch (error) {
+        alert("Login failed: " + error.message);
+      }
+    });
+
+    // If already logged in, go straight to dashboard
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "teacher.html";
+      }
+    });
+  </script>
+</body>
+</html>
