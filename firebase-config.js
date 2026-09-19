@@ -1,17 +1,23 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+/* ============================================
+   Firebase Configuration
+   ============================================ */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBhr4S2pX7PM1ENEbYPOJRdAQ4np3HCQqs",
-  authDomain: "search-afa41.firebaseapp.com",
-  databaseURL: "https://search-afa41-default-rtdb.firebaseio.com",
-  projectId: "search-afa41",
-  storageBucket: "search-afa41.firebasestorage.app",
-  messagingSenderId: "750620318797",
-  appId: "1:750620318797:web:e9ab5ad199f7361c1f9004"
+  apiKey: "AIzaSyAGWdBaIUOYT-SwOQuWMjRymDUnRNP60MA",
+  authDomain: "my-registration-and-login.firebaseapp.com",
+  projectId: "my-registration-and-login",
+  storageBucket: "my-registration-and-login.firebasestorage.app",
+  messagingSenderId: "751883676713",
+  appId: "1:751883676713:web:4401fcf89e4ce348ef8038",
+  measurementId: "G-NRKKC9K2ZM"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const FIREBASE_VERSION = "10.12.0";
+const FIREBASE_CDN = `https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}`;
 
-export { db };
+/* ✅ Expose globally for modules */
+window.FIREBASE_CONFIG  = firebaseConfig;
+window.FIREBASE_VERSION = FIREBASE_VERSION;
+window.FIREBASE_CDN     = FIREBASE_CDN;
+
+console.log("[Firebase] Config loaded:", firebaseConfig.projectId);
