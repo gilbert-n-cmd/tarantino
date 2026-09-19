@@ -1486,6 +1486,21 @@ body {
 <script src="map.js"></script>
 
 <script src="year.js"></script>
+
+  
+  <!-- 1. Knowledge (regular script — must load first) -->
+  <script src="ai-knowledge.js"></script>
+
+  <!-- 2. Firebase config (regular script — must be before modules) -->
+  <script src="firebase-config.js"></script>
+
+  <!-- 3. Firebase auth + Firestore (ES modules) -->
+  <script type="module" src="ai-auth.js"></script>
+  <script type="module" src="ai-chat-store.js"></script>
+
+  <!-- 4. Main bot (regular script, loaded last) -->
+  <script src="ai-bot.js" defer></script>
+
 </body>
 </html>
 
