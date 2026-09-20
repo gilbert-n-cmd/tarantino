@@ -1,5 +1,6 @@
 /* ============================================
-   AI Guide Bot — Main Logic (Firebase integrated)
+   AI Guide Bot — Main Logic
+   Bishop Angelo Tarantino Memorial Secondary School
    ============================================ */
 
 (function () {
@@ -31,35 +32,29 @@
     attachEvents();
     showWelcome();
 
-    // Listen for auth changes
     window.addEventListener("auth:login", onLogin);
     window.addEventListener("auth:logout", onLogout);
 
-    // ✅ Wait for Firebase auth to settle, then restore UI
     if (typeof window.tarantinoWaitAuth === "function") {
       const user = await window.tarantinoWaitAuth();
-      if (user) {
-        // onAuthStateChanged will also fire, but this catches the initial state
-        if (!isLoggedIn) onLogin({ detail: user });
-      }
+      if (user && !isLoggedIn) onLogin({ detail: user });
     }
   }
 
   /* ---------- HTML ---------- */
   function injectHTML() {
     const html = `
-        <button id="ai-bot-button" aria-label="Open school assistant">
-  <span class="pulse"></span>
-  <svg width="46" height="46" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="6" cy="6" r="2" fill="#0d3b66"/>
-    <circle cx="18" cy="6" r="2" fill="#0d3b66"/>
-    <circle cx="6" cy="18" r="2" fill="#0d3b66"/>
-    <circle cx="18" cy="18" r="2" fill="#0d3b66"/>
-    <circle cx="12" cy="12" r="3" fill="#0d3b66"/>
-    <path d="M6 6L12 12M18 6L12 12M6 18L12 12M18 18L12 12"
-          stroke="#0d3b66" stroke-width="1.5" opacity="0.7"/>
-  </svg>
-</button>
+      <div id="ai-bot-button" role="button" aria-label="Open school assistant" tabindex="0">
+        <svg width="46" height="46" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="6" cy="6" r="2" fill="#0d3b66"/>
+          <circle cx="18" cy="6" r="2" fill="#0d3b66"/>
+          <circle cx="6" cy="18" r="2" fill="#0d3b66"/>
+          <circle cx="18" cy="18" r="2" fill="#0d3b66"/>
+          <circle cx="12" cy="12" r="3" fill="#0d3b66"/>
+          <path d="M6 6L12 12M18 6L12 12M6 18L12 12M18 18L12 12"
+                stroke="#0d3b66" stroke-width="1.5" opacity="0.7"/>
+        </svg>
+      </div>
 
       <div id="ai-bot-window" role="dialog" aria-label="School assistant chat">
         <div id="ai-bot-header">
@@ -136,6 +131,13 @@
 
   function attachEvents() {
     botButton.addEventListener("click", toggleBot);
+    botButton.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleBot();
+      }
+    });
+
     document.getElementById("ai-bot-close").addEventListener("click", toggleBot);
     sendButton.addEventListener("click", handleSend);
     inputField.addEventListener("keypress", e => { if (e.key === "Enter") handleSend(); });
@@ -166,10 +168,9 @@
 
     document.getElementById("ai-bot-status").textContent =
       `● ${currentUserName} — history on`;
-    authBadge.textContent = "🚪";  // logout icon
+    authBadge.textContent = "🚪";
     authBadge.title = "Logout";
 
-    // Load most recent session, or start one
     await loadLatestOrNewSession();
   }
 
@@ -189,7 +190,6 @@
     addMessage("👋 You're now in guest mode. Chats won't be saved.", "bot");
   }
 
-  /* ---------- Load latest session OR create one ---------- */
   async function loadLatestOrNewSession() {
     if (!isLoggedIn || !window.tarantinoListSessions) return;
     try {
@@ -211,10 +211,8 @@
     }
   }
 
-  /* ---------- Load session by id ---------- */
   async function loadSession(sessionId) {
     clearMessages();
-
     const msgs = await window.tarantinoLoadMessages(sessionId);
 
     if (msgs.length === 0) {
@@ -226,7 +224,6 @@
       return;
     }
 
-    // Show "welcome back" line
     addMessage(
       `👋 Welcome back, <b>${escapeHTML(currentUserName)}</b>. Continuing your last chat:`,
       "bot"
@@ -240,7 +237,6 @@
     })).slice(-8);
   }
 
-  /* ---------- Start a new chat ---------- */
   async function startNewChat() {
     document.getElementById("ai-history-modal").classList.remove("open");
     if (!isLoggedIn) return;
@@ -357,7 +353,6 @@
       const errBox   = document.getElementById("ai-auth-error");
       errBox.textContent = "";
 
-      // ✅ Sanity checks before hitting Firebase
       if (!window.tarantinoSignUp || !window.tarantinoLogin) {
         errBox.textContent = "Auth service not ready. Please refresh the page.";
         return;
@@ -392,8 +387,8 @@
     if (code.includes("wrong-password"))         return "Incorrect password. Try again.";
     if (code.includes("invalid-credential"))     return "Wrong email or password.";
     if (code.includes("too-many-requests"))      return "Too many attempts. Please wait a minute.";
-    if (code.includes("operation-not-allowed"))  return "Email/Password sign-in is not enabled. Enable it in Firebase Console.";
-    if (code.includes("unauthorized-domain"))    return "This domain isn't authorized. Add it in Firebase Console → Authentication → Settings.";
+    if (code.includes("operation-not-allowed"))  return "Email/Password sign-in is not enabled.";
+    if (code.includes("unauthorized-domain"))    return "This domain isn't authorized.";
     if (code.includes("network-request-failed")) return "Network error. Check your connection.";
     return "Something went wrong. Please try again.";
   }
@@ -419,7 +414,6 @@
     messagesBox.appendChild(div);
     messagesBox.scrollTop = messagesBox.scrollHeight;
 
-    // Save to Firestore if logged in
     if (save && isLoggedIn && currentSessionId && window.tarantinoSaveMessage) {
       window.tarantinoSaveMessage(currentSessionId, sender, text).catch(err =>
         console.warn("[Bot] Failed to save message:", err)
@@ -488,7 +482,6 @@
     sendButton.disabled = true;
 
     try {
-      // 1️⃣ AI first if enabled
       if (typeof BOT_CONFIG !== "undefined" && BOT_CONFIG.useAI) {
         try {
           const aiReply = await askAI(userText);
@@ -501,7 +494,6 @@
         }
       }
 
-      // 2️⃣ Local general responses
       if (typeof getGeneralResponse === "function") {
         const generalReply = getGeneralResponse(userText);
         if (generalReply) {
@@ -512,7 +504,6 @@
         }
       }
 
-      // 3️⃣ School keyword match
       const reply = await keywordMatch(userText);
       removeTyping();
       addMessage(reply, "bot", true);
