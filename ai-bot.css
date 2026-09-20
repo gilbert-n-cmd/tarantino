@@ -3,7 +3,7 @@
    Bishop Angelo Tarantino Memorial Secondary School
    ============================================ */
 
-/* Floating AI Icon — transparent, blue icon only */
+/* Floating AI Icon — plain icon, no button look */
 #ai-bot-button {
   position: fixed;
   bottom: 80px;
@@ -12,6 +12,7 @@
   height: 60px;
   background: transparent;
   border: none;
+  outline: none;
   cursor: pointer;
   z-index: 9999;
   display: flex;
@@ -19,37 +20,15 @@
   justify-content: center;
   padding: 0;
   box-shadow: none;
-  transition: transform 0.25s ease;
-  filter: drop-shadow(0 4px 10px rgba(13, 59, 102, 0.35));
-}
-
-#ai-bot-button:hover {
-  transform: translateY(-3px) scale(1.08);
-  filter: drop-shadow(0 8px 18px rgba(13, 59, 102, 0.5));
+  filter: drop-shadow(0 4px 10px rgba(13, 59, 102, 0.3));
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #ai-bot-button svg {
   display: block;
   width: 46px;
   height: 46px;
-}
-
-/* Green pulse dot */
-#ai-bot-button .pulse {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 12px;
-  height: 12px;
-  background: #4ade80;
-  border-radius: 50%;
-  border: 2px solid #ffffff;
-  animation: pulse 1.8s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.5; transform: scale(1.2); }
 }
 
 /* Chat Window */
@@ -266,11 +245,5 @@
   #ai-bot-button svg {
     width: 42px;
     height: 42px;
-  }
-  #ai-bot-button .pulse {
-    top: 0;
-    right: 0;
-    width: 11px;
-    height: 11px;
   }
 }
