@@ -841,3 +841,12 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
   transform: scale(1.08);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
+
+   @media (max-width: 768px) {
+  .nav-badge {
+    width: 44px;
+    height: 44px;
+    padding: 3px;
+    margin-left: auto;
+  }
+}
