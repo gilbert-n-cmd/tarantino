@@ -85,7 +85,7 @@ function setBrightness(level) {
 }
 
 
-backToTopBtn.style.display
+
 
   //language change
 
@@ -167,4 +167,51 @@ backToTopBtn.style.display
   });
 
 
+/* ============================================
+   Back to Top Button
+   Bishop Angelo Tarantino Memorial Secondary School
+   ============================================ */
 
+(function () {
+  "use strict";
+
+  const SHOW_AFTER_PX = 300;   // Show button after scrolling 300px
+
+  // ---------- Scroll to top ----------
+  // Global function so onclick="scrollToTop()" works
+  window.scrollToTop = function () {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
+
+  // ---------- Show / hide button on scroll ----------
+  function initBackToTop() {
+    const btn = document.getElementById("backToTopBtn");
+    if (!btn) {
+      console.warn("[BackToTop] Button not found");
+      return;
+    }
+
+    // Start hidden
+    btn.style.display = "none";
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > SHOW_AFTER_PX) {
+        btn.style.display = "flex";
+      } else {
+        btn.style.display = "none";
+      }
+    });
+
+    console.log("[BackToTop] Ready");
+  }
+
+  // ---------- Boot ----------
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initBackToTop);
+  } else {
+    initBackToTop();
+  }
+})();
