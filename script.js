@@ -84,24 +84,45 @@ function setBrightness(level) {
   }
 }
 
-const backToTopBtn = document.getElementById("backToTopBtn");
+/* ============================================
+   Back to Top Button
+   ============================================ */
 
-  window.onscroll = function () {
-    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-      backToTopBtn.style.display = "block";
-    } else {
-      backToTopBtn.style.display = "none";
-    }
-  };
+(function () {
+  "use strict";
 
-  function scrollToTop() {
+  const SHOW_AFTER_PX = 300;
+
+  // Global function for onclick="scrollToTop()"
+  window.scrollToTop = function () {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth"
+    });
+  };
+
+  function initBackToTop() {
+    const btn = document.getElementById("backToTopBtn");
+    if (!btn) return;
+
+    // Start hidden
+    btn.style.display = "none";
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > SHOW_AFTER_PX) {
+        btn.style.display = "flex";
+      } else {
+        btn.style.display = "none";
+      }
     });
   }
 
-
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initBackToTop);
+  } else {
+    initBackToTop();
+  }
+})();
   //language change
 
   const translations = {
