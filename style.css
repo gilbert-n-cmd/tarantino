@@ -821,3 +821,23 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     font-size: 11px;
   }
 }
+
+/* ============================================
+   SCHOOL BADGE (right side, image only)
+   ============================================ */
+.nav-badge {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: white;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex-shrink: 0;
+}
+
+.nav-badge:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
