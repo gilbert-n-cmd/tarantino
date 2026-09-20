@@ -3,51 +3,57 @@
    Bishop Angelo Tarantino Memorial Secondary School
    ============================================ */
 
-/* Floating Button */
+/* Floating AI Icon Button */
 #ai-bot-button {
   position: fixed;
-  bottom: 90px;
+  bottom: 80px;
   right: 24px;
+  width: 60px;
+  height: 60px;
   background: linear-gradient(135deg, #0d3b66, #1a5fa8);
   color: #ffffff;
-  padding: 14px 22px;
-  border-radius: 50px;
+  border-radius: 50%;
   cursor: pointer;
   z-index: 9999;
-  box-shadow: 0 6px 20px rgba(13, 59, 102, 0.35);
-  font-weight: 700;
-  font-size: 15px;
+  box-shadow: 0 6px 20px rgba(13, 59, 102, 0.45);
+  font-size: 26px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   border: none;
   font-family: 'Segoe UI', Tahoma, sans-serif;
+  padding: 0;
 }
 
 #ai-bot-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(13, 59, 102, 0.45);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 28px rgba(13, 59, 102, 0.55);
 }
 
+/* Green pulse dot (online indicator) */
 #ai-bot-button .pulse {
-  width: 10px;
-  height: 10px;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 14px;
+  height: 14px;
   background: #4ade80;
   border-radius: 50%;
+  border: 2px solid #ffffff;
   animation: pulse 1.8s infinite;
 }
 
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.5; transform: scale(1.3); }
+  50%      { opacity: 0.5; transform: scale(1.2); }
 }
 
 /* Chat Window */
 #ai-bot-window {
   display: none;
   position: fixed;
-  bottom: 92px;
+  bottom: 152px;
   right: 24px;
   width: 380px;
   height: 560px;
@@ -244,14 +250,21 @@
 @media (max-width: 480px) {
   #ai-bot-window {
     width: calc(100vw - 24px);
-    height: calc(100vh - 120px);
+    height: calc(100vh - 180px);
     right: 12px;
-    bottom: 84px;
+    bottom: 140px;
   }
   #ai-bot-button {
-    bottom: 90px;
+    bottom: 72px;
     right: 16px;
-    padding: 12px 18px;
-    font-size: 14px;
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+  }
+  #ai-bot-button .pulse {
+    top: 4px;
+    right: 4px;
+    width: 12px;
+    height: 12px;
   }
 }
