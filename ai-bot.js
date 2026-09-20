@@ -482,6 +482,32 @@
     sendButton.disabled = true;
 
     try {
+      // ═══════════════════════════════════════════════════
+      // 1️⃣ SEARCH FIRESTORE KNOWLEDGE FIRST
+      // ═══════════════════════════════════════════════════
+      if (typeof window.tarantinoSearchKnowledge === "function") {
+        try {
+          const hit = await window.tarantinoSearchKnowledge(userText);
+          if (hit) {
+            removeTyping();
+
+            let reply = hit.answer || "Here's what I found:";
+            if (hit.url) {
+              reply += `<br><br>👉 <a href="${hit.url}" target="_blank">Open page</a>`;
+            }
+
+            addMessage(reply, "bot", true);
+            conversationHistory.push({ role: "assistant", content: reply });
+            return;
+          }
+        } catch (kbErr) {
+          console.warn("[AI Bot] Knowledge search failed:", kbErr);
+        }
+      }
+
+      // ═══════════════════════════════════════════════════
+      // 2️⃣ TRY AI (if enabled)
+      // ═══════════════════════════════════════════════════
       if (typeof BOT_CONFIG !== "undefined" && BOT_CONFIG.useAI) {
         try {
           const aiReply = await askAI(userText);
@@ -494,6 +520,9 @@
         }
       }
 
+      // ═══════════════════════════════════════════════════
+      // 3️⃣ LOCAL RULES (greetings, math, time, jokes)
+      // ═══════════════════════════════════════════════════
       if (typeof getGeneralResponse === "function") {
         const generalReply = getGeneralResponse(userText);
         if (generalReply) {
@@ -504,6 +533,9 @@
         }
       }
 
+      // ═══════════════════════════════════════════════════
+      // 4️⃣ HARDCODED SITE_ACTIONS
+      // ═══════════════════════════════════════════════════
       const reply = await keywordMatch(userText);
       removeTyping();
       addMessage(reply, "bot", true);
