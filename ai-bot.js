@@ -48,11 +48,16 @@
   /* ---------- HTML ---------- */
   function injectHTML() {
     const html = `
-      <button id="ai-bot-button" aria-label="Open school assistant">
+       <button id="ai-bot-button" aria-label="Open school assistant">
   <span class="pulse"></span>
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 2C6.48 2 2 6.03 2 11C2 13.42 3.04 15.62 4.75 17.25L3 22L8.5 20.25C9.6 20.73 10.77 21 12 21C17.52 21 22 16.97 22 12C22 7.03 17.52 2 12 2Z" fill="white"/>
-    <path d="M12 7L12.8 10.2L16 11L12.8 11.8L12 15L11.2 11.8L8 11L11.2 10.2L12 7Z" fill="#0d3b66"/>
+  <svg width="46" height="46" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="6" cy="6" r="2" fill="#0d3b66"/>
+    <circle cx="18" cy="6" r="2" fill="#0d3b66"/>
+    <circle cx="6" cy="18" r="2" fill="#0d3b66"/>
+    <circle cx="18" cy="18" r="2" fill="#0d3b66"/>
+    <circle cx="12" cy="12" r="3" fill="#0d3b66"/>
+    <path d="M6 6L12 12M18 6L12 12M6 18L12 12M18 18L12 12"
+          stroke="#0d3b66" stroke-width="1.5" opacity="0.7"/>
   </svg>
 </button>
 
