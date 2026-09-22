@@ -842,43 +842,39 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
 }
 
 /* ============================================
-   SCHOOL BADGE — Zoomed In
+   SCHOOL BADGE — no ring, just the image
    ============================================ */
 .nav-badge {
-  width: 90px;
-  height: 90px;
+  width: 70px;
+  height: 70px;
   object-fit: contain;
-  border-radius: 50%;
-  background: #ffffff;
-  padding: 8px;
-  border: 3px solid #ffffff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  background: transparent;         /* ← no white fill */
+  padding: 0;                      /* ← no inner gap */
+  border: none;                    /* ← no ring */
+  border-radius: 0;                /* ← no circle clip */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);  /* ← subtle shadow for depth */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   flex-shrink: 0;
   display: block;
 }
 
 .nav-badge:hover {
-  transform: scale(1.12);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
-/* Tablet */
+/* Mobile */
 @media (max-width: 768px) {
   .nav-badge {
-    width: 72px;
-    height: 72px;
-    padding: 6px;
-    border-width: 2px;
+    width: 58px;
+    height: 58px;
     margin-left: auto;
   }
 }
 
-/* Small phones */
 @media (max-width: 480px) {
   .nav-badge {
-    width: 60px;
-    height: 60px;
-    padding: 5px;
+    width: 50px;
+    height: 50px;
   }
 }
