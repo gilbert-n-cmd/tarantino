@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Tarantino Portal</title>
+  <link rel="stylesheet" href="css/portal.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <header class="portal-header">
+    <div class="portal-brand">🛠️ Admin Panel</div>
+  <nav class="portal-nav">
+  <button class="nav-tab active" onclick="document.querySelectorAll('.admin-tab').forEach(s=>s.classList.remove('active'));document.getElementById('tab-overview').classList.add('active');document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');">Overview</button>
+  <button class="nav-tab" onclick="document.querySelectorAll('.admin-tab').forEach(s=>s.classList.remove('active'));document.getElementById('tab-students').classList.add('active');document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');">Students</button>
+  <button class="nav-tab" onclick="document.querySelectorAll('.admin-tab').forEach(s=>s.classList.remove('active'));document.getElementById('tab-grades').classList.add('active');document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');">Grades</button>
+  <button class="nav-tab" onclick="document.querySelectorAll('.admin-tab').forEach(s=>s.classList.remove('active'));document.getElementById('tab-fees').classList.add('active');document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');">Fees</button>
+  <button class="nav-tab" onclick="document.querySelectorAll('.admin-tab').forEach(s=>s.classList.remove('active'));document.getElementById('tab-timetable').classList.add('active');document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');">Timetable</button>
+  <button class="nav-tab" onclick="document.querySelectorAll('.admin-tab').forEach(s=>s.classList.remove('active'));document.getElementById('tab-messages').classList.add('active');document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');">Messages</button>
+  <button id="portalLogout">Logout</button>
+</nav>
+  </header>
+
+  <main class="portal-content">
+
+    <!-- ═══════════ OVERVIEW ═══════════ -->
+    <section id="tab-overview" class="admin-tab active">
+      <h1>Overview</h1>
+      <p class="portal-sub">School at a glance</p>
+
+      <div class="dashboard-grid">
+        <div class="dash-card"><h3>👥 Students</h3><p id="statStudents">…</p></div>
+        <div class="dash-card"><h3>📊 Grade Entries</h3><p id="statGrades">…</p></div>
+        <div class="dash-card"><h3>💰 Outstanding Fees</h3><p id="statFees">…</p></div>
+        <div class="dash-card"><h3>✉️ Unread Messages</h3><p id="statMsgs">…</p></div>
+      </div>
+    </section>
+
+    <!-- ═══════════ STUDENTS ═══════════ -->
+    <section id="tab-students" class="admin-tab">
+      <div class="admin-header">
+        <div>
+          <h1>Students</h1>
+          <p class="portal-sub">Manage student records</p>
+        </div>
+        <div class="admin-header-actions">
+          <button class="admin-btn" id="importCsvBtn">📥 Import CSV</button>
+          <button class="admin-btn primary" id="addStudentBtn">+ Add Student</button>
+        </div>
+      </div>
+
+      <div class="admin-search">
+        <input type="text" id="studentSearch" placeholder="🔍 Search by name, email, or class…">
+      </div>
+
+      <div id="studentsList" class="admin-list">Loading…</div>
+    </section>
+
+    <!-- ═══════════ GRADES ═══════════ -->
+    <section id="tab-grades" class="admin-tab">
+      <div class="admin-header">
+        <div><h1>Grades</h1><p class="portal-sub">Record exam results</p></div>
+        <div class="admin-header-actions">
+          <button class="admin-btn" id="printReportBtn">🖨️ Report Card</button>
+          <button class="admin-btn primary" id="addGradeBtn">+ Add Grade</button>
+        </div>
+      </div>
+
+      <div class="admin-filter">
+        <label>Student:
+          <select id="gradeStudentFilter">
+            <option value="">— Select a student —</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="gradesList" class="admin-list">Select a student above</div>
+    </section>
+
+    <!-- ═══════════ FEES ═══════════ -->
+    <section id="tab-fees" class="admin-tab">
+      <div class="admin-header">
+        <div><h1>Fees</h1><p class="portal-sub">Track payments and balances</p></div>
+        <div class="admin-header-actions">
+          <button class="admin-btn" id="printReceiptBtn">🧾 Receipt</button>
+          <button class="admin-btn primary" id="addFeeBtn">+ Record Fee</button>
+        </div>
+      </div>
+
+      <div class="admin-filter">
+        <label>Student:
+          <select id="feeStudentFilter">
+            <option value="">— Select a student —</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="feesList" class="admin-list">Select a student above</div>
+    </section>
+
+    <!-- ═══════════ TIMETABLE ═══════════ -->
+    <section id="tab-timetable" class="admin-tab">
+      <div class="admin-header">
+        <div><h1>Timetable</h1><p class="portal-sub">Build class schedules</p></div>
+        <button class="admin-btn primary" id="addSlotBtn">+ Add Slot</button>
+      </div>
+
+      <div class="admin-filter">
+        <label>Class:
+          <input type="text" id="ttClassInput" placeholder="e.g. S.5 Sciences">
+        </label>
+      </div>
+
+      <div id="timetableList" class="admin-list">Enter a class name</div>
+    </section>
+
+    <!-- ═══════════ MESSAGES ═══════════ -->
+    <section id="tab-messages" class="admin-tab">
+      <div class="admin-header">
+        <div><h1>Messages</h1><p class="portal-sub">Send announcements to students</p></div>
+      </div>
+
+      <div class="admin-card">
+        <h3>Send to:</h3>
+        <div class="radio-group">
+          <label><input type="radio" name="msgTarget" value="all" checked> All students</label>
+          <label><input type="radio" name="msgTarget" value="class"> Specific class</label>
+          <label><input type="radio" name="msgTarget" value="one"> One student</label>
+        </div>
+
+        <div id="msgTargetPicker" style="display:none; margin-top:12px">
+          <input type="text" id="msgClassInput" placeholder="Class name" style="display:none">
+          <select id="msgStudentPicker" style="display:none">
+            <option value="">— Select student —</option>
+          </select>
+        </div>
+
+        <textarea id="announcementText" rows="5" placeholder="Write your announcement…"></textarea>
+        <button class="admin-btn primary" id="sendAnnouncementBtn">Send Announcement</button>
+      </div>
+
+      <h3 style="margin-top:32px">Recent Messages</h3>
+      <div id="messagesList" class="admin-list">Loading…</div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════ MODALS ═══════════ -->
+
+  <!-- Student Modal -->
+  <div id="studentModal" class="admin-modal">
+    <div class="admin-modal-box">
+      <button class="admin-modal-close" data-close="studentModal">✖</button>
+      <h2 id="studentModalTitle">Add Student</h2>
+      <form id="studentForm">
+        <input type="hidden" id="studentDocId">
+
+        <label>Full Name <input type="text" id="studentNameInput" required></label>
+        <label>Email <input type="email" id="studentEmailInput" required></label>
+        <label>Firebase UID <input type="text" id="studentUidInput" placeholder="From Firebase Auth"></label>
+        <label>Class <input type="text" id="studentClassInput" placeholder="e.g. S.5 Sciences"></label>
+        <label>House <input type="text" id="studentHouseInput" placeholder="e.g. Blue"></label>
+        <label>Term <input type="text" id="studentTermInput" placeholder="e.g. Term 1 2026"></label>
+
+        <p class="portal-error" id="studentFormError"></p>
+        <p class="portal-help" id="uidHelp" style="display:none">
+          ⚠️ Enter the student's Firebase UID. Find it in Firebase Console → Authentication → Users.
+        </p>
+
+        <div class="admin-modal-actions">
+          <button type="button" class="admin-btn" data-close="studentModal">Cancel</button>
+          <button type="submit" class="admin-btn primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Grade Modal (Add + Edit) -->
+  <div id="gradeModal" class="admin-modal">
+    <div class="admin-modal-box">
+      <button class="admin-modal-close" data-close="gradeModal">✖</button>
+      <h2 id="gradeModalTitle">Add Grade</h2>
+      <form id="gradeForm">
+        <input type="hidden" id="gradeDocId">
+        <label>Student <select id="gradeStudentSelect" required></select></label>
+        <label>Subject <input type="text" id="gradeSubject" required placeholder="Mathematics"></label>
+        <label>Score <input type="number" id="gradeScore" required min="0" max="100"></label>
+        <label>Grade <input type="text" id="gradeLetter" placeholder="A, B+, etc."></label>
+        <label>Term <input type="text" id="gradeTerm" placeholder="Term 1 2026"></label>
+        <label>Teacher <input type="text" id="gradeTeacher" placeholder="Mr. Okello"></label>
+        <p class="portal-error" id="gradeFormError"></p>
+        <div class="admin-modal-actions">
+          <button type="button" class="admin-btn" data-close="gradeModal">Cancel</button>
+          <button type="submit" class="admin-btn primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Fee Modal (Add + Edit) -->
+  <div id="feeModal" class="admin-modal">
+    <div class="admin-modal-box">
+      <button class="admin-modal-close" data-close="feeModal">✖</button>
+      <h2 id="feeModalTitle">Record Fee</h2>
+      <form id="feeForm">
+        <input type="hidden" id="feeDocId">
+        <label>Student <select id="feeStudentSelect" required></select></label>
+        <label>Term <input type="text" id="feeTerm" required placeholder="Term 1 2026"></label>
+        <label>Total Amount (UGX) <input type="number" id="feeAmount" required min="0"></label>
+        <label>Amount Paid (UGX) <input type="number" id="feePaid" required min="0"></label>
+        <p class="portal-error" id="feeFormError"></p>
+        <div class="admin-modal-actions">
+          <button type="button" class="admin-btn" data-close="feeModal">Cancel</button>
+          <button type="submit" class="admin-btn primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Slot Modal (Add + Edit) -->
+  <div id="slotModal" class="admin-modal">
+    <div class="admin-modal-box">
+      <button class="admin-modal-close" data-close="slotModal">✖</button>
+      <h2 id="slotModalTitle">Add Timetable Slot</h2>
+      <form id="slotForm">
+        <input type="hidden" id="slotEditIdx">
+        <input type="hidden" id="slotEditDay">
+        <label>Class <input type="text" id="slotClass" required></label>
+        <label>Day
+          <select id="slotDay" required>
+            <option>Mon</option><option>Tue</option><option>Wed</option>
+            <option>Thu</option><option>Fri</option>
+          </select>
+        </label>
+        <label>Subject <input type="text" id="slotSubject" required></label>
+        <label>Teacher <input type="text" id="slotTeacher"></label>
+        <label>Room <input type="text" id="slotRoom"></label>
+        <p class="portal-error" id="slotFormError"></p>
+        <div class="admin-modal-actions">
+          <button type="button" class="admin-btn" data-close="slotModal">Cancel</button>
+          <button type="submit" class="admin-btn primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CSV Import Modal -->
+  <div id="csvModal" class="admin-modal">
+    <div class="admin-modal-box">
+      <button class="admin-modal-close" data-close="csvModal">✖</button>
+      <h2>Bulk Import Students</h2>
+      <p class="portal-help">
+        Upload a CSV with columns: <code>name,email,class,house,term</code><br>
+        (Firebase Auth accounts must exist first — UID will be matched by email.)
+      </p>
+
+      <input type="file" id="csvFileInput" accept=".csv">
+      <div id="csvPreview" style="margin-top:16px"></div>
+      <p class="portal-error" id="csvError"></p>
+
+      <div class="admin-modal-actions">
+        <button type="button" class="admin-btn" data-close="csvModal">Cancel</button>
+        <button type="button" class="admin-btn primary" id="csvImportConfirm" disabled>Import</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Card / Receipt printable area -->
+  <div id="printArea"></div>
+
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>

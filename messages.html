@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages — Student Portal</title>
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+  <header class="portal-header">
+    <div class="portal-brand">🎓 Tarantino Portal</div>
+    <nav class="portal-nav">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="grades.html">Grades</a>
+      <a href="fees.html">Fees</a>
+      <a href="timetable.html">Timetable</a>
+      <a href="messages.html" class="active">Messages</a>
+      <button id="portalLogout">Logout</button>
+    </nav>
+  </header>
+
+  <main class="portal-content">
+    <h1>Messages</h1>
+    <p class="portal-sub">Announcements and conversations with the school</p>
+
+    <div id="msgsLoading" class="portal-loading">Loading messages…</div>
+    <div id="msgsEmpty" class="portal-empty" style="display:none">
+      No messages yet.
+    </div>
+
+    <div id="messagesList" class="messages-list"></div>
+
+    <!-- Send message box -->
+    <div class="message-compose">
+      <textarea id="newMessageText" placeholder="Type a message to the school…" rows="3"></textarea>
+      <button id="sendMessageBtn">Send</button>
+    </div>
+  </main>
+
+  <script src="../js/firebase-config.js"></script>
+  <script type="module" src="../js/ai-auth.js"></script>
+  <script type="module" src="../js/firestore-data.js"></script>
+  <script type="module" src="../js/portal.js"></script>
+</body>
+</html>

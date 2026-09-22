@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal — Login</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+  <main class="portal-login">
+    <div class="login-card">
+      <div class="login-badge">🎓</div>
+      <h1>Student Portal</h1>
+      <p class="login-sub">Sign in to view your grades, fees, and timetable.</p>
+
+      <form id="portalLoginForm">
+        <label>
+          Email
+          <input type="email" id="portalEmail" required autocomplete="email">
+        </label>
+
+        <label>
+          Password
+          <input type="password" id="portalPassword" required minlength="6" autocomplete="current-password">
+        </label>
+
+        <button type="submit" id="portalLoginBtn">Sign In</button>
+
+        <p class="portal-error" id="portalError"></p>
+      </form>
+
+      <p class="portal-help">
+        No account? Contact the school office.
+      </p>
+
+      <p class="portal-help">
+        <a href="../index.html">← Back to main site</a>
+      </p>
+    </div>
+  </main>
+
+  <script src="../firebase-config.js"></script>
+  <script type="module" src="../ai-auth.js"></script>
+  <script type="module" src="../firestore-data.js"></script>
+  <script type="module" src="../portal.js"></script>
+</body>
+</html>
