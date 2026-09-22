@@ -847,7 +847,7 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
 .nav-badge {
   width: 55px;
   height: 55px;
-  object-fit: contain;
+ /* object-fit: contain;*/
   border-radius: 50%;
   background: white;
   padding: 4px;
