@@ -1,0 +1,478 @@
+/* ============================================
+   Student Portal Styles
+   ============================================ */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #f4f7fb;
+  color: #1f2937;
+}
+
+/* ============================================
+   LOGIN PAGE
+   ============================================ */
+.portal-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0d3b66, #1a5fa8);
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  border-radius: 16px;
+  padding: 40px 32px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.login-badge { font-size: 56px; margin-bottom: 12px; }
+
+.login-card h1 {
+  color: #0d3b66;
+  font-size: 26px;
+  margin: 0 0 8px;
+}
+
+.login-sub {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+.login-card form { text-align: left; }
+
+.login-card label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 16px;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 6px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.login-card input:focus { border-color: #0d3b66; }
+
+#portalLoginBtn {
+  width: 100%;
+  background: #0d3b66;
+  color: white;
+  border: none;
+  padding: 13px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+#portalLoginBtn:hover:not(:disabled) { background: #1a5fa8; }
+#portalLoginBtn:disabled { background: #94a3b8; cursor: not-allowed; }
+
+.portal-error {
+  color: #dc2626;
+  font-size: 13px;
+  text-align: center;
+  margin: 12px 0 0;
+  min-height: 16px;
+}
+
+.portal-help {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 16px 0 0;
+}
+
+.portal-help a {
+  color: #0d3b66;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ============================================
+   PORTAL HEADER + NAV
+   ============================================ */
+.portal-header {
+  background: linear-gradient(135deg, #0d3b66, #1a5fa8);
+  color: white;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.portal-brand { font-size: 18px; font-weight: 700; }
+
+.portal-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.portal-nav a {
+  color: white;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.portal-nav a:hover { background: rgba(255, 255, 255, 0.15); }
+.portal-nav a.active { background: rgba(255, 255, 255, 0.25); font-weight: 700; }
+
+#portalLogout {
+  background: white;
+  color: #0d3b66;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#portalLogout:hover { background: #e8f0fb; }
+
+/* ============================================
+   PORTAL CONTENT
+   ============================================ */
+.portal-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.portal-content h1 {
+  color: #0d3b66;
+  font-size: 28px;
+  margin: 0 0 8px;
+}
+
+.portal-sub {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0 0 32px;
+}
+
+.portal-loading,
+.portal-empty {
+  color: #6b7280;
+  font-size: 14px;
+  padding: 24px;
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* ============================================
+   DASHBOARD
+   ============================================ */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.dash-card {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dash-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dash-card h3 {
+  color: #0d3b66;
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dash-card p {
+  color: #1f2937;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  word-break: break-word;
+}
+
+/* ============================================
+   GRADES
+   ============================================ */
+.grades-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.grade-row {
+  background: white;
+  padding: 18px 24px;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 20px;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.grade-subject strong { font-size: 15px; color: #1f2937; }
+.grade-term {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.grade-score {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0d3b66;
+  text-align: right;
+}
+
+.grade-grade {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  background: #0d3b66;
+  padding: 4px 10px;
+  border-radius: 20px;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* ============================================
+   FEES
+   ============================================ */
+.fee-summary { margin-bottom: 24px; }
+
+.fee-summary-card {
+  padding: 28px;
+  border-radius: 12px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.fee-summary-card.paid { background: linear-gradient(135deg, #059669, #10b981); }
+.fee-summary-card.owing { background: linear-gradient(135deg, #dc2626, #ef4444); }
+
+.fee-summary-label {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+.fee-summary-value {
+  font-size: 34px;
+  font-weight: 700;
+  margin: 8px 0;
+}
+
+.fee-summary-term { font-size: 13px; opacity: 0.9; }
+
+.fees-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fee-row {
+  background: white;
+  padding: 18px 24px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.fee-term {
+  font-weight: 700;
+  color: #0d3b66;
+  margin-bottom: 8px;
+}
+
+.fee-amounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.fee-amounts .owing { color: #dc2626; }
+.fee-amounts .paid  { color: #059669; }
+
+/* ============================================
+   TIMETABLE
+   ============================================ */
+.timetable-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.timetable-table th,
+.timetable-table td {
+  padding: 14px 18px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.timetable-table th {
+  background: #0d3b66;
+  color: white;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.timetable-table tr:last-child td { border-bottom: none; }
+.timetable-table tr:hover td { background: #f9fafb; }
+
+/* ============================================
+   MESSAGES
+   ============================================ */
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.msg-bubble {
+  max-width: 75%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.msg-bubble.from-them {
+  background: white;
+  border-bottom-left-radius: 4px;
+  align-self: flex-start;
+}
+
+.msg-bubble.from-me {
+  background: #0d3b66;
+  color: white;
+  border-bottom-right-radius: 4px;
+  align-self: flex-end;
+}
+
+.msg-meta {
+  font-size: 11px;
+  opacity: 0.75;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.msg-text { font-size: 14px; line-height: 1.5; }
+
+.message-compose {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message-compose textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  outline: none;
+}
+
+.message-compose textarea:focus { border-color: #0d3b66; }
+
+#sendMessageBtn {
+  align-self: flex-end;
+  background: #0d3b66;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#sendMessageBtn:hover:not(:disabled) { background: #1a5fa8; }
+#sendMessageBtn:disabled { background: #94a3b8; cursor: not-allowed; }
+
+/* ============================================
+   MOBILE
+   ============================================ */
+@media (max-width: 768px) {
+  .portal-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .portal-nav { justify-content: center; }
+  .portal-nav a { font-size: 13px; padding: 6px 10px; }
+
+  .login-card { padding: 32px 22px; }
+
+  .portal-content h1 { font-size: 22px; }
+
+  .grade-row {
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+  }
+
+  .grade-grade { grid-column: 1 / -1; justify-self: start; }
+
+  .msg-bubble { max-width: 90%; }
+}
+
