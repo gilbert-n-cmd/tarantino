@@ -52,28 +52,38 @@
   50%      { opacity: 0.5; transform: scale(1.2); }
 }
 
-/* Chat Window */
-#ai-bot-window {
-  display: none;
-  position: fixed;
-  bottom: 152px;
-  right: 24px;
-  width: 380px;
-  height: 560px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-  z-index: 9999;
-  flex-direction: column;
-  overflow: hidden;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-}
-
-#ai-bot-window.open {
-  display: flex;
-  animation: slideUp 0.25s ease;
-}
-
+/* ============================================
+   AI CHAT WINDOW — LARGE SCREEN
+   ============================================ */
+   #ai-bot-window {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    width: 420px;
+  
+    /* Uses almost the full screen height */
+    height: calc(100vh - 40px);
+    max-height: calc(100vh - 40px);
+  
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    z-index: 9999;
+  
+    flex-direction: column;
+    overflow: hidden;
+  
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+  }
+  
+  /* When opened */
+  #ai-bot-window.open {
+    display: flex;
+    animation: slideUp 0.25s ease;
+  }
+  
+  
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
