@@ -1,0 +1,36 @@
+.school-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.school-badge {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.school-brand .logo {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+/* Mobile screens: hide badge only, keep school name */
+@media (max-width: 768px) {
+    .school-badge {
+      display: none !important;
+    }
+  
+    .school-brand {
+      display: flex;
+      align-items: center;
+    }
+  
+    .school-brand .logo {
+      display: block;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+  }
+  
