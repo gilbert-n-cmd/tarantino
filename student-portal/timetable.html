@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timetable — Student Portal</title>
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+  <header class="portal-header">
+    <div class="portal-brand">🎓 Tarantino Portal</div>
+    <nav class="portal-nav">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="grades.html">Grades</a>
+      <a href="fees.html">Fees</a>
+      <a href="timetable.html" class="active">Timetable</a>
+      <a href="messages.html">Messages</a>
+      <button id="portalLogout">Logout</button>
+    </nav>
+  </header>
+
+  <main class="portal-content">
+    <h1>My Timetable</h1>
+    <p class="portal-sub">
+      Class: <span id="ttClass">…</span> |
+      Term: <span id="ttTerm">…</span>
+    </p>
+
+    <div id="ttLoading" class="portal-loading">Loading timetable…</div>
+    <div id="ttEmpty" class="portal-empty" style="display:none">
+      No timetable published yet. Check back soon.
+    </div>
+
+    <div id="timetableGrid" class="timetable-grid"></div>
+  </main>
+
+  <script src="../js/firebase-config.js"></script>
+  <script type="module" src="../js/ai-auth.js"></script>
+  <script type="module" src="../js/firestore-data.js"></script>
+  <script type="module" src="../js/portal.js"></script>
+</body>
+</html>

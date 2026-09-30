@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — Tarantino AI</title>
+  <link rel="stylesheet" href="css/portal.css">
+  <link rel="stylesheet" href="css/admin-login.css">
+</head>
+<body>
+  <main class="portal-login">
+    <div class="login-card admin-login-card">
+      <div class="login-badge">🛠️</div>
+      <h1>AI Admin Login</h1>
+      <p class="login-sub">Manage the school assistant's knowledge</p>
+
+      <form id="adminLoginForm">
+        <label>
+          Admin Email
+          <input type="email" id="adminEmail" required autocomplete="email" placeholder="admin@school.com">
+        </label>
+
+        <label>
+          Password
+          <input type="password" id="adminPassword" required minlength="6" autocomplete="current-password">
+        </label>
+
+        <button type="submit" id="adminLoginBtn">Sign In</button>
+
+        <p class="portal-error" id="adminError"></p>
+      </form>
+
+      <p class="portal-help">
+        <a href="../index.html">← Back to main site</a>
+      </p>
+    </div>
+  </main>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/ai-auth.js"></script>
+  <script type="module" src="js/admin-login.js"></script>
+</body>
+</html>

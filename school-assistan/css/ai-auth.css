@@ -1,0 +1,187 @@
+
+/* ============================================
+   Firebase Auth + History Modal Styles
+   ============================================ */
+
+/* ---------- Shared Modal Backdrop ---------- */
+#ai-auth-modal,
+#ai-history-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 100000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+#ai-auth-modal.open,
+#ai-history-modal.open {
+  display: flex;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---------- Auth Box ---------- */
+.ai-auth-box,
+.ai-history-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 28px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  position: relative;
+  animation: slideUp 0.25s ease;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ai-auth-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #94a3b8;
+}
+.ai-auth-close:hover { color: #1f2937; }
+
+.ai-auth-box h2,
+.ai-history-box h2 {
+  color: #0d3b66;
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.ai-auth-box p#ai-auth-sub {
+  color: #6b7280;
+  font-size: 13px;
+  margin: 0 0 20px;
+}
+
+/* ---------- Form ---------- */
+#ai-auth-form input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 12px;
+  font-family: inherit;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color .2s;
+}
+#ai-auth-form input:focus { border-color: #0d3b66; }
+
+#ai-auth-submit {
+  width: 100%;
+  background: #0d3b66;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 4px;
+  font-family: inherit;
+  transition: background .2s;
+}
+#ai-auth-submit:hover:not(:disabled) { background: #1a5fa8; }
+#ai-auth-submit:disabled { background: #94a3b8; cursor: not-allowed; }
+
+.ai-auth-switch {
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+  margin: 16px 0 6px;
+}
+.ai-auth-switch a {
+  color: #0d3b66;
+  font-weight: 700;
+  text-decoration: none;
+}
+.ai-auth-switch a:hover { text-decoration: underline; }
+
+.ai-auth-guest {
+  text-align: center;
+  font-size: 12px;
+  margin: 8px 0 0;
+}
+.ai-auth-guest a {
+  color: #94a3b8;
+  text-decoration: none;
+}
+.ai-auth-guest a:hover { color: #0d3b66; text-decoration: underline; }
+
+.ai-auth-error {
+  color: #dc2626;
+  font-size: 13px;
+  text-align: center;
+  margin: 10px 0 0;
+  min-height: 16px;
+}
+
+/* ---------- History Modal ---------- */
+.ai-history-box {
+  max-width: 480px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#ai-history-new {
+  background: #0d3b66;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 12px 0;
+  font-family: inherit;
+}
+#ai-history-new:hover { background: #1a5fa8; }
+
+#ai-history-list {
+  overflow-y: auto;
+  flex: 1;
+  margin-top: 4px;
+}
+
+.ai-history-item {
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.ai-history-item:hover {
+  background: #f4f7fb;
+  border-color: #0d3b66;
+}
+
+.ai-history-title {
+  font-weight: 700;
+  color: #1f2937;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+.ai-history-date {
+  font-size: 11px;
+  color: #94a3b8;
+}

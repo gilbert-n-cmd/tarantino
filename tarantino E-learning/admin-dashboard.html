@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin Dashboard</title>
+<style>
+:root {
+  --primary: #4a90e2;
+  --danger: #dc3545;
+  --light: #f5f6fa;
+  --white: #fff;
+  --shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+* { box-sizing: border-box; }
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--light);
+  margin: 0;
+}
+header {
+  background: var(--primary);
+  color: var(--white);
+  padding: 15px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-shadow: var(--shadow);
+}
+header h1 { margin: 0; font-size: 1.4rem; }
+#logoutBtn {
+  position: absolute; right: 20px;
+  background: var(--danger); border: none;
+  color: var(--white); padding: 7px 14px;
+  border-radius: 6px; cursor: pointer;
+  font-weight: bold; transition: 0.2s;
+}
+#logoutBtn:hover { opacity: 0.9; }
+nav {
+  background:#1976d2;
+  padding:10px;
+  display:flex;
+  justify-content:center;
+  flex-wrap: wrap;
+  gap:10px;
+}
+nav button {
+  padding:10px 16px; border:none; border-radius:6px;
+  color:white; background:#2196f3; cursor:pointer; transition:0.2s;
+  font-size: 0.95rem;
+}
+nav button:hover { background:#1565c0; }
+
+main { max-width: 1100px; margin: 20px auto; padding: 15px; }
+section {
+  background: var(--white); padding: 15px; border-radius: 10px;
+  box-shadow: var(--shadow); margin-bottom: 20px;
+}
+h3 {
+  border-left: 5px solid var(--primary);
+  padding-left: 10px; margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+.summary-cards {
+  display: flex; flex-wrap: wrap;
+  justify-content: space-around; gap: 10px;
+}
+.summary-card {
+  flex: 1 1 120px; background: #e3f2fd;
+  border-radius: 8px; text-align: center;
+  padding: 10px; box-shadow: var(--shadow);
+  transition: 0.2s;
+}
+.summary-card:hover { transform: translateY(-2px); }
+.summary-card h2 { margin: 0; font-size: 1.4rem; color: #1976d2; }
+.summary-card p { margin: 5px 0 0; color: #555; font-size: 0.85rem; }
+input, select {
+  padding: 8px; border: 1px solid #ccc;
+  border-radius: 6px; font-size: 0.95rem; width: 100%;
+  margin-bottom: 10px;
+}
+button {
+  background: var(--primary); color: var(--white);
+  border: none; padding: 8px; border-radius: 6px;
+  cursor: pointer; font-size: 0.95rem; transition: 0.2s;
+}
+button:hover { opacity: 0.9; }
+table {
+  width: 100%; border-collapse: collapse;
+  overflow-x: auto; display: block;
+}
+th, td {
+  border: 1px solid #ddd; padding: 8px;
+  text-align: left; white-space: nowrap;
+}
+th { background: var(--primary); color: var(--white); }
+.delete-btn {
+  background: var(--danger); color: white;
+  border: none; padding: 5px 10px;
+  border-radius: 5px; cursor: pointer;
+}
+.delete-btn:hover { background: #b52d3a; }
+#loadingMsg { text-align:center; color:gray; margin:15px 0; }
+.success { color: green; }
+.error { color: red; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  nav button {
+    flex: 1 1 45%;
+  }
+  .summary-card {
+    flex: 1 1 100%;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Admin Dashboard</h1>
+  <button id="logoutBtn">Logout</button>
+</header>
+
+<nav>
+  <button class="menu-btn" data-section="dashboardSummary">Dashboard</button>
+  <button class="menu-btn" data-section="addUserSection">Add New User</button>
+  <button class="menu-btn" data-section="teachersSection">Teachers</button>
+  <button class="menu-btn" data-section="studentsSection">Students</button>
+  <button class="menu-btn" data-section="quizzesSection">Quizzes</button>
+  <button class="menu-btn" data-section="notesSection">Notes & Tutorials</button>
+</nav>
+
+<p id="loadingMsg">Loading data, please wait...</p>
+
+<main>
+  <section id="dashboardSummary">
+    <h3>📊 Dashboard Summary</h3>
+    <div class="summary-cards">
+      <div class="summary-card"><h2 id="totalUsers">0</h2><p>Total Users</p></div>
+      <div class="summary-card"><h2 id="totalTeachers">0</h2><p>Teachers</p></div>
+      <div class="summary-card"><h2 id="totalStudents">0</h2><p>Students</p></div>
+      <div class="summary-card"><h2 id="totalQuizzes">0</h2><p>Quizzes</p></div>
+      <div class="summary-card"><h2 id="totalNotes">0</h2><p>Notes & Tutorials</p></div>
+    </div>
+  </section>
+
+  <section id="addUserSection" style="display:none;">
+    <h3>➕ Add New User</h3>
+    <form id="createUserForm">
+      <input type="email" id="newEmail" placeholder="User Email" required>
+      <input type="password" id="newPassword" placeholder="Password" required>
+      <select id="newRole" required>
+        <option value="">Select Role</option>
+        <option value="teacher">Teacher</option>
+        <option value="student">Student</option>
+      </select>
+      <button type="submit">Create User</button>
+      <p id="createMsg"></p>
+    </form>
+  </section>
+
+  <!-- Teachers Table -->
+  <section id="teachersSection" style="display:none;">
+    <h3>👩‍🏫 Teachers</h3>
+    <table id="teachersTable">
+      <thead>
+        <tr><th>Email</th><th>Password</th><th>Action</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- Students Table -->
+  <section id="studentsSection" style="display:none;">
+    <h3>👨‍🎓 Students</h3>
+    <table id="studentsTable">
+      <thead>
+        <tr><th>Email</th><th>Password</th><th>Action</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="quizzesSection" style="display:none;">
+    <h3>🧩 Quizzes</h3>
+    <table id="quizTable">
+      <thead><tr><th>Title</th><th>Teacher</th><th>Start</th><th>End</th><th>Action</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="notesSection" style="display:none;">
+    <h3>📚 Notes & Tutorials</h3>
+    <table id="notesTable">
+      <thead><tr><th>Title</th><th>Teacher</th><th>PDF</th><th>YouTube</th><th>Action</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, addDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyDv0wNHZl4wSXd10B7tr9Br-7phWidLDaU",
+authDomain: "tarantino-e-learning.firebaseapp.com",
+projectId: "tarantino-e-learning",
+storageBucket: "tarantino-e-learning.firebasestorage.app",
+messagingSenderId: "501202693775",
+appId: "1:501202693775:web:fabc3af9989542c9a18afa"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const sections = ["dashboardSummary","addUserSection","teachersSection","studentsSection","quizzesSection","notesSection"];
+document.querySelectorAll(".menu-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    sections.forEach(id => {
+      document.getElementById(id).style.display = id === btn.dataset.section ? "block" : "none";
+    });
+  });
+});
+
+// Create User
+const createForm = document.getElementById("createUserForm");
+const msg = document.getElementById("createMsg");
+createForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("newEmail").value;
+  const password = document.getElementById("newPassword").value;
+  const role = document.getElementById("newRole").value;
+  msg.textContent = "Creating user...";
+  msg.className = "";
+
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await addDoc(collection(db, "users"), { uid: cred.user.uid, email, password, role });
+    msg.textContent = "✅ User created successfully!";
+    msg.className = "success";
+    createForm.reset();
+    loadAllData();
+  } catch (error) {
+    msg.textContent = "❌ " + error.message;
+    msg.className = "error";
+  }
+});
+
+// Load Dashboard Data
+async function loadAllData() {
+  const loading = document.getElementById("loadingMsg");
+  loading.textContent = "Fetching data...";
+
+  const usersSnap = await getDocs(collection(db, "users"));
+  const quizzesSnap = await getDocs(collection(db, "teacher_quizzes"));
+  const notesSnap = await getDocs(collection(db, "notes"));
+
+  let teachers = 0, students = 0;
+  const teachersTable = document.querySelector("#teachersTable tbody");
+  const studentsTable = document.querySelector("#studentsTable tbody");
+  teachersTable.innerHTML = studentsTable.innerHTML = "";
+
+  usersSnap.forEach(docSnap => {
+    const data = docSnap.data();
+    const deleteBtn = `<button class="delete-btn" onclick="deleteUser('${docSnap.id}')">Delete</button>`;
+    if (data.role === "teacher") {
+      teachers++;
+      teachersTable.innerHTML += `<tr><td>${data.email}</td><td>${data.password}</td><td>${deleteBtn}</td></tr>`;
+    } else if (data.role === "student") {
+      students++;
+      studentsTable.innerHTML += `<tr><td>${data.email}</td><td>${data.password}</td><td>${deleteBtn}</td></tr>`;
+    }
+  });
+
+  document.getElementById("totalUsers").textContent = usersSnap.size;
+  document.getElementById("totalTeachers").textContent = teachers;
+  document.getElementById("totalStudents").textContent = students;
+  document.getElementById("totalQuizzes").textContent = quizzesSnap.size;
+  document.getElementById("totalNotes").textContent = notesSnap.size;
+
+  // Quizzes
+  const quizTable = document.querySelector("#quizTable tbody");
+  quizTable.innerHTML = "";
+  quizzesSnap.forEach(docSnap => {
+    const q = docSnap.data();
+    const id = docSnap.id;
+    quizTable.innerHTML += `<tr>
+      <td>${q.title}</td>
+      <td>${q.teacher}</td>
+      <td>${new Date(q.startTime).toLocaleString()}</td>
+      <td>${new Date(q.endTime).toLocaleString()}</td>
+      <td><button class="delete-btn" onclick="deleteQuiz('${id}')">Delete</button></td>
+    </tr>`;
+  });
+
+  // Notes
+  const notesTable = document.querySelector("#notesTable tbody");
+  notesTable.innerHTML = "";
+  notesSnap.forEach(docSnap => {
+    const n = docSnap.data();
+    const id = docSnap.id;
+    notesTable.innerHTML += `<tr>
+      <td>${n.title}</td>
+      <td>${n.teacher}</td>
+      <td><a href="${n.pdf}" target="_blank">PDF</a></td>
+      <td><a href="${n.youtube}" target="_blank">Video</a></td>
+      <td><button class="delete-btn" onclick="deleteNote('${id}')">Delete</button></td>
+    </tr>`;
+  });
+
+  loading.textContent = "";
+}
+
+// Delete user
+window.deleteUser = async function(firestoreId) {
+  if (!confirm("Are you sure you want to delete this user?")) return;
+  await deleteDoc(doc(db, "users", firestoreId));
+  alert("User deleted!");
+  loadAllData();
+};
+
+// Delete quiz
+window.deleteQuiz = async function(firestoreId) {
+  if (!confirm("Are you sure you want to delete this quiz?")) return;
+  await deleteDoc(doc(db, "teacher_quizzes", firestoreId));
+  alert("Quiz deleted!");
+  loadAllData();
+};
+
+// Delete note
+window.deleteNote = async function(firestoreId) {
+  if (!confirm("Are you sure you want to delete this note?")) return;
+  await deleteDoc(doc(db, "notes", firestoreId));
+  alert("Note deleted!");
+  loadAllData();
+};
+
+// Auth state
+onAuthStateChanged(auth, user => {
+  if (!user) window.location.href = "admin-login.html";
+  else loadAllData();
+});
+
+// Logout
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  signOut(auth).then(() => window.location.href = "admin-login.html");
+});
+</script>
+</body>
+</html>

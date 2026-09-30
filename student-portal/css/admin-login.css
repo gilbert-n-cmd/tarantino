@@ -1,0 +1,23 @@
+/* ============================================
+   Admin Login Page
+   ============================================ */
+.admin-login-card {
+  border-top: 6px solid #dc2626;   /* red accent to signal restricted area */
+}
+
+.admin-login-card h1 {
+  color: #dc2626;
+}
+
+.admin-login-card #adminLoginBtn {
+  background: #dc2626;
+}
+
+.admin-login-card #adminLoginBtn:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+.admin-login-card .portal-help a {
+  color: #dc2626;
+}
+

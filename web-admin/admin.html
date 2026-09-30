@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9f9f9;
+      color: #003366;
+      margin: 0;
+      padding: 0;
+    }
+    main {
+      max-width: 100%;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #004080;
+      margin-bottom: 40px;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .gallery-item {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+    .gallery-item:hover {
+      transform: scale(1.05);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .gallery-item h3 {
+      padding: 15px;
+      margin: 0;
+      color: #004080;
+    }
+    .gallery-item p {
+      padding: 0 15px 15px;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="top-bar">
+        <div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+
+        <div id="chat-container">
+
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
+          
+            <div class="time"><b>Current Time: <span id="liveTime"></span></b>
+                <b>Current Date: <span id="liveDate"></span></b></div>
+            <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+        <div id="chat-box">
+          <!---<div class="chat-header">
+            <span>Live Chat</span>
+            <button onclick="toggleChat()">✖</button>
+          </div>--->
+          <!---<div class="chat-body">
+            <p>Welcome to Noble Mayombo Memorial seed School! How can we help you?</p>
+            <input type="text" placeholder="Type your message..." /><br /><br />
+            <button onclick="toggleChat()">send</button>
+          </div>--->
+        </div>
+      </div>
+
+              <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
+        <div class="right-section">
+  <div class="socials-icons img">
+    <!-- Twitter -->
+    <a href="https://twitter.com/yourprofile" target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/atuma743/" target="_blank">
+  <i class="fab fa-instagram"></i>
+</a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+  <i class="fab fa-facebook-f"></i>
+</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/256779905605" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
+        <button id="registerBtn">register</button>
+    </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </button>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#">Academics &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="o-level.html">O Level</a>
+        <a href="a-level.html">A Level</a>
+    </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">About &#x25BC;</a>
+      <div class="dropdown-content">
+        <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
+        <a href="Staff.html">Staff</a>
+        <a href="student-life.html">Student-life</a>
+        <a href="history.html">history</a>
+        <a href="Academic-performance.html">Academic performance</a>
+        
+        <a href="gallery.html">Gallery</a>
+        <a href="Board-of-Governors.html">Board of Governors</a>
+        <a href="PTA-executives.html">PTA executives</a>
+        <div class="dropdown-submenu">
+          <a href="#">Clubs & Facilities</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+    <a href="news-updates.html">News & updates</a>
+    <a href="calendar-event.html">Calendar & event</a>
+    <a href="contact.html">Contact</a>
+<div class="dropdown">
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
+        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+    </div>
+    </div>
+    <button class="search-toggle" aria-label="Toggle search">
+      <i class="fas fa-search"></i>
+    </button>
+  </nav>
+  <nav id="admin-navbar" style="
+display:flex;
+gap:10px;
+padding:10px;
+background:#35597d;
+overflow-x:auto;
+white-space:nowrap;
+">
+
+<button onclick="location.href='upload-news.html'">
+Upload News
+</button>
+
+<button onclick="location.href='upload-messages.html'">
+view Messages
+</button>
+
+<button onclick="location.href='upload-events.html'">
+Upload Events
+</button>
+
+<button onclick="location.href='upload-image.html'">
+Upload Images
+</button>
+
+<button onclick="location.href='applicants-o.html'">
+view O-Level Applicants
+</button>
+
+<button onclick="location.href='applicants-a.html'">
+view A-Level Applicants
+</button>
+
+</nav>
+  <!----- <div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">
+       
+      </div>-->
+    
+<!-- SEARCH CONTAINER -->
+<div class="search-container">
+
+  <!-- SEARCH BUTTON -->
+  <button 
+    class="search-toggle"
+    id="searchToggle"
+    aria-label="Toggle search"
+  >
+    <i class="fas fa-search"></i>
+  </button>
+
+  <!-- SEARCH BOX -->
+  <div class="search-bar" id="searchBar">
+
+    <input 
+      type="text"
+      id="searchInput"
+      placeholder="Search pages..."
+      autocomplete="off"
+    >
+
+    <div id="searchResults"></div>
+
+  </div>
+
+</div>
+
+
+      <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+      <!---<div id="splash-screen" class="splash">
+        <img src="images/loading.gif" alt="About Us Introduction">--->
+       
+    <!---<div class="brightness-controls">
+  <button onclick="setBrightness('low')">Low</button>
+  <button onclick="setBrightness('medium')">Medium</button>
+  <button onclick="setBrightness('high')">High</button>
+</div>--->
+
+ <!-- ✅ Firebase Login Popup -->
+  <div id="login-block">
+    <h3>Login to Continue</h3>
+    <input type="email" id="email" placeholder="Enter email" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button id="loginBtn">Login</button>
+    <p id="loginMessage"></p>
+  </div>
+
+  <!-- ✅ Google Form -->
+  <div id="form-block">
+    <iframe 
+      src=" https://forms.gle/PJU1jL4Lo9ZwpBd87" 
+      width="350" 
+      height="700" 
+      frameborder="0" 
+      marginheight="0" 
+      marginwidth="0">
+      Loading…
+    </iframe>
+  </div>
+
+  
+  <footer class="footer">
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="history.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://forms.gle/ETV3e5VFoF3JrhD86">Apply online(O Level)</a></li>
+        <li><a href="https://forms.gle/D8JgdH3MipwwjshG">Apply Online(A-Level)</a></li>
+      </ul>
+    </div>
+    <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
+    <div class="footer-column">
+      <h3>Contact Us</h3>
+      <p>Location: P.O.Box 112,Arua</p>
+      <p>Phone: +256-779-905-605</p>
+      <p>Email: bishopangelotarantino@gmail.ac.ug</p>
+    </div>
+    <div class="footer-column">
+      <h3>Opening Hours</h3>
+      <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+      <p>Sat: 9:00 AM - 4:00 PM</p>
+      <p>Sun: Closed</p>
+    </div>
+    <div class="footer-bottom">
+         
+      <marquee>
+  <p>
+    &copy; <span id="year"></span> Bishop Angelo Tarantino Memorial Secondary School. All rights reserved.<br>
+    Designed by:<br>
+    ATUMA GILBERT <br>
+    www.gilbertatuma700@gmail.com<br>
+    0779905605
+  </p>
+</marquee>
+
+<script src="year.js"></script>
+    </div>
+  </footer>
+<script>
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDpRkkp6fdlmVQM5xnLsRkRPS5awu0YSmc",
+  authDomain: "website-database-d75ea.firebaseapp.com",
+  databaseURL: "https://website-database-d75ea-default-rtdb.firebaseio.com",
+  projectId: "website-database-d75ea",
+  storageBucket: "website-database-d75ea.firebasestorage.app",
+  messagingSenderId: "61842953615",
+  appId: "1:61842953615:web:e255cb2ca96184bb0767fa"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.showSection = function(id){
+document.querySelectorAll('.section')
+.forEach(sec => sec.classList.remove('active'));
+
+document.getElementById(id)
+.classList.add('active');
+};
+
+document.getElementById("saveNews").addEventListener("click", async () => {
+
+await addDoc(collection(db,"news"),{
+title: document.getElementById("newsTitle").value,
+content: document.getElementById("newsContent").value,
+createdAt: new Date()
+});
+
+alert("News saved");
+});
+
+document.getElementById("saveEvent").addEventListener("click", async () => {
+
+await addDoc(collection(db,"events"),{
+title: document.getElementById("eventTitle").value,
+date: document.getElementById("eventDate").value,
+description: document.getElementById("eventDescription").value
+});
+
+alert("Event saved");
+});
+
+async function loadMessages(){
+
+const snapshot = await getDocs(collection(db,"messages"));
+
+const table = document.getElementById("messagesTable");
+
+snapshot.forEach(doc => {
+
+const data = doc.data();
+
+table.innerHTML += `
+  <tr>
+    <td>${data.name}</td>
+    <td>${data.email}</td>
+    <td>${data.message}</td>
+  </tr>
+`;
+
+});
+}
+
+async function loadApplicants(){
+
+const snapshot = await getDocs(collection(db,"applicants"));
+
+const table = document.getElementById("applicantsTable");
+
+snapshot.forEach(doc => {
+
+const data = doc.data();
+
+table.innerHTML += `
+  <tr>
+    <td>${data.name}</td>
+    <td>${data.class}</td>
+    <td>${data.phone}</td>
+  </tr>
+`;
+
+});
+}
+
+loadMessages();
+loadApplicants();
+</script>
+  <script type="module" src="termlyregister.js"></script>
+  <script src="script.js"></script>
+  <script src="firebase-config.js"></script>
+  <script type="module" src="search.js"></script>
+</body>
+</html>
+
+
+
+
+
+

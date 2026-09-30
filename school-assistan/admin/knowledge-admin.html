@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knowledge Manager — Tarantino Admin</title>
+  <link rel="stylesheet" href="css/portal.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/knowledge-admin.css">
+  <style>
+    /* FAQ Insights Styles */
+    .faq-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    .faq-tab-btn {
+      background: transparent;
+      border: none;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #6b7280;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      font-family: inherit;
+    }
+    .faq-tab-btn.active {
+      color: #0d3b66;
+      border-bottom-color: #0d3b66;
+    }
+    .faq-row {
+      display: grid;
+      grid-template-columns: 60px 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .faq-count {
+      background: #0d3b66;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .faq-question {
+      font-size: 15px;
+      color: #1f2937;
+      font-weight: 600;
+    }
+    .faq-original {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 3px;
+      font-style: italic;
+    }
+    .faq-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .faq-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #6b7280;
+    }
+    .faq-filter-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .faq-filter-bar input,
+    .faq-filter-bar select {
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      background: white;
+      outline: none;
+    }
+    .faq-filter-bar input:focus,
+    .faq-filter-bar select:focus {
+      border-color: #0d3b66;
+    }
+  </style>
+</head>
+<body>
+  <header class="portal-header">
+    <div class="portal-brand">📚 Knowledge Manager</div>
+    <nav class="portal-nav">
+      <a href="admin.html">← Admin Panel</a>
+      <a href="portal/dashboard.html">Portal</a>
+      <button id="portalLogout">Logout</button>
+    </nav>
+  </header>
+
+  <main class="portal-content">
+
+    <!-- ═══════════ MAIN TABS ═══════════ -->
+    <div class="faq-tabs">
+      <button class="faq-tab-btn active" data-maintab="knowledge">📖 Knowledge Base</button>
+      <button class="faq-tab-btn" data-maintab="faq">📊 FAQ Insights</button>
+    </div>
+
+    <!-- ═══════════ KNOWLEDGE TAB ═══════════ -->
+    <section id="maintab-knowledge">
+      <div class="admin-header">
+        <div>
+          <h1>Knowledge Base</h1>
+          <p class="portal-sub">Manage what the AI assistant knows and answers</p>
+        </div>
+        <div class="admin-header-actions">
+          <button class="admin-btn" id="bulkPasteBtn">📥 Bulk Paste</button>
+          <button class="admin-btn" id="seedDefaultsBtn">⚡ Load Starter Pack</button>
+          <button class="admin-btn primary" id="addEntryBtn">+ Add Entry</button>
+        </div>
+      </div>
+
+      <div class="knowledge-stats">
+        <div class="stat-card">
+          <div class="stat-label">Total Entries</div>
+          <div class="stat-value" id="statTotal">…</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">With Links</div>
+          <div class="stat-value" id="statUrls">…</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Categories</div>
+          <div class="stat-value" id="statCategories">…</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Last Updated</div>
+          <div class="stat-value" id="statUpdated">…</div>
+        </div>
+      </div>
+
+      <div class="knowledge-filters">
+        <input type="text" id="knowledgeSearch" placeholder="🔍 Search by question, keyword, or answer…">
+        <select id="categoryFilter">
+          <option value="">All categories</option>
+        </select>
+        <select id="sortBy">
+          <option value="priority">Sort: Priority (high → low)</option>
+          <option value="question">Sort: Question (A → Z)</option>
+          <option value="category">Sort: Category (A → Z)</option>
+        </select>
+      </div>
+
+      <div id="knowledgeList" class="admin-list">Loading…</div>
+    </section>
+
+    <!-- ═══════════ FAQ INSIGHTS TAB ═══════════ -->
+    <section id="maintab-faq" style="display:none;">
+      <div class="admin-header">
+        <div>
+          <h1>FAQ Insights</h1>
+          <p class="portal-sub">See what students are asking most frequently</p>
+        </div>
+        <div class="admin-header-actions">
+          <button class="admin-btn" id="refreshFaqBtn">🔄 Refresh</button>
+          <button class="admin-btn danger" id="clearFaqBtn">🗑️ Clear All Logs</button>
+        </div>
+      </div>
+
+      <div class="knowledge-stats">
+        <div class="stat-card">
+          <div class="stat-label">Total Questions</div>
+          <div class="stat-value" id="faqTotal">…</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Unique Questions</div>
+          <div class="stat-value" id="faqUnique">…</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Top Question Count</div>
+          <div class="stat-value" id="faqTopCount">…</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Last Asked</div>
+          <div class="stat-value" id="faqLast">…</div>
+        </div>
+      </div>
+
+      <div class="faq-filter-bar">
+        <input type="text" id="faqSearch" placeholder="🔍 Search questions…" style="flex:1;">
+        <select id="faqSortBy">
+          <option value="count">Sort: Most Asked</option>
+          <option value="recent">Sort: Most Recent</option>
+          <option value="alpha">Sort: A → Z</option>
+        </select>
+        <select id="faqTimeFilter">
+          <option value="all">All Time</option>
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="1">Today</option>
+        </select>
+      </div>
+
+      <div id="faqList" class="admin-list">Loading…</div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════ ADD/EDIT MODAL ═══════════ -->
+  <div id="knowledgeModal" class="admin-modal">
+    <div class="admin-modal-box" style="max-width:560px">
+      <button class="admin-modal-close" data-close="knowledgeModal">✖</button>
+      <h2 id="knowledgeModalTitle">Add Entry</h2>
+
+      <form id="knowledgeForm">
+        <input type="hidden" id="knowledgeDocId">
+
+        <label>
+          Question *
+          <input type="text" id="kQuestion" required placeholder="e.g. What is the school motto?">
+        </label>
+
+        <label>
+          Keywords * <span style="font-weight:400;color:#6b7280">(comma-separated)</span>
+          <textarea id="kKeywords" required rows="2" placeholder="motto, slogan, pride, school motto"></textarea>
+        </label>
+
+        <label>
+          Answer *
+          <textarea id="kAnswer" required rows="4" placeholder="Our motto is Primus Inter Pares — Latin for 'First Among Equals'."></textarea>
+        </label>
+
+        <label>
+          Link URL <span style="font-weight:400;color:#6b7280">(optional — adds a clickable button)</span>
+          <input type="url" id="kUrl" placeholder="https://gilbert-n-cmd.github.io/tarantino/admissions.html">
+        </label>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <label>
+            Category
+            <input type="text" id="kCategory" placeholder="general">
+          </label>
+          <label>
+            Priority (1–10)
+            <input type="number" id="kPriority" min="1" max="10" value="10">
+          </label>
+        </div>
+
+        <p class="portal-error" id="knowledgeFormError"></p>
+
+        <div class="admin-modal-actions">
+          <button type="button" class="admin-btn" data-close="knowledgeModal">Cancel</button>
+          <button type="submit" class="admin-btn primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════ BULK PASTE MODAL ═══════════ -->
+  <div id="bulkModal" class="admin-modal">
+    <div class="admin-modal-box" style="max-width:640px">
+      <button class="admin-modal-close" data-close="bulkModal">✖</button>
+      <h2>Bulk Paste Entries</h2>
+
+      <p class="portal-help">
+        One entry per block, separated by <code>---</code>. Each line uses a prefix:
+      </p>
+      <pre class="format-help">Q: What is the school motto?
+K: motto, slogan, pride
+A: Our motto is Primus Inter Pares — Latin for "First Among Equals".
+U: https://gilbert-n-cmd.github.io/tarantino/about.html
+C: general
+P: 10
+
+---
+Q: How do I apply for A-Level?
+K: a-level, s5, s6, apply
+A: Bring your UCE results, a passport photo, and the application fee.
+U: https://gilbert-n-cmd.github.io/tarantino/a-level.html
+P: 10</pre>
+
+      <textarea id="bulkText" rows="14" placeholder="Paste your entries here…"></textarea>
+
+      <p class="portal-error" id="bulkError"></p>
+
+      <div class="admin-modal-actions">
+        <button type="button" class="admin-btn" data-close="bulkModal">Cancel</button>
+        <button type="button" class="admin-btn primary" id="bulkConfirm">Import</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ STARTER PACK MODAL ═══════════ -->
+  <div id="seedModal" class="admin-modal">
+    <div class="admin-modal-box">
+      <button class="admin-modal-close" data-close="seedModal">✖</button>
+      <h2>Load Starter Pack</h2>
+      <p class="portal-help">
+        This will add <strong>20 ready-made entries</strong> covering common school questions:
+      </p>
+      <ul style="font-size:13px;color:#4b5563;line-height:1.7;margin:12px 0">
+        <li>School motto, location, headmaster</li>
+        <li>O-Level and A-Level admission</li>
+        <li>Fees, uniform, term dates</li>
+        <li>Subjects, streams, facilities</li>
+        <li>Contact, portal, alumni</li>
+        <li>Boarding, hours, values, religion</li>
+      </ul>
+      <p class="portal-help">
+        ⚠️ Existing entries will <strong>not</strong> be deleted. Duplicates may occur.
+      </p>
+      <div class="admin-modal-actions">
+        <button type="button" class="admin-btn" data-close="seedModal">Cancel</button>
+        <button type="button" class="admin-btn primary" id="seedConfirm">Add 20 Entries</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/ai-auth.js"></script>
+  <script type="module" src="js/knowledge-admin-page.js"></script>
+  <script type="module" src="js/faq-insights.js"></script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Tarantino AI</title>
+  <link rel="stylesheet" href="css/portal.css">
+  <style>
+    /* Fresh Admin Panel Styles */
+    :root {
+      --sidebar-width: 250px;
+      --primary-color: #0f172a;
+      --accent-color: #3b82f6;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #334155;
+      --text-light: #64748b;
+      --border-color: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 0;
+      position: fixed;
+      height: 100vh;
+      left: 0;
+      top: 0;
+    }
+
+    .sidebar-header {
+      padding: 0 1.5rem 2rem;
+      font-size: 1.25rem;
+      font-weight: bold;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 1rem 0;
+    }
+
+    .sidebar-nav a {
+      display: block;
+      padding: 0.75rem 1.5rem;
+      color: #94a3b8;
+      text-decoration: none;
+      transition: 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .sidebar-nav a:hover, .sidebar-nav a.active {
+      background-color: #1e293b;
+      color: white;
+      border-left: 4px solid var(--accent-color);
+    }
+
+    .sidebar-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #1e293b;
+    }
+
+    .sidebar-footer button {
+      width: 100%;
+      padding: 0.5rem;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 2rem;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+    }
+
+    .admin-email {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      background: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Cards & Grid */
+    .card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 1.5rem;
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:hover { background: #2563eb; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Knowledge List */
+    .knowledge-item {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .knowledge-item-content {
+      flex: 1;
+    }
+
+    .knowledge-item h3 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .knowledge-item p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 0.1rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-sm {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-danger { background: #fee2e2; color: #dc2626; }
+    .btn-edit { background: #f1f5f9; color: #334155; }
+
+    /* Loading State */
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      🛠️ Admin Panel
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="active" data-tab="knowledge">Knowledge Base</a>
+      <a href="#" data-tab="settings">Settings</a>
+      <a href="#" data-tab="users">User Management</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button id="logoutBtn">Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <header class="page-header">
+      <h1 id="pageTitle">Knowledge Base</h1>
+      <span class="admin-email" id="adminEmailDisplay">Loading...</span>
+    </header>
+
+    <!-- Knowledge Base Tab -->
+    <section id="tab-knowledge" class="tab-content">
+      <div class="card">
+        <h2>Add New Knowledge</h2>
+        <form id="knowledgeForm">
+          <div class="form-group">
+            <label for="kbTitle">Title / Topic</label>
+            <input type="text" id="kbTitle" required placeholder="e.g., School Uniform Policy">
+          </div>
+          <div class="form-group">
+            <label for="kbContent">Content (The AI will use this to answer questions)</label>
+            <textarea id="kbContent" required placeholder="Enter the detailed information here..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="kbCategory">Category</label>
+            <select id="kbCategory">
+              <option value="general">General</option>
+              <option value="academic">Academic</option>
+              <option value="rules">Rules & Regulations</option>
+              <option value="events">Events</option>
+            </select>
+          </div>
+          <button type="submit" class="btn" id="saveKbBtn">Save Knowledge</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Existing Knowledge</h2>
+        <div id="knowledgeList">
+          <div class="loading">Loading knowledge base...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Settings Tab (Placeholder) -->
+    <section id="tab-settings" class="tab-content" style="display: none;">
+      <div class="card">
+        <h2>System Settings</h2>
+        <p style="color: var(--text-light);">Settings panel coming soon.</p>
+      </div>
+    </section>
+
+    <!-- Users Tab (Placeholder) -->
+    <section id="tab-users" class="tab-content" style="display: none;">
+      <div class="card">
+        <h2>User Management</h2>
+        <p style="color: var(--text-light);">User management panel coming soon.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Firebase Scripts -->
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="script/admin-panel.js"></script>
+</body>
+</html>
