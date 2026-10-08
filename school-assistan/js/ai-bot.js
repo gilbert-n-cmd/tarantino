@@ -457,11 +457,7 @@
       btn.addEventListener("click", () => {
         removeQuickReplies();
         addMessage(escapeHTML(qr.query), "user", true);
-        if (isLoggedIn && window.aiBotLogQuestion) {
-          window.aiBotLogQuestion(qr.query).catch(err =>
-            console.warn("[Bot] Failed to log question for admin insights:", err)
-          );
-        }
+        logQuestionForAdmin(qr.query);
         conversationHistory.push({ role: "user", content: qr.query });
         respondTo(qr.query);
       });
@@ -475,6 +471,13 @@
     document.getElementById("quick-replies")?.remove();
   }
 
+  function logQuestionForAdmin(text) {
+    if (typeof window.aiBotLogQuestion !== "function") return;
+    window.aiBotLogQuestion(text).catch(err =>
+      console.warn("[Bot] Failed to log question for admin insights:", err)
+    );
+  }
+
   // ============================================
   // SEND + RESPOND
   // ============================================
@@ -484,11 +487,7 @@
 
     removeQuickReplies();
     addMessage(escapeHTML(text), "user", true);
-    if (isLoggedIn && window.aiBotLogQuestion) {
-      window.aiBotLogQuestion(text).catch(err =>
-        console.warn("[Bot] Failed to log question for admin insights:", err)
-      );
-    }
+    logQuestionForAdmin(text);
     conversationHistory.push({ role: "user", content: text });
     inputField.value = "";
     respondTo(text);

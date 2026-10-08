@@ -33,12 +33,15 @@ const chatStoreReady = (async () => {
     return ref.id;
   };
 
-  // Log each registered user's question so admins can review common questions.
-  // This is separate from private per-user chat history.
+  // Log every AI question for the admin FAQ Insights dashboard.
+  // This is intentionally separate from private per-user chat history.
+  // Guest questions are allowed in FAQ Insights, but guest chat history
+  // is not stored under /users because the guest has no account.
   window.aiBotLogQuestion = async (question) => {
-    const uid = requireUser();
     const text = String(question || "").trim();
     if (!text) return null;
+
+    const uid = auth.currentUser?.uid || null;
 
     const ref = await addDoc(collection(db, "faq_logs"), {
       question: text.toLowerCase().replace(/\s+/g, " ").trim(),
