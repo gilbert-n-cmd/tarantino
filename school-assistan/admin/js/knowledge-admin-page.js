@@ -253,8 +253,10 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/f
 
     const kbSection = document.getElementById("maintab-knowledge");
     const faqSection = document.getElementById("maintab-faq");
+    const chatsSection = document.getElementById("maintab-chats");
     if (kbSection) kbSection.style.display = "block";
     if (faqSection) faqSection.style.display = "none";
+    if (chatsSection) chatsSection.style.display = "none";
   };
 
   function setupForm() {

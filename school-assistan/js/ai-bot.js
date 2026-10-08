@@ -337,20 +337,35 @@
       const errBox   = document.getElementById("ai-auth-error");
       errBox.textContent = "";
 
-      if (!window.aiBotAuthReady) {
-        errBox.textContent = "Authentication is still starting. Please wait a moment and try again.";
-        return;
-      }
+      // Firebase modules are asynchronous. Wait for the AI auth module even
+      // when the user clicks Sign In before the module has published its API.
+      submit.disabled = true;
+      submit.textContent = "Connecting…";
 
       try {
+        const started = Date.now();
+        while (!window.aiBotAuthReady && Date.now() - started < 10000) {
+          await new Promise(resolve => setTimeout(resolve, 50));
+        }
+
+        if (!window.aiBotAuthReady) {
+          throw new Error("AI authentication module did not load within 10 seconds.");
+        }
+
         await window.aiBotAuthReady;
+
+        if (typeof window.aiBotLogin !== "function" ||
+            typeof window.aiBotSignUp !== "function") {
+          throw new Error("AI authentication functions were not registered.");
+        }
       } catch (authInitError) {
         console.error("[AI Bot] Auth initialization failed:", authInitError);
-        errBox.textContent = "Authentication could not start. Please refresh the page.";
+        errBox.textContent = "Authentication could not start. Check the browser console for the exact error.";
+        submit.disabled = false;
+        submit.textContent = authMode === "signup" ? "Sign Up" : "Sign In";
         return;
       }
 
-      submit.disabled = true;
       submit.textContent = "Please wait…";
 
       try {
@@ -442,6 +457,11 @@
       btn.addEventListener("click", () => {
         removeQuickReplies();
         addMessage(escapeHTML(qr.query), "user", true);
+        if (isLoggedIn && window.aiBotLogQuestion) {
+          window.aiBotLogQuestion(qr.query).catch(err =>
+            console.warn("[Bot] Failed to log question for admin insights:", err)
+          );
+        }
         conversationHistory.push({ role: "user", content: qr.query });
         respondTo(qr.query);
       });
@@ -464,6 +484,11 @@
 
     removeQuickReplies();
     addMessage(escapeHTML(text), "user", true);
+    if (isLoggedIn && window.aiBotLogQuestion) {
+      window.aiBotLogQuestion(text).catch(err =>
+        console.warn("[Bot] Failed to log question for admin insights:", err)
+      );
+    }
     conversationHistory.push({ role: "user", content: text });
     inputField.value = "";
     respondTo(text);

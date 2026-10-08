@@ -33,6 +33,23 @@ const chatStoreReady = (async () => {
     return ref.id;
   };
 
+  // Log each registered user's question so admins can review common questions.
+  // This is separate from private per-user chat history.
+  window.aiBotLogQuestion = async (question) => {
+    const uid = requireUser();
+    const text = String(question || "").trim();
+    if (!text) return null;
+
+    const ref = await addDoc(collection(db, "faq_logs"), {
+      question: text.toLowerCase().replace(/\s+/g, " ").trim(),
+      originalQuestion: text,
+      userId: uid,
+      source: "ai-bot",
+      timestamp: serverTimestamp()
+    });
+    return ref.id;
+  };
+
   window.aiBotSaveMessage = async (sessionId, sender, text) => {
     const uid = requireUser();
     await addDoc(collection(db, "users", uid, "sessions", sessionId, "messages"), {
