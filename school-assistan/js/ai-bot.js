@@ -471,11 +471,18 @@
     document.getElementById("quick-replies")?.remove();
   }
 
-  function logQuestionForAdmin(text) {
-    if (typeof window.aiBotLogQuestion !== "function") return;
-    window.aiBotLogQuestion(text).catch(err =>
-      console.warn("[Bot] Failed to log question for admin insights:", err)
-    );
+  async function logQuestionForAdmin(text) {
+    try {
+      // Wait for the Firestore chat store so logging cannot lose the first question.
+      if (window.aiBotChatReady) await window.aiBotChatReady;
+      if (typeof window.aiBotLogQuestion !== "function") {
+        console.warn("[Bot] FAQ logger is not available.");
+        return;
+      }
+      await window.aiBotLogQuestion(text);
+    } catch (err) {
+      console.warn("[Bot] Failed to log question for admin insights:", err);
+    }
   }
 
   // ============================================

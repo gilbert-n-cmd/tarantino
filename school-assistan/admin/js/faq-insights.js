@@ -3,7 +3,7 @@
    ============================================ */
 
 import {
-  collection, getDocs, query, orderBy, limit, deleteDoc, doc
+  collection, getDocs, deleteDoc, doc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 (function () {
@@ -56,14 +56,16 @@ import {
     if (list) list.textContent = "Loading…";
 
     try {
-      // Load the last 500 logs (most recent first)
-      const q = query(
-        collection(db, "faq_logs"),
-        orderBy("timestamp", "desc"),
-        limit(500)
-      );
-      const snap = await getDocs(q);
+      // Read the collection directly. Sorting is done in JavaScript so FAQ
+      // Insights does not depend on an index or on every document having a timestamp.
+      const snap = await getDocs(collection(db, "faq_logs"));
       logs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      logs.sort((a, b) => {
+        const at = a.timestamp?.toMillis?.() || 0;
+        const bt = b.timestamp?.toMillis?.() || 0;
+        return bt - at;
+      });
+      logs = logs.slice(0, 500);
       console.log(`[FAQ Insights] Loaded ${logs.length} logs`);
       renderFAQ();
     } catch (e) {
@@ -230,7 +232,7 @@ import {
     if (wired) return;
     wired = true;
 
-    // Main tab switching (Knowledge vs FAQ)
+    // Main tab switching. Do not depend on another admin script's global flag.
     document.querySelectorAll(".faq-tab-btn").forEach(btn => {
       btn.onclick = () => {
         document.querySelectorAll(".faq-tab-btn").forEach(b => b.classList.remove("active"));
@@ -238,11 +240,11 @@ import {
         const tab = btn.dataset.maintab;
         document.getElementById("maintab-knowledge").style.display = tab === "knowledge" ? "block" : "none";
         document.getElementById("maintab-faq").style.display = tab === "faq" ? "block" : "none";
-        if (tab === "faq" && logs.length === 0) loadLogs();
+        document.getElementById("maintab-chats").style.display = tab === "chats" ? "block" : "none";
+        if (tab === "faq") loadLogs();
       };
     });
 
-    // Filters
     const search = document.getElementById("faqSearch");
     const sortBy = document.getElementById("faqSortBy");
     const timeFilter = document.getElementById("faqTimeFilter");
@@ -250,32 +252,25 @@ import {
     if (sortBy) sortBy.addEventListener("change", renderFAQ);
     if (timeFilter) timeFilter.addEventListener("change", renderFAQ);
 
-    // Refresh button
     const refresh = document.getElementById("refreshFaqBtn");
     if (refresh) refresh.onclick = loadLogs;
 
-    // Clear button
     const clear = document.getElementById("clearFaqBtn");
     if (clear) clear.onclick = clearAllLogs;
 
-    console.log("[FAQ Insights] ✅ Wired");
+    console.log("[FAQ Insights] Wired successfully");
   }
 
-  // ============================================
-  // BOOT — wait for user to be logged in as admin
-  // ============================================
+  // Boot independently. The admin page performs the actual admin check;
+  // this module only wires the UI and uses the already initialized Firebase DB.
   function boot() {
-    // Poll until admin user is confirmed (knowledge-admin-page.js already verifies)
-    const check = setInterval(() => {
-      if (window.tarantinoUser) {
-        clearInterval(check);
-        wireUp();
-      }
-    }, 200);
-    setTimeout(() => clearInterval(check), 15000);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", wireUp, { once: true });
+    } else {
+      wireUp();
+    }
   }
 
   boot();
 
 })();
-
