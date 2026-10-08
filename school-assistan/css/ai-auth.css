@@ -185,3 +185,61 @@
   font-size: 11px;
   color: #94a3b8;
 }
+
+
+/* ---------- Mobile Auth Fix ---------- */
+@media (max-width: 600px) {
+  #ai-auth-modal,
+  #ai-history-modal {
+    padding: 12px;
+    align-items: center;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ai-auth-box,
+  .ai-history-box {
+    width: min(100%, 420px);
+    max-width: 100%;
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 28px 18px 20px;
+    margin: auto;
+  }
+
+  .ai-auth-box h2,
+  .ai-history-box h2 {
+    padding-right: 28px;
+    font-size: 20px;
+  }
+
+  #ai-auth-form input,
+  #ai-auth-submit {
+    min-height: 46px;
+    font-size: 16px;
+  }
+
+  .ai-auth-close {
+    top: 8px;
+    right: 8px;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    z-index: 2;
+  }
+}
+
+@media (max-width: 380px) {
+  #ai-auth-modal,
+  #ai-history-modal {
+    padding: 8px;
+  }
+
+  .ai-auth-box,
+  .ai-history-box {
+    max-height: calc(100dvh - 16px);
+    padding: 26px 14px 16px;
+    border-radius: 14px;
+  }
+}
