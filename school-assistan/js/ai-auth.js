@@ -1,6 +1,8 @@
 /* ============================================
-   Firebase Auth — AI Bot Only
-   Uses tarantino-3e322 (window.tarantinoAuth)
+   AI BOT AUTHENTICATION — REGULAR USERS ONLY
+   Firebase project: tarantino-3e322
+
+   This auth is deliberately isolated from the school portal auth.
    ============================================ */
 
 import {
@@ -12,89 +14,141 @@ import {
   setPersistence,
   browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
 import {
-  doc, setDoc, serverTimestamp
+  doc,
+  setDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Wait for firebase-config.js to finish
-function waitForFirebase() {
-  return new Promise((resolve) => {
-    if (window.tarantinoAuth?.auth && window.tarantinoAuth?.db) {
-      return resolve(window.tarantinoAuth);
-    }
-    const check = setInterval(() => {
+const waitForFirebase = async () => {
+  if (window.aiBotFirebaseReady) return window.aiBotFirebaseReady;
+
+  // Fallback for cached/older pages.
+  return new Promise((resolve, reject) => {
+    const started = Date.now();
+    const timer = setInterval(() => {
       if (window.tarantinoAuth?.auth && window.tarantinoAuth?.db) {
-        clearInterval(check);
+        clearInterval(timer);
         resolve(window.tarantinoAuth);
+      } else if (Date.now() - started > 10000) {
+        clearInterval(timer);
+        reject(new Error("AI Firebase initialization timed out."));
       }
-    }, 20);
-    setTimeout(() => clearInterval(check), 10000);
+    }, 25);
   });
-}
+};
 
-(async () => {
+const authReady = (async () => {
   const { auth, db } = await waitForFirebase();
-  console.log("[Auth] Starting with project:", auth.app.options.projectId);
 
-  await setPersistence(auth, browserLocalPersistence)
-    .catch((err) => console.warn("[Auth] Persistence failed:", err));
+  console.log("[AI Auth] Starting with project:", auth.app.options.projectId);
 
-  window.tarantinoUser = null;
+  await setPersistence(auth, browserLocalPersistence).catch(err => {
+    console.warn("[AI Auth] Persistence failed:", err);
+  });
 
-  onAuthStateChanged(auth, async (user) => {
-    window.tarantinoUser = user;
+  let currentUser = auth.currentUser || null;
+  let firstAuthStateResolved = false;
+  let firstAuthStateResolve;
+
+  const firstAuthState = new Promise(resolve => {
+    firstAuthStateResolve = resolve;
+  });
+
+  const dispatch = (name, user) => {
+    window.dispatchEvent(new CustomEvent(name, { detail: user || null }));
+  };
+
+  onAuthStateChanged(auth, async user => {
+    currentUser = user;
 
     if (user) {
-      console.log("[Auth] Logged in:", user.email);
+      console.log("[AI Auth] Logged in:", user.email);
+
       try {
         await setDoc(doc(db, "users", user.uid), {
-          email: user.email,
-          displayName: user.displayName || user.email.split("@")[0],
+          email: user.email || "",
+          displayName: user.displayName || (user.email || "user").split("@")[0],
           lastLogin: serverTimestamp()
         }, { merge: true });
       } catch (err) {
-        console.warn("[Auth] Could not write user doc:", err);
+        // Do not block login if Firestore rules temporarily prevent the profile write.
+        console.warn("[AI Auth] Could not write user profile:", err);
       }
-      window.dispatchEvent(new CustomEvent("auth:login", { detail: user }));
+
+      dispatch("ai-bot:login", user);
     } else {
-      console.log("[Auth] Logged out");
-      window.dispatchEvent(new CustomEvent("auth:logout"));
+      console.log("[AI Auth] Logged out");
+      dispatch("ai-bot:logout", null);
+    }
+
+    if (!firstAuthStateResolved) {
+      firstAuthStateResolved = true;
+      firstAuthStateResolve(user);
     }
   });
 
-  window.tarantinoSignUp = async (email, password, displayName) => {
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
-    if (displayName) await updateProfile(cred.user, { displayName });
-    await setDoc(doc(db, "users", cred.user.uid), {
-      email,
-      displayName: displayName || email.split("@")[0],
-      createdAt: serverTimestamp(),
-      lastLogin: serverTimestamp()
-    });
-    return cred.user;
-  };
+  // Wait until Firebase has delivered the initial auth state.
+  await firstAuthState;
 
-  window.tarantinoLogin = async (email, password) => {
-    const cred = await signInWithEmailAndPassword(auth, email, password);
-    return cred.user;
-  };
+  window.aiBotAuth = {
+    auth,
+    db,
 
-  window.tarantinoLogout = async () => {
-    await signOut(auth);
-  };
+    async signUp(email, password, displayName) {
+      const cleanEmail = String(email || "").trim();
+      const cleanName = String(displayName || "").trim();
 
-  window.tarantinoGetUser = () => window.tarantinoUser;
+      const cred = await createUserWithEmailAndPassword(auth, cleanEmail, password);
 
-  window.tarantinoWaitAuth = () =>
-    new Promise((resolve) => {
-      if (window.tarantinoUser !== null || auth.currentUser !== null) {
-        return resolve(window.tarantinoUser);
+      if (cleanName) {
+        await updateProfile(cred.user, { displayName: cleanName });
       }
-      const unsub = onAuthStateChanged(auth, (user) => {
-        unsub();
-        resolve(user);
-      });
-    });
 
-  console.log("[Auth] ✅ Ready");
+      await setDoc(doc(db, "users", cred.user.uid), {
+        email: cleanEmail,
+        displayName: cleanName || cleanEmail.split("@")[0],
+        createdAt: serverTimestamp(),
+        lastLogin: serverTimestamp()
+      }, { merge: true });
+
+      return cred.user;
+    },
+
+    async login(email, password) {
+      const cleanEmail = String(email || "").trim();
+      const cred = await signInWithEmailAndPassword(auth, cleanEmail, password);
+      return cred.user;
+    },
+
+    async logout() {
+      await signOut(auth);
+    },
+
+    getUser() {
+      return currentUser || auth.currentUser || null;
+    },
+
+    async waitAuth() {
+      return currentUser || auth.currentUser || null;
+    }
+  };
+
+  // Compatibility-free, AI-specific function names.
+  window.aiBotSignUp = (...args) => window.aiBotAuth.signUp(...args);
+  window.aiBotLogin = (...args) => window.aiBotAuth.login(...args);
+  window.aiBotLogout = (...args) => window.aiBotAuth.logout(...args);
+  window.aiBotGetUser = () => window.aiBotAuth.getUser();
+  window.aiBotWaitAuth = () => window.aiBotAuth.waitAuth();
+
+  console.log("[AI Auth] Ready");
+  return window.aiBotAuth;
 })();
+
+window.aiBotAuthReady = authReady;
+
+// Make initialization failures visible instead of silently leaving the login button broken.
+authReady.catch(err => {
+  console.error("[AI Auth] Initialization failed:", err);
+});

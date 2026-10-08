@@ -31,11 +31,15 @@
     attachEvents();
     showWelcome();
 
-    window.addEventListener("auth:login", onLogin);
-    window.addEventListener("auth:logout", onLogout);
+    window.addEventListener("ai-bot:login", onLogin);
+    window.addEventListener("ai-bot:logout", onLogout);
 
-    if (typeof window.tarantinoWaitAuth === "function") {
-      const user = await window.tarantinoWaitAuth();
+    if (typeof window.aiBotAuthReady === "object" || window.aiBotAuthReady instanceof Promise) {
+      try { await window.aiBotAuthReady; } catch (err) { console.error("[AI Bot] Auth startup failed:", err); }
+    }
+
+    if (typeof window.aiBotWaitAuth === "function") {
+      const user = await window.aiBotWaitAuth();
       if (user && !isLoggedIn) onLogin({ detail: user });
     }
   }
@@ -153,6 +157,14 @@
   // AUTH HANDLERS
   // ============================================
   async function onLogin(e) {
+    if (window.aiBotChatReady) {
+      try {
+        await window.aiBotChatReady;
+      } catch (err) {
+        console.error("[AI Bot] Chat store initialization failed:", err);
+      }
+    }
+
     isLoggedIn = true;
     const user = e.detail;
     currentUserName = user.displayName || user.email?.split("@")[0] || "there";
@@ -181,14 +193,14 @@
   }
 
   async function loadLatestOrNewSession() {
-    if (!isLoggedIn || !window.tarantinoListSessions) return;
+    if (!isLoggedIn || !window.aiBotListSessions) return;
     try {
-      const sessions = await window.tarantinoListSessions(1);
+      const sessions = await window.aiBotListSessions(1);
       if (sessions.length > 0) {
         currentSessionId = sessions[0].id;
         await loadSession(currentSessionId);
       } else {
-        currentSessionId = await window.tarantinoCreateSession("New chat");
+        currentSessionId = await window.aiBotCreateSession("New chat");
         clearMessages();
         addMessage(`👋 Welcome back, <b>${escapeHTML(currentUserName)}</b>! How can I help you today?`, "bot");
         showQuickReplies();
@@ -200,7 +212,7 @@
 
   async function loadSession(sessionId) {
     clearMessages();
-    const msgs = await window.tarantinoLoadMessages(sessionId);
+    const msgs = await window.aiBotLoadMessages(sessionId);
 
     if (msgs.length === 0) {
       addMessage(`👋 Welcome back, <b>${escapeHTML(currentUserName)}</b>! How can I help you today?`, "bot");
@@ -220,7 +232,7 @@
   async function startNewChat() {
     document.getElementById("ai-history-modal").classList.remove("open");
     if (!isLoggedIn) return;
-    currentSessionId = await window.tarantinoCreateSession("New chat");
+    currentSessionId = await window.aiBotCreateSession("New chat");
     conversationHistory = [];
     clearMessages();
     addMessage(`👋 New chat started. How can I help you, <b>${escapeHTML(currentUserName)}</b>?`, "bot");
@@ -232,7 +244,7 @@
   // ============================================
   function openAuthModal() {
     if (isLoggedIn) {
-      if (confirm("Log out? Your chats stay saved.")) window.tarantinoLogout();
+      if (confirm("Log out? Your chats stay saved.")) window.aiBotLogout();
       return;
     }
     document.getElementById("ai-auth-modal").classList.add("open");
@@ -256,7 +268,7 @@
     list.innerHTML = "Loading…";
 
     try {
-      const sessions = await window.tarantinoListSessions(20);
+      const sessions = await window.aiBotListSessions(20);
       if (sessions.length === 0) {
         list.innerHTML = "<p>No chats yet. Start one below!</p>";
         return;
@@ -325,8 +337,16 @@
       const errBox   = document.getElementById("ai-auth-error");
       errBox.textContent = "";
 
-      if (!window.tarantinoSignUp || !window.tarantinoLogin) {
-        errBox.textContent = "Auth service not ready. Please refresh the page.";
+      if (!window.aiBotAuthReady) {
+        errBox.textContent = "Authentication is still starting. Please wait a moment and try again.";
+        return;
+      }
+
+      try {
+        await window.aiBotAuthReady;
+      } catch (authInitError) {
+        console.error("[AI Bot] Auth initialization failed:", authInitError);
+        errBox.textContent = "Authentication could not start. Please refresh the page.";
         return;
       }
 
@@ -335,9 +355,9 @@
 
       try {
         if (authMode === "signup") {
-          await window.tarantinoSignUp(email, password, name);
+          await window.aiBotSignUp(email, password, name);
         } else {
-          await window.tarantinoLogin(email, password);
+          await window.aiBotLogin(email, password);
         }
         closeAuthModal();
       } catch (err) {
@@ -386,8 +406,8 @@
     messagesBox.appendChild(div);
     messagesBox.scrollTop = messagesBox.scrollHeight;
 
-    if (save && isLoggedIn && currentSessionId && window.tarantinoSaveMessage) {
-      window.tarantinoSaveMessage(currentSessionId, sender, text).catch(err =>
+    if (save && isLoggedIn && currentSessionId && window.aiBotSaveMessage) {
+      window.aiBotSaveMessage(currentSessionId, sender, text).catch(err =>
         console.warn("[Bot] Failed to save message:", err)
       );
     }

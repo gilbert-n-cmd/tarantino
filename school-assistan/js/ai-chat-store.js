@@ -8,20 +8,13 @@ import {
   serverTimestamp, deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-function waitForFirebase() {
-  return new Promise((resolve) => {
-    if (window.tarantinoAuth?.db) return resolve(window.tarantinoAuth);
-    const check = setInterval(() => {
-      if (window.tarantinoAuth?.db) {
-        clearInterval(check);
-        resolve(window.tarantinoAuth);
-      }
-    }, 20);
-    setTimeout(() => clearInterval(check), 10000);
-  });
+async function waitForFirebase() {
+  if (window.aiBotFirebaseReady) return window.aiBotFirebaseReady;
+  if (window.tarantinoAuth?.db) return window.tarantinoAuth;
+  throw new Error("AI Firebase is not initialized.");
 }
 
-(async () => {
+const chatStoreReady = (async () => {
   const { db, auth } = await waitForFirebase();
 
   function requireUser() {
@@ -30,7 +23,7 @@ function waitForFirebase() {
     return uid;
   }
 
-  window.tarantinoCreateSession = async (title = "New chat") => {
+  window.aiBotCreateSession = async (title = "New chat") => {
     const uid = requireUser();
     const ref = await addDoc(collection(db, "users", uid, "sessions"), {
       title,
@@ -40,7 +33,7 @@ function waitForFirebase() {
     return ref.id;
   };
 
-  window.tarantinoSaveMessage = async (sessionId, sender, text) => {
+  window.aiBotSaveMessage = async (sessionId, sender, text) => {
     const uid = requireUser();
     await addDoc(collection(db, "users", uid, "sessions", sessionId, "messages"), {
       sender,
@@ -54,7 +47,7 @@ function waitForFirebase() {
     );
   };
 
-  window.tarantinoListSessions = async (max = 20) => {
+  window.aiBotListSessions = async (max = 20) => {
     const uid = requireUser();
     const q = query(
       collection(db, "users", uid, "sessions"),
@@ -65,7 +58,7 @@ function waitForFirebase() {
     return snap.docs.map(d => ({ id: d.id, ...d.data() }));
   };
 
-  window.tarantinoLoadMessages = async (sessionId) => {
+  window.aiBotLoadMessages = async (sessionId) => {
     const uid = requireUser();
     const q = query(
       collection(db, "users", uid, "sessions", sessionId, "messages"),
@@ -75,10 +68,14 @@ function waitForFirebase() {
     return snap.docs.map(d => ({ id: d.id, ...d.data() }));
   };
 
-  window.tarantinoDeleteSession = async (sessionId) => {
+  window.aiBotDeleteSession = async (sessionId) => {
     const uid = requireUser();
     await deleteDoc(doc(db, "users", uid, "sessions", sessionId));
   };
 
   console.log("[Chat Store] ✅ Ready");
+  return true;
 })();
+
+window.aiBotChatReady = chatStoreReady;
+chatStoreReady.catch(err => console.error("[Chat Store] Initialization failed:", err));

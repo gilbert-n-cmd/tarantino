@@ -16,19 +16,21 @@ const firebaseConfig = {
   appId: "1:364845638359:web:1f8331fd05af099c7cc692"
 };
 
-// Init once (dedicated app name "bot")
+// Prevent duplicate initialization if another module imports this file.
 const app = getApps().some(a => a.name === "bot")
   ? getApp("bot")
   : initializeApp(firebaseConfig, "bot");
 
 const auth = getAuth(app);
-const db   = getFirestore(app);
+const db = getFirestore(app);
 
-// Expose globally
 window.FIREBASE_CONFIG = firebaseConfig;
-window.FIREBASE_APP    = app;
-window.FIREBASE_AUTH   = auth;
-window.FIREBASE_DB     = db;
-window.tarantinoAuth   = { auth, db };
+window.FIREBASE_APP = app;
+window.FIREBASE_AUTH = auth;
+window.FIREBASE_DB = db;
+window.tarantinoAuth = { auth, db };
 
-console.log("[Firebase] ✅ Ready:", firebaseConfig.projectId);
+// Explicit readiness signal. Other AI modules wait for this instead of racing startup.
+window.aiBotFirebaseReady = Promise.resolve({ app, auth, db });
+
+console.log("[AI Firebase] Ready:", firebaseConfig.projectId);
