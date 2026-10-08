@@ -187,6 +187,24 @@
 }
 
 
+
+/* Mobile tap/stacking hardening */
+#ai-bot-header #ai-bot-auth {
+  position: relative !important;
+  z-index: 20 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#ai-auth-modal {
+  pointer-events: auto;
+}
+
+#ai-auth-modal.open {
+  pointer-events: auto;
+}
+
 /* ---------- Mobile Auth Fix ---------- */
 @media (max-width: 600px) {
   #ai-auth-modal,

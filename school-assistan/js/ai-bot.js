@@ -68,7 +68,7 @@
           </div>
           <div style="display:flex;gap:10px;align-items:center">
             <button id="ai-bot-history" title="Chat history" style="background:none;border:none;color:#fff;cursor:pointer;font-size:16px">🕘</button>
-            <button id="ai-bot-auth" title="Login / Account" style="background:none;border:none;color:#fff;cursor:pointer;font-size:16px">👤</button>
+            <button type="button" id="ai-bot-auth" title="Login / Account" aria-label="Login or account" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px;line-height:1;min-width:42px;min-height:42px;padding:8px;display:inline-flex;align-items:center;justify-content:center;position:relative;z-index:20;pointer-events:auto;touch-action:manipulation">👤</button>
             <button id="ai-bot-close" aria-label="Close chat">✖</button>
           </div>
         </div>
@@ -137,7 +137,14 @@
     sendButton.addEventListener("click", handleSend);
     inputField.addEventListener("keypress", e => { if (e.key === "Enter") handleSend(); });
 
-    authBadge.addEventListener("click", openAuthModal);
+    authBadge.addEventListener("click", openAuthModal, { passive: true });
+    authBadge.addEventListener("pointerup", (e) => {
+      // Some mobile browsers/webview shells can miss a synthesized click.
+      if (e.pointerType === "touch") {
+        e.preventDefault();
+        openAuthModal();
+      }
+    }, { passive: false });
     document.getElementById("ai-auth-close").addEventListener("click", closeAuthModal);
     document.getElementById("ai-auth-continue-guest").addEventListener("click", (e) => {
       e.preventDefault();
@@ -151,6 +158,16 @@
     document.getElementById("ai-history-new").addEventListener("click", startNewChat);
 
     setupAuthForm();
+
+    // Mobile-safe delegated fallback. This still works if another page-level
+    // script replaces or interferes with the header button after initialization.
+    document.addEventListener("click", (e) => {
+      const target = e.target.closest && e.target.closest("#ai-bot-auth");
+      if (!target) return;
+      if (e.__aiAuthHandled) return;
+      e.__aiAuthHandled = true;
+      openAuthModal();
+    });
   }
 
   // ============================================
