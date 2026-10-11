@@ -1,0 +1,222 @@
+/* ============================================
+   FEATURE STYLES — suggestions, trending,
+   empty state, pagination, highlight
+   ============================================ */
+
+/* ---------- SUGGESTIONS DROPDOWN ---------- */
+.suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(16, 24, 40, 0.12);
+  overflow: hidden;
+  z-index: 50;
+  max-height: 340px;
+  overflow-y: auto;
+  animation: fadeSlide 0.15s ease;
+}
+
+.suggestions .sug-section {
+  padding: 0.5rem 0.75rem 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+}
+
+.suggestions .sug-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #111827;
+  transition: background 0.1s;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+}
+.suggestions .sug-item:hover,
+.suggestions .sug-item.active {
+  background: #eef2ff;
+}
+.suggestions .sug-item .sug-icon {
+  font-size: 0.9rem;
+  opacity: 0.6;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.suggestions .sug-item .sug-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.suggestions .sug-item .sug-count {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+.suggestions .sug-item .sug-remove {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  flex-shrink: 0;
+}
+.suggestions .sug-item .sug-remove:hover { color: #dc2626; }
+
+/* ---------- TRENDING BAR ---------- */
+.trending-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+.trending-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+.trending-chips {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.trend-chip {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.35rem 0.75rem;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 999px;
+  color: #9a3412;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.trend-chip:hover {
+  background: #ffedd5;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.15);
+}
+
+/* ---------- EMPTY STATE ---------- */
+.empty-state {
+  margin-top: 1.5rem;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+.empty-state h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+.empty-state .muted {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+.popular-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+.popular-list li {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+.popular-list li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
+  border-color: #c7d2fe;
+}
+.popular-list .pop-name {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.2rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.popular-list .pop-cat {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.5rem;
+  background: #eef2ff;
+  color: #4f46e5;
+  border-radius: 999px;
+}
+
+/* ---------- LOAD MORE ---------- */
+.load-more-wrap {
+  margin-top: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.load-more-wrap .muted { font-size: 0.8rem; }
+
+/* ---------- "DID YOU MEAN" ---------- */
+.did-you-mean {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #1e40af;
+  text-align: center;
+  animation: fadeSlide 0.2s ease;
+}
+.did-you-mean button {
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1d4ed8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0 0.15rem;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+

@@ -11,7 +11,17 @@
   <link rel="stylesheet" href="school-assistan/css/ai-bot.css">
   <link rel="stylesheet" href="school-assistan/css/ai-auth.css">
 
- <link rel="stylesheet" href="badge.css"></head>
+ <link rel="stylesheet" href="badge.css">
+
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+ <link rel="stylesheet" href="styles/style.css" />
+ <link rel="stylesheet" href="styles/features.css" />
+ <link rel="stylesheet" href="styles/extra-features.css" />
+ 
+</head>
 <body>
   <header>
     <div class="top-bar">
@@ -116,8 +126,8 @@
  <div class="dropdown">
     <a href="#">Apply Online &#x25BC;</a>
     <div class="dropdown-content">
-        <a href="https://forms.gle/ETV3e5VFoF3JrhD86">O Level</a>
-        <a href="https://forms.gle/D8JgdH3MipwwjshG9">A Level</a>
+        <a href="o level application form.html">O Level</a>
+        <a href="a level apllication form.html">A Level</a>
     </div>
     </div>
     <button class="search-toggle" aria-label="Toggle search">
@@ -130,18 +140,108 @@
 <!-- Loading Screen -->
 <!-- Loading Spinner -->
 
-  <!---<div id="splash-screen" class="splash">
-        <img src="images/loading.gif" alt="About Us Introduction">
-       
-    </div>--->
 <div class="search-bar" style="display:none;">
-    <!---<form action="search_results.php" method="GET" style="display:flex; gap:5px;">
-      <input type="text" name="q" placeholder="Search..." required />
-      <button type="submit">Search</button>
-    </form>--->
-    <script async src="https://cse.google.com/cse.js?cx=b374e5ea123af4b1b">
-    </script>
-<div class="gcse-search"></div>    
+    
+      <!-- ============ SEARCH WRAPPER ============ -->
+      <div class="search-wrapper" id="searchWrapper">
+        <span class="search-icon" aria-hidden="true">🔎</span>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="e.g. How much is school fees?"
+          autocomplete="off"
+          aria-label="Search school information"
+          aria-autocomplete="list"
+          aria-controls="suggestionsBox"
+        />
+        <span id="spinner" class="spinner hidden" aria-hidden="true"></span>
+        <button id="clearBtn" class="clear-btn hidden" aria-label="Clear search">✕</button>
+  
+        <div id="suggestionsBox" class="suggestions hidden" role="listbox"></div>
+      </div>
+  
+      <!-- ===== QUICK LINKS (Feature 3) ===== -->
+      <section id="quickLinks" class="quick-links">
+        <a class="quick-tile" data-category="fees" href="#">
+          <span class="qt-icon">💰</span>
+          <span class="qt-label">Fees</span>
+        </a>
+        <a class="quick-tile" data-category="admissions" href="#">
+          <span class="qt-icon">📝</span>
+          <span class="qt-label">Apply Now</span>
+        </a>
+        <a class="quick-tile" data-page="events" href="events.html">
+          <span class="qt-icon">📅</span>
+          <span class="qt-label">Events</span>
+        </a>
+        <a class="quick-tile" data-category="staff" href="#">
+          <span class="qt-icon">👩‍🏫</span>
+          <span class="qt-label">Staff</span>
+        </a>
+        <a class="quick-tile" data-category="contact" href="#">
+          <span class="qt-icon">📞</span>
+          <span class="qt-label">Contact</span>
+        </a>
+        <a class="quick-tile" data-category="news" href="#">
+          <span class="qt-icon">📰</span>
+          <span class="qt-label">News</span>
+        </a>
+      </section>
+  
+      <!-- ===== TRENDING ===== -->
+      <div id="trendingBar" class="trending-bar hidden">
+        <span class="trending-label">🔥 Frequently asked:</span>
+        <div id="trendingChips" class="trending-chips"></div>
+      </div>
+  
+      <!-- ===== EMPTY STATE / QUICK PRODUCTS ===== -->
+      <section id="emptyState" class="empty-state hidden">
+        <h2>Popular right now</h2>
+        <p class="muted">Explore what others are finding</p>
+        <ul id="popularList" class="popular-list"></ul>
+      </section>
+  
+      <!-- ===== CATEGORY FILTERS ===== -->
+      <div id="filterBar" class="filter-bar" role="tablist" aria-label="Filter by category">
+        <button class="filter-chip active" data-category="all">All</button>
+        <button class="filter-chip" data-category="fees">💰 Fees</button>
+        <button class="filter-chip" data-category="admissions">📝 Admissions</button>
+        <button class="filter-chip" data-category="subjects">📚 Subjects</button>
+        <button class="filter-chip" data-category="staff">👩‍🏫 Staff</button>
+        <button class="filter-chip" data-category="events">📅 Events</button>
+        <button class="filter-chip" data-category="news">📰 News</button>
+        <button class="filter-chip" data-category="policies">📋 Policies</button>
+        <button class="filter-chip" data-category="contact">📞 Contact</button>
+      </div>
+  
+      <!-- ===== FEEDBACK ===== -->
+      <div id="feedback" class="feedback hidden" role="status" aria-live="polite"></div>
+  
+      <!-- ===== ANSWER-FIRST RESULT (Feature 1) ===== -->
+      <section id="answerCard" class="answer-card hidden">
+        <div class="answer-head">
+          <span class="answer-label">💡 Quick answer</span>
+        </div>
+        <h3 id="answerTitle" class="answer-title"></h3>
+        <p id="answerText" class="answer-text"></p>
+        <div class="answer-actions">
+          <button id="answerShare" class="btn ghost sm">🔗 Share</button>
+          <div class="answer-rate" id="answerRate">
+            <span class="rate-label">Was this helpful?</span>
+            <button class="rate-btn" data-vote="yes" aria-label="Yes">👍</button>
+            <button class="rate-btn" data-vote="no" aria-label="No">👎</button>
+          </div>
+        </div>
+      </section>
+  
+      <!-- ===== RESULTS ===== -->
+      <ul id="results" class="results" aria-live="polite"></ul>
+  
+      <!-- ===== LOAD MORE ===== -->
+      <div id="loadMoreWrap" class="load-more-wrap hidden">
+        <button id="loadMoreBtn" class="btn ghost">Load more</button>
+        <span id="loadMoreStatus" class="muted"></span>
+      </div>   
   </div>
   <button id="backToTopBtn" onclick="scrollToTop()">↑</button>
   <!---<div class="brightness-controls">
@@ -559,7 +659,12 @@
     </div>
   </footer>
 <script type="module" src="termlyregister.js"></script>
+
   <script src="script.js"></script>
+
+  <script type="module" src="search/scripts/app.js"></script>
+
+
 </body>
 </html>
 

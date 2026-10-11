@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/shared.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+   <link rel="stylesheet" href="../styles/styles.css" />
+</head>
+<body class="admin-body">
+
+  <div id="authLoader" class="auth-loader">
+    <div class="spinner lg"></div>
+    <p>Checking authentication…</p>
+  </div>
+
+  <section id="adminView" class="admin-shell hidden">
+
+    <aside class="sidebar">
+     
+<div class="sidebar-brand">
+  <span class="brand-dot"></span>
+  <span class="brand-name">School Admin</span>
+</div>
+
+      <nav class="sidebar-nav">
+     <button class="nav-item active" data-tab="add">
+  <span class="nav-icon">➕</span> Add Resource
+</button>
+<button class="nav-item" data-tab="products">
+  <span class="nav-icon">📚</span> All Resources
+</button>
+<button class="nav-item" data-tab="analytics">
+  <span class="nav-icon">📊</span> Analytics
+</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span id="userEmail" class="user-email"></span>
+        <button id="logoutBtn" class="btn ghost sm full">Log out</button>
+      </div>
+    </aside>
+
+  <main class="content">
+
+  <!-- ADD RESOURCE -->
+  <section id="tab-add" class="tab">
+    <header class="tab-head">
+      <h1 id="formTitle">Add Resource</h1>
+      <p class="muted" id="formSubtitle">Add a piece of school information</p>
+    </header>
+
+    <div class="panel">
+      <form id="productForm" class="form">
+        <input type="hidden" id="productId" />
+
+        <label class="field">
+          <span>Title <em>*</em></span>
+          <input type="text" id="name" required placeholder="e.g. School Fees Structure" />
+        </label>
+
+        <label class="field">
+          <span>Description / Content</span>
+          <input type="text" id="description" placeholder="Short answer or summary" />
+        </label>
+
+        <label class="field">
+          <span>Category</span>
+          <select id="category">
+            <option value="fees">💰 Fees</option>
+            <option value="admissions">📝 Admissions</option>
+            <option value="subjects">📚 Subjects</option>
+            <option value="staff">👩‍🏫 Staff</option>
+            <option value="events">📅 Events</option>
+            <option value="news">📰 News</option>
+            <option value="policies">📋 Policies</option>
+            <option value="contact">📞 Contact</option>
+            <option value="other">📦 Other</option>
+          </select>
+        </label>
+
+        <div class="form-actions">
+          <button type="submit" id="submitBtn" class="btn primary">
+            <span class="btn-label">Save Resource</span>
+          </button>
+          <button type="button" id="cancelBtn" class="btn ghost hidden">Cancel</button>
+        </div>
+
+        <p id="formFeedback" class="feedback hidden"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ALL RESOURCES -->
+  <section id="tab-products" class="tab hidden">
+    <header class="tab-head row">
+      <div>
+        <h1>All Resources</h1>
+        <p class="muted">Everything stored in the school info database</p>
+      </div>
+      <span id="productCount" class="pill">0 items</span>
+    </header>
+    <ul id="adminList" class="admin-list"></ul>
+  </section>
+
+  <!-- ANALYTICS -->
+  <section id="tab-analytics" class="tab hidden">
+    <header class="tab-head row">
+      <div>
+        <h1>Frequently Asked</h1>
+        <p class="muted">Top queries from your visitors</p>
+      </div>
+      <button id="refreshAnalytics" class="btn ghost sm">↻ Refresh</button>
+    </header>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <span class="stat-label">Recent searches</span>
+        <span class="stat-value" id="statTotalSearches">—</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Unique terms</span>
+        <span class="stat-value" id="statUniqueTerms">—</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Top question</span>
+        <span class="stat-value" id="statTopTerm">—</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Top terms</h2>
+        <p class="muted">Sorted by search count</p>
+      </div>
+      <ul id="topTermsList" class="term-list"></ul>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Recent raw searches</h2>
+        <p class="muted">Last 20 search events</p>
+      </div>
+      <ul id="recentSearchesList" class="recent-list"></ul>
+    </div>
+  </section>
+
+</main>
+    
+  </section>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

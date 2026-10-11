@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/shared.css" />
+  <link rel="stylesheet" href="css/login.css" />
+</head>
+<body class="login-body">
+
+  <main class="login-wrap">
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="brand-icon">🔐</div>
+        <h1>Admin Access</h1>
+        <p class="muted">Sign in to manage your store</p>
+      </div>
+
+      <form id="loginForm" class="form" novalidate>
+        <label class="field">
+          <span>Email</span>
+          <input type="email" id="email" placeholder="admin@example.com" required autocomplete="email" />
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password" />
+        </label>
+
+        <button type="submit" id="submitBtn" class="btn primary full lg">
+          <span class="btn-label">Sign In</span>
+        </button>
+
+        <p id="loginError" class="feedback error hidden"></p>
+      </form>
+
+      <p class="login-footer">
+        Not an admin? <a href="../index.html">Back to shop</a>
+      </p>
+    </div>
+  </main>
+
+  <div id="authLoader" class="auth-loader">
+    <div class="spinner lg"></div>
+    <p>Checking session…</p>
+  </div>
+
+  <script type="module" src="js/login.js"></script>
+</body>
+</html>

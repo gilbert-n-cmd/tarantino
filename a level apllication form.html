@@ -7,6 +7,19 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+
+  <link rel="stylesheet" href="school-assistan/css/ai-bot.css">
+  <link rel="stylesheet" href="school-assistan/css/ai-auth.css">
+
+  <link rel="stylesheet" href="badge.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/features.css" />
+  <link rel="stylesheet" href="styles/extra-features.css" />
   <style>
     body { 
       font-family: Arial, sans-serif; 
@@ -22,7 +35,7 @@
       padding: 20px;
     }
     .container { 
-      background: linear-gradient(to bottom, white, brown); 
+      background: linear-gradient(to bottom, white, #004080); 
       padding: 30px; 
       border-radius: 8px; 
       box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
@@ -37,7 +50,7 @@
     textarea { resize: vertical; height: 80px; }
     .submit-button { background: #0073b1; color: white; border: none; padding: 12px; width: 100%; font-size: 16px; cursor: pointer; border-radius: 5px; }
     .submit-button:hover { background: #005f8a; }
-    span{ color:red;}
+    /*span{ color:red;}*/
     h4{ font-size: 12px; color:#004080;}
    
   </style>
@@ -46,27 +59,62 @@
 
   <header>
     <div class="top-bar">
-<div class="logo" style="color: white; font-size: 24px; font-weight: bold;">Bishop Angelo Tarantino Memorial Secondary School</div>
+      <div class="school-brand">
+        <img 
+          src="images/staff-image/Dr.Arun-Walia.png" 
+          alt="School Badge" 
+          class="school-badge"
+        >
+      
+        <div class="logo">
+          Bishop Angelo Tarantino Memorial Secondary School
+        </div>
+      </div>
         <div id="chat-container">
+          
+  <button class= "chat-header" onclick="location.href='tarantino E-learning/student-login.html';" style="margin-right: 0px; margin-left: 0; padding: 6px 14px; font-size: 0.9rem; vertical-align: middle; cursor:pointer; position: relative; margin-bottom: 5px;">E-learning</button>
+
             <div class="time"><b>Current Time: <span id="liveTime"></span></b>
                 <b>Current Date: <span id="liveDate"></span></b></div>
-        </div>
+            <!---<button class="chat-btn" onclick="toggleChat()">💬 Chat with Us</button>--->
+       <div id="chat-box">
+        <!---<div class="chat-header">
+          <span>Live Chat</span>
+          <button onclick="toggleChat()">✖</button>
+        </div>--->
+        <!---<div class="chat-body">
+          <p>Welcome to Noble Mayombo Memorial seed School! How can we help you?</p>
+          <input type="text" placeholder="Type your message..." /><br /><br />
+          <button onclick="toggleChat()">send</button>
+        </div>--->
+      </div>
+    </div>
+                <div class="header-contact"><a href="tel:+256779905605" class="cta-btn">📞 Call Now</a>| <a href="mailto:bishopangelotarantino@gmail.ac.ug">bishopangelotarantino@gmail.ac.ug</a></div>
+
         <div class="right-section">
-            <div class="socials-icons img">
-              <a href="#footer-icons"><i class="fas fa-globe"></i></a>
-              <a href="#footer-icons"><i class="fab fa-instagram"></i></a>
-              <a href="#footer-icons"><i class="fab fa-facebook-f"></i></a>
-              <a href="#footer-icons"><i class="fab fa-whatsapp"></i></a>
-            </div>
-            <select id="language-select" class="language-selector">
-                <option value="en">English</option>
-                <option value="fr">French</option>
-                <option value="es">Spanish</option>
-            </select>
-        </div>
+  <div class="socials-icons img">
+    <!-- Twitter -->
+    <a href="https://twitter.com/yourprofile" target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/atuma743/" target="_blank">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61581582092482" target="_blank">
+  <i class="fab fa-facebook-f"></i>
+</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/256779905605" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
+  <a href="schhool-portal/login.html" id="portalBtn">Portal</a>
+    </div>
     </div>
   </header>
-
   <nav>
     <button class="nav-toggle" aria-label="Toggle navigation">
       <span class="hamburger"></span>
@@ -74,10 +122,10 @@
     <a href="index.html">Home</a>
     <div class="dropdown">
       <a href="#">Academics &#x25BC;</a>
-      <div class="dropdown-content">
+    <div class="dropdown-content">
         <a href="o-level.html">O Level</a>
         <a href="a-level.html">A Level</a>
-      </div>
+    </div>
     </div>
     <div class="dropdown">
       <a href="#">About &#x25BC;</a>
@@ -85,32 +133,35 @@
         <a href="About-bishop.html">About Bishop Angelo Tarantino</a>
         <a href="Staff.html">Staff</a>
         <a href="student-life.html">Student-life</a>
-        <a href="history.html">History</a>
+        <a href="history.html">School history</a>
         <a href="Academic-performance.html">Academic performance</a>
+        
         <a href="gallery.html">Gallery</a>
         <a href="Board-of-Governors.html">Board of Governors</a>
         <a href="PTA-executives.html">PTA executives</a>
         <div class="dropdown-submenu">
           <a href="#">Clubs & Facilities</a>
-          <div class="dropdown-submenu-content">
-            <a href="Catholic.html">Catholic</a>
-            <a href="Scripture-Union.html">Scripture Union</a>
-            <a href="muslim-comunity.html">Muslim community</a>
-            <a href="MDD.html">MDD</a>
-            <a href="Debating-Club.html">Debating Club</a>
+            <div class="dropdown-submenu-content">
+              <a href="Catholic.html">Catholic</a>
+              <a href="Scripture-Union.html">Scripture union</a>
+              <a href="muslim-comunity.html">Muslim community</a>
+              <a href="MDD.html">MDD</a>
+              <a href="Debating-Club.html">Debating Club</a>
+              
+            </div>
           </div>
-        </div>
+        
       </div>
     </div>
     <a href="news-updates.html">News & updates</a>
     <a href="calendar-event.html">Calendar & event</a>
     <a href="contact.html">Contact</a>
     <div class="dropdown">
-      <a href="#">Apply Online &#x25BC;</a>
-      <div class="dropdown-content">
-        <a href="o level application form.html">O Level</a>
-        <a href="a level apllication form.html">A Level</a>
-      </div>
+    <a href="#">Apply Online &#x25BC;</a>
+    <div class="dropdown-content">
+      <a href="o level application form.html">O Level</a>
+      <a href="a level apllication form.html">A Level</a>
+    </div>
     </div>
     <button class="search-toggle" aria-label="Toggle search">
       <i class="fas fa-search"></i>
@@ -118,8 +169,112 @@
 
     <img src="images/staff-image/Dr.Arun-Walia.png" alt="Dr. Ashwani Kalia" alt="School Badge" class="nav-badge">
 
+    
   </nav>
 
+ <div class="search-bar" style="display:none;">
+
+      <!-- ============ SEARCH WRAPPER ============ -->
+      <div class="search-wrapper" id="searchWrapper">
+        <span class="search-icon" aria-hidden="true">🔎</span>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="e.g. How much is school fees?"
+          autocomplete="off"
+          aria-label="Search school information"
+          aria-autocomplete="list"
+          aria-controls="suggestionsBox"
+        />
+        <span id="spinner" class="spinner hidden" aria-hidden="true"></span>
+        <button id="clearBtn" class="clear-btn hidden" aria-label="Clear search">✕</button>
+  
+        <div id="suggestionsBox" class="suggestions hidden" role="listbox"></div>
+      </div>
+  
+      <!-- ===== QUICK LINKS (Feature 3) ===== -->
+      <section id="quickLinks" class="quick-links">
+        <a class="quick-tile" data-category="fees" href="#">
+          <span class="qt-icon">💰</span>
+          <span class="qt-label">Fees</span>
+        </a>
+        <a class="quick-tile" data-category="admissions" href="#">
+          <span class="qt-icon">📝</span>
+          <span class="qt-label">Apply Now</span>
+        </a>
+        <a class="quick-tile" data-page="events" href="events.html">
+          <span class="qt-icon">📅</span>
+          <span class="qt-label">Events</span>
+        </a>
+        <a class="quick-tile" data-category="staff" href="#">
+          <span class="qt-icon">👩‍🏫</span>
+          <span class="qt-label">Staff</span>
+        </a>
+        <a class="quick-tile" data-category="contact" href="#">
+          <span class="qt-icon">📞</span>
+          <span class="qt-label">Contact</span>
+        </a>
+        <a class="quick-tile" data-category="news" href="#">
+          <span class="qt-icon">📰</span>
+          <span class="qt-label">News</span>
+        </a>
+      </section>
+  
+      <!-- ===== TRENDING ===== -->
+      <div id="trendingBar" class="trending-bar hidden">
+        <span class="trending-label">🔥 Frequently asked:</span>
+        <div id="trendingChips" class="trending-chips"></div>
+      </div>
+  
+      <!-- ===== EMPTY STATE / QUICK PRODUCTS ===== -->
+      <section id="emptyState" class="empty-state hidden">
+        <h2>Popular right now</h2>
+        <p class="muted">Explore what others are finding</p>
+        <ul id="popularList" class="popular-list"></ul>
+      </section>
+  
+      <!-- ===== CATEGORY FILTERS ===== -->
+      <div id="filterBar" class="filter-bar" role="tablist" aria-label="Filter by category">
+        <button class="filter-chip active" data-category="all">All</button>
+        <button class="filter-chip" data-category="fees">💰 Fees</button>
+        <button class="filter-chip" data-category="admissions">📝 Admissions</button>
+        <button class="filter-chip" data-category="subjects">📚 Subjects</button>
+        <button class="filter-chip" data-category="staff">👩‍🏫 Staff</button>
+        <button class="filter-chip" data-category="events">📅 Events</button>
+        <button class="filter-chip" data-category="news">📰 News</button>
+        <button class="filter-chip" data-category="policies">📋 Policies</button>
+        <button class="filter-chip" data-category="contact">📞 Contact</button>
+      </div>
+  
+      <!-- ===== FEEDBACK ===== -->
+      <div id="feedback" class="feedback hidden" role="status" aria-live="polite"></div>
+  
+      <!-- ===== ANSWER-FIRST RESULT (Feature 1) ===== -->
+      <section id="answerCard" class="answer-card hidden">
+        <div class="answer-head">
+          <span class="answer-label">💡 Quick answer</span>
+        </div>
+        <h3 id="answerTitle" class="answer-title"></h3>
+        <p id="answerText" class="answer-text"></p>
+        <div class="answer-actions">
+          <button id="answerShare" class="btn ghost sm">🔗 Share</button>
+          <div class="answer-rate" id="answerRate">
+            <span class="rate-label">Was this helpful?</span>
+            <button class="rate-btn" data-vote="yes" aria-label="Yes">👍</button>
+            <button class="rate-btn" data-vote="no" aria-label="No">👎</button>
+          </div>
+        </div>
+      </section>
+  
+      <!-- ===== RESULTS ===== -->
+      <ul id="results" class="results" aria-live="polite"></ul>
+  
+      <!-- ===== LOAD MORE ===== -->
+      <div id="loadMoreWrap" class="load-more-wrap hidden">
+        <button id="loadMoreBtn" class="btn ghost">Load more</button>
+        <span id="loadMoreStatus" class="muted"></span>
+      </div>
+</div>
   <main>
     <div class="container">
 Tarantino Admission Form
@@ -389,11 +544,14 @@ await addDoc(collection(db, 'a-level-applicants'), payload);
   
 <script src="year.js"></script>
 
+<script src="script.js"></script>
+
+
 <!-- 1. Knowledge (regular script — must load first) -->
 <script src="school-assistan/js/ai-knowledge.js"></script>
 
 <!-- 2. Firebase config (regular script — must be before modules) -->
-<script type="module" src="school-assistan/js/firebase-config.js"></script>
+<script src="school-assistan/js/firebase-config.js"></script>
 
 <!-- 3. Firebase auth + Firestore (ES modules) -->
 <script type="module" src="school-assistan/js/ai-auth.js"></script>
@@ -403,6 +561,8 @@ await addDoc(collection(db, 'a-level-applicants'), payload);
 <script src="school-assistan/js/ai-bot.js" defer></script>
 
 <script type="module" src="school-assistan/js/ai-knowledge-store.js"></script>
+
+<script type="module" src="search/scripts/app.js"></script>
 
 </body>
 </html>

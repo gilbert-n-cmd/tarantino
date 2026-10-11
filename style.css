@@ -511,7 +511,6 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
 }
 
 .time {
- .time {
   background: #419efc;
   color: white;
   padding: 20px;
@@ -519,9 +518,8 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
   cursor: pointer;
   border-radius: 20px;
   font-size: 14px;
-  height: 35px;
+  height: 30px;
   
-}
 }
 
 #chat-container .chat-header {
