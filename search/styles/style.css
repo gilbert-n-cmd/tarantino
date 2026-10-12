@@ -308,7 +308,7 @@ body {
    MOBILE
    ============================================ */
 @media (max-width: 480px) {
-  body { padding: 1.5rem 0.5rem 3rem; }
+  /*body { padding: 1.5rem 0.5rem 3rem; }*/
   .container { padding: 0 0.25rem; }
   .page-head h1 { font-size: 1.35rem; }
   .page-head .sub { font-size: 0.82rem; }
