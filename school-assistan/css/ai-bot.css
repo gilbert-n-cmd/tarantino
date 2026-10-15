@@ -259,28 +259,118 @@
 #ai-bot-send:hover { background: #1a5fa8; }
 #ai-bot-send:disabled { background: #94a3b8; cursor: not-allowed; }
 
-/* Mobile Responsive */
-@media (max-width: 480px) {
+/* ============================================
+   MOBILE — full-screen chat window
+   ============================================ */
+@media (max-width: 600px) {
+  /* Full-screen chat on mobile */
   #ai-bot-window {
-    width: calc(100vw - 24px);
-    height: calc(100vh - 180px);
-    right: 12px;
-    bottom: 140px;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh; /* dynamic — accounts for mobile browser bars */
+    max-width: 100vw;
+    max-height: 100vh;
+    max-height: 100dvh;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    top: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
+
+  #ai-bot-header {
+    padding: 14px 16px;
+    padding-top: max(14px, env(safe-area-inset-top));
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  #ai-bot-header .title {
+    font-size: 15px;
+  }
+
+  #ai-bot-header .status {
+    font-size: 12px;
+  }
+
+  #ai-bot-messages {
+    flex: 1;
+    min-height: 0;
+    padding: 14px;
+    font-size: 15px;
+  }
+
+  .msg {
+    font-size: 15px;
+    padding: 12px 16px;
+    max-width: 88%;
+    line-height: 1.55;
+  }
+
+  #ai-bot-input-row {
+    flex-shrink: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  #ai-bot-input {
+    padding: 14px 16px;
+    font-size: 16px; /* 16px prevents iOS zoom on focus */
+  }
+
+  #ai-bot-send {
+    padding: 0 20px;
+    font-size: 15px;
+  }
+
+  /* Hide the floating bot button when chat is open on mobile */
+  #ai-bot-window.open ~ #ai-bot-button {
+    display: none;
+  }
+
+  /* Bot button position on mobile */
   #ai-bot-button {
-    bottom: 72px;
-    right: 16px;
-    width: 56px;
-    height: 56px;
+    bottom: 75px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    z-index: 9999;
   }
   #ai-bot-button svg {
-    width: 42px;
-    height: 42px;
+    width: 46px;
+    height: 46px;
   }
-  #ai-bot-button .pulse {
-    top: 0;
-    right: 0;
-    width: 11px;
-    height: 11px;
+}
+
+/* Tablets and small laptops */
+@media (min-width: 601px) and (max-width: 900px) {
+  #ai-bot-window {
+    width: 400px;
+    height: min(640px, calc(100vh - 180px));
+    bottom: 120px;
+    right: 20px;
   }
+}
+/* ============================================
+   TYPEWRITER CURSOR
+   ============================================ */
+.msg.typing-target::after {
+  content: "▍";
+  display: inline-block;
+  margin-left: 2px;
+  color: #0d3b66;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+  font-weight: 400;
+}
+
+@keyframes blink {
+  0%, 50%   { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.msg.typing-target.done::after {
+  display: none;
 }
