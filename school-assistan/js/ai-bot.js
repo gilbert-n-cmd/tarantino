@@ -1,5 +1,6 @@
 /* ============================================
    AI Guide Bot — COMPLETE FILE
+   Includes human-like typewriter effect
    ============================================ */
 
 (function () {
@@ -29,7 +30,7 @@
     injectHTML();
     cacheElements();
     attachEvents();
-    showWelcome();
+    await showWelcome();
 
     window.addEventListener("ai-bot:login", onLogin);
     window.addEventListener("ai-bot:logout", onLogout);
@@ -139,7 +140,6 @@
 
     authBadge.addEventListener("click", openAuthModal, { passive: true });
     authBadge.addEventListener("pointerup", (e) => {
-      // Some mobile browsers/webview shells can miss a synthesized click.
       if (e.pointerType === "touch") {
         e.preventDefault();
         openAuthModal();
@@ -159,8 +159,7 @@
 
     setupAuthForm();
 
-    // Mobile-safe delegated fallback. This still works if another page-level
-    // script replaces or interferes with the header button after initialization.
+    // Delegated fallback for the auth button
     document.addEventListener("click", (e) => {
       const target = e.target.closest && e.target.closest("#ai-bot-auth");
       if (!target) return;
@@ -204,9 +203,11 @@
     authBadge.title = "Login / Sign up";
 
     clearMessages();
-    addMessage(WELCOME_MESSAGE, "bot");
-    showQuickReplies();
-    addMessage("👋 You're now in guest mode. Chats won't be saved.", "bot");
+    (async () => {
+      await addTypedMessage(WELCOME_MESSAGE, false);
+      showQuickReplies();
+      await addTypedMessage("👋 You're now in guest mode. Chats won't be saved.", false);
+    })();
   }
 
   async function loadLatestOrNewSession() {
@@ -219,7 +220,7 @@
       } else {
         currentSessionId = await window.aiBotCreateSession("New chat");
         clearMessages();
-        addMessage(`👋 Welcome back, <b>${escapeHTML(currentUserName)}</b>! How can I help you today?`, "bot");
+        await addTypedMessage(`👋 Welcome back, <b>${escapeHTML(currentUserName)}</b>! How can I help you today?`, "bot");
         showQuickReplies();
       }
     } catch (err) {
@@ -232,11 +233,12 @@
     const msgs = await window.aiBotLoadMessages(sessionId);
 
     if (msgs.length === 0) {
-      addMessage(`👋 Welcome back, <b>${escapeHTML(currentUserName)}</b>! How can I help you today?`, "bot");
+      await addTypedMessage(`👋 Welcome back, <b>${escapeHTML(currentUserName)}</b>! How can I help you today?`, "bot");
       showQuickReplies();
       return;
     }
 
+    // History restores instantly (no typewriter)
     addMessage(`👋 Welcome back, <b>${escapeHTML(currentUserName)}</b>. Continuing your last chat:`, "bot");
     msgs.forEach(m => addMessage(m.text, m.sender));
 
@@ -252,7 +254,7 @@
     currentSessionId = await window.aiBotCreateSession("New chat");
     conversationHistory = [];
     clearMessages();
-    addMessage(`👋 New chat started. How can I help you, <b>${escapeHTML(currentUserName)}</b>?`, "bot");
+    await addTypedMessage(`👋 New chat started. How can I help you, <b>${escapeHTML(currentUserName)}</b>?`, "bot");
     showQuickReplies();
   }
 
@@ -275,7 +277,7 @@
 
   async function openHistoryModal() {
     if (!isLoggedIn) {
-      addMessage("🔒 Please sign in to view chat history.", "bot");
+      await addTypedMessage("🔒 Please sign in to view chat history.", "bot");
       openAuthModal();
       return;
     }
@@ -354,8 +356,6 @@
       const errBox   = document.getElementById("ai-auth-error");
       errBox.textContent = "";
 
-      // Firebase modules are asynchronous. Wait for the AI auth module even
-      // when the user clicks Sign In before the module has published its API.
       submit.disabled = true;
       submit.textContent = "Connecting…";
 
@@ -431,6 +431,11 @@
     messagesBox.innerHTML = "";
   }
 
+  // ============================================
+  // MESSAGE RENDERING
+  // ============================================
+
+  // Instant message (for user messages, restored history)
   function addMessage(text, sender, save = false) {
     const div = document.createElement("div");
     div.className = "msg " + sender;
@@ -438,13 +443,172 @@
     messagesBox.appendChild(div);
     messagesBox.scrollTop = messagesBox.scrollHeight;
 
-    if (save && isLoggedIn && currentSessionId && window.aiBotSaveMessage) {
-      window.aiBotSaveMessage(currentSessionId, sender, text).catch(err =>
+    if (save && isLoggedIn && currentSessionId && window.tarantinoSaveMessage) {
+      window.tarantinoSaveMessage(currentSessionId, sender, text).catch(err =>
         console.warn("[Bot] Failed to save message:", err)
       );
     }
+    return div;
   }
 
+  // Typewriter message — human-like pacing
+  async function addTypedMessage(html, save = false) {
+    const div = document.createElement("div");
+    div.className = "msg bot typing-target";
+    div.innerHTML = "";
+    messagesBox.appendChild(div);
+
+    // Click to skip
+    let skipRequested = false;
+    div.addEventListener("click", () => { skipRequested = true; }, { once: true });
+
+    const tokens = tokenizeHTML(html);
+
+    let rendered = "";
+    let prevTokenText = "";
+
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i];
+      const isTag = token.startsWith("<");
+
+      rendered += token;
+      div.innerHTML = rendered;
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+
+      if (!isTag && !skipRequested) {
+        const delay = computeHumanDelay(token, prevTokenText, i);
+        await sleep(delay);
+      }
+
+      if (!isTag) {
+        prevTokenText = token;
+      }
+    }
+
+    div.classList.add("done");
+    div.classList.remove("typing-target");
+
+    if (save && isLoggedIn && currentSessionId && window.tarantinoSaveMessage) {
+      window.tarantinoSaveMessage(currentSessionId, "bot", html).catch(err =>
+        console.warn("[Bot] Failed to save message:", err)
+      );
+    }
+
+    return div;
+  }
+
+  // ============================================
+  // HUMAN-LIKE DELAY CALCULATION
+  // ============================================
+  function computeHumanDelay(token, prevToken, index) {
+    const word = token.trim();
+    const wordLen = word.length;
+
+    // Base delay: 40ms per char-ish, with caps
+    let delay = 40 + wordLen * 14;
+    delay = Math.min(320, Math.max(55, delay));
+
+    const lastChar = word[word.length - 1];
+
+    // Punctuation pauses
+    if (lastChar === "." || lastChar === "!" || lastChar === "?") {
+      delay += 320 + Math.random() * 180;
+    } else if (lastChar === ",") {
+      delay += 140 + Math.random() * 80;
+    } else if (lastChar === ";" || lastChar === ":") {
+      delay += 180 + Math.random() * 100;
+    } else if (lastChar === "—" || lastChar === "–") {
+      delay += 220 + Math.random() * 120;
+    }
+
+    // Ellipsis
+    if (/\.{3,}$/.test(word) || /…$/.test(word)) {
+      delay += 260 + Math.random() * 200;
+    }
+
+    // Speed up common short words
+    const fastWords = new Set([
+      "a", "an", "the", "and", "or", "but", "is", "are", "was", "were",
+      "to", "of", "in", "on", "at", "by", "for", "as", "it", "its",
+      "we", "you", "they", "i", "he", "she", "me", "us", "them",
+      "do", "be", "so", "if", "no", "yes", "not"
+    ]);
+    if (fastWords.has(word.toLowerCase())) {
+      delay = Math.round(delay * 0.55);
+    }
+
+    // Slow down long words
+    if (wordLen >= 9) {
+      delay = Math.round(delay * 1.25);
+    }
+
+    // Emphasize proper nouns mid-sentence
+    if (
+      index > 2 &&
+      /^[A-Z][a-z]/.test(word) &&
+      !/^[A-Z]+$/.test(word)
+    ) {
+      delay = Math.round(delay * 1.15);
+    }
+
+    // Occasional hesitation pause
+    if (
+      (lastChar === "," || lastChar === ".") &&
+      Math.random() < 0.04
+    ) {
+      delay += 400 + Math.random() * 500;
+    }
+
+    // Breath after end of sentence
+    if (prevToken) {
+      const prevWord = prevToken.trim();
+      const prevLast = prevWord[prevWord.length - 1];
+      if (prevLast === "." || prevLast === "!" || prevLast === "?") {
+        delay += 60 + Math.random() * 60;
+      }
+    }
+
+    // Tiny random jitter
+    delay += Math.random() * 40 - 20;
+
+    return Math.max(30, Math.round(delay));
+  }
+
+  // ============================================
+  // TOKENIZER — split HTML into typeable words
+  // ============================================
+  function tokenizeHTML(html) {
+    const tokens = [];
+    let i = 0;
+
+    while (i < html.length) {
+      if (html[i] === "<") {
+        const end = html.indexOf(">", i);
+        if (end === -1) {
+          tokens.push(html.slice(i));
+          break;
+        }
+        tokens.push(html.slice(i, end + 1));
+        i = end + 1;
+      } else {
+        let end = html.indexOf("<", i);
+        if (end === -1) end = html.length;
+        const chunk = html.slice(i, end);
+        const parts = chunk.match(/\S+\s*|\s+/g) || [chunk];
+        tokens.push(...parts);
+        i = end;
+      }
+    }
+    return tokens;
+  }
+
+  function sleep(ms) {
+    return new Promise((r) => setTimeout(r, ms));
+  }
+
+  // ============================================
+  // TYPING INDICATOR (three dots while searching)
+  // ============================================
   function showTyping() {
     const div = document.createElement("div");
     div.className = "msg bot typing";
@@ -458,8 +622,11 @@
     document.getElementById("ai-bot-typing")?.remove();
   }
 
-  function showWelcome() {
-    addMessage(WELCOME_MESSAGE, "bot");
+  // ============================================
+  // WELCOME + QUICK REPLIES
+  // ============================================
+  async function showWelcome() {
+    await addTypedMessage(WELCOME_MESSAGE, false);
     showQuickReplies();
   }
 
@@ -490,7 +657,6 @@
 
   async function logQuestionForAdmin(text) {
     try {
-      // Wait for the Firestore chat store so logging cannot lose the first question.
       if (window.aiBotChatReady) await window.aiBotChatReady;
       if (typeof window.aiBotLogQuestion !== "function") {
         console.warn("[Bot] FAQ logger is not available.");
@@ -530,7 +696,7 @@
             removeTyping();
             let reply = hit.answer || "Here's what I found:";
             if (hit.url) reply += `<br><br>👉 <a href="${hit.url}" target="_blank">Open page</a>`;
-            addMessage(reply, "bot", true);
+            await addTypedMessage(reply, true);
             conversationHistory.push({ role: "assistant", content: reply });
             return;
           }
@@ -544,7 +710,7 @@
         const generalReply = getGeneralResponse(userText);
         if (generalReply) {
           removeTyping();
-          addMessage(generalReply, "bot", true);
+          await addTypedMessage(generalReply, true);
           conversationHistory.push({ role: "assistant", content: generalReply });
           return;
         }
@@ -553,12 +719,12 @@
       // 3️⃣ Keyword match
       const reply = await keywordMatch(userText);
       removeTyping();
-      addMessage(reply, "bot", true);
+      await addTypedMessage(reply, true);
       conversationHistory.push({ role: "assistant", content: reply });
 
     } catch (err) {
       removeTyping();
-      addMessage(FALLBACK_REPLY, "bot", true);
+      await addTypedMessage(FALLBACK_REPLY, true);
       console.error("Bot error:", err);
     } finally {
       sendButton.disabled = false;
