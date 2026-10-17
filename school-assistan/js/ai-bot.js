@@ -1,6 +1,6 @@
 /* ============================================
    AI Guide Bot — COMPLETE FILE
-   Includes human-like typewriter effect
+   Includes human-like typewriter effect & clean auth
    ============================================ */
 
 (function () {
@@ -238,7 +238,6 @@
       return;
     }
 
-    // History restores instantly (no typewriter)
     addMessage(`👋 Welcome back, <b>${escapeHTML(currentUserName)}</b>. Continuing your last chat:`, "bot");
     msgs.forEach(m => addMessage(m.text, m.sender));
 
@@ -359,21 +358,15 @@
       submit.disabled = true;
       submit.textContent = "Connecting…";
 
+      // CLEANED UP AUTH INITIALIZATION
       try {
         const started = Date.now();
-        while (!window.aiBotAuthReady && Date.now() - started < 10000) {
+        while ((!window.tarantinoLogin || !window.tarantinoSignUp) && Date.now() - started < 10000) {
           await new Promise(resolve => setTimeout(resolve, 50));
         }
 
-        if (!window.aiBotAuthReady) {
+        if (!window.tarantinoLogin || !window.tarantinoSignUp) {
           throw new Error("AI authentication module did not load within 10 seconds.");
-        }
-
-        await window.aiBotAuthReady;
-
-        if (typeof window.aiBotLogin !== "function" ||
-            typeof window.aiBotSignUp !== "function") {
-          throw new Error("AI authentication functions were not registered.");
         }
       } catch (authInitError) {
         console.error("[AI Bot] Auth initialization failed:", authInitError);
@@ -385,11 +378,12 @@
 
       submit.textContent = "Please wait…";
 
+      // CLEANED UP LOGIN CALLS
       try {
         if (authMode === "signup") {
-          await window.aiBotSignUp(email, password, name);
+          await window.tarantinoSignUp(email, password, name);
         } else {
-          await window.aiBotLogin(email, password);
+          await window.tarantinoLogin(email, password);
         }
         closeAuthModal();
       } catch (err) {
@@ -422,7 +416,12 @@
   // ============================================
   function toggleBot() {
     botWindow.classList.toggle("open");
-    if (botWindow.classList.contains("open")) {
+    const isOpen = botWindow.classList.contains("open");
+    
+    // Hide the floating button when the chat is open
+    botButton.style.display = isOpen ? "none" : "flex";
+    
+    if (isOpen) {
       setTimeout(() => inputField.focus(), 200);
     }
   }
@@ -435,7 +434,6 @@
   // MESSAGE RENDERING
   // ============================================
 
-  // Instant message (for user messages, restored history)
   function addMessage(text, sender, save = false) {
     const div = document.createElement("div");
     div.className = "msg " + sender;
@@ -451,14 +449,12 @@
     return div;
   }
 
-  // Typewriter message — human-like pacing
   async function addTypedMessage(html, save = false) {
     const div = document.createElement("div");
     div.className = "msg bot typing-target";
     div.innerHTML = "";
     messagesBox.appendChild(div);
 
-    // Click to skip
     let skipRequested = false;
     div.addEventListener("click", () => { skipRequested = true; }, { once: true });
 
@@ -497,20 +493,15 @@
     return div;
   }
 
-  // ============================================
-  // HUMAN-LIKE DELAY CALCULATION
-  // ============================================
   function computeHumanDelay(token, prevToken, index) {
     const word = token.trim();
     const wordLen = word.length;
 
-    // Base delay: 40ms per char-ish, with caps
     let delay = 40 + wordLen * 14;
     delay = Math.min(320, Math.max(55, delay));
 
     const lastChar = word[word.length - 1];
 
-    // Punctuation pauses
     if (lastChar === "." || lastChar === "!" || lastChar === "?") {
       delay += 320 + Math.random() * 180;
     } else if (lastChar === ",") {
@@ -521,12 +512,10 @@
       delay += 220 + Math.random() * 120;
     }
 
-    // Ellipsis
     if (/\.{3,}$/.test(word) || /…$/.test(word)) {
       delay += 260 + Math.random() * 200;
     }
 
-    // Speed up common short words
     const fastWords = new Set([
       "a", "an", "the", "and", "or", "but", "is", "are", "was", "were",
       "to", "of", "in", "on", "at", "by", "for", "as", "it", "its",
@@ -537,29 +526,18 @@
       delay = Math.round(delay * 0.55);
     }
 
-    // Slow down long words
     if (wordLen >= 9) {
       delay = Math.round(delay * 1.25);
     }
 
-    // Emphasize proper nouns mid-sentence
-    if (
-      index > 2 &&
-      /^[A-Z][a-z]/.test(word) &&
-      !/^[A-Z]+$/.test(word)
-    ) {
+    if (index > 2 && /^[A-Z][a-z]/.test(word) && !/^[A-Z]+$/.test(word)) {
       delay = Math.round(delay * 1.15);
     }
 
-    // Occasional hesitation pause
-    if (
-      (lastChar === "," || lastChar === ".") &&
-      Math.random() < 0.04
-    ) {
+    if ((lastChar === "," || lastChar === ".") && Math.random() < 0.04) {
       delay += 400 + Math.random() * 500;
     }
 
-    // Breath after end of sentence
     if (prevToken) {
       const prevWord = prevToken.trim();
       const prevLast = prevWord[prevWord.length - 1];
@@ -568,15 +546,11 @@
       }
     }
 
-    // Tiny random jitter
     delay += Math.random() * 40 - 20;
 
     return Math.max(30, Math.round(delay));
   }
 
-  // ============================================
-  // TOKENIZER — split HTML into typeable words
-  // ============================================
   function tokenizeHTML(html) {
     const tokens = [];
     let i = 0;
@@ -606,9 +580,6 @@
     return new Promise((r) => setTimeout(r, ms));
   }
 
-  // ============================================
-  // TYPING INDICATOR (three dots while searching)
-  // ============================================
   function showTyping() {
     const div = document.createElement("div");
     div.className = "msg bot typing";
@@ -622,9 +593,6 @@
     document.getElementById("ai-bot-typing")?.remove();
   }
 
-  // ============================================
-  // WELCOME + QUICK REPLIES
-  // ============================================
   async function showWelcome() {
     await addTypedMessage(WELCOME_MESSAGE, false);
     showQuickReplies();
@@ -668,9 +636,6 @@
     }
   }
 
-  // ============================================
-  // SEND + RESPOND
-  // ============================================
   function handleSend() {
     const text = inputField.value.trim();
     if (!text) return;
@@ -688,7 +653,6 @@
     sendButton.disabled = true;
 
     try {
-      // 1️⃣ Firestore knowledge
       if (typeof window.tarantinoSearchKnowledge === "function") {
         try {
           const hit = await window.tarantinoSearchKnowledge(userText);
@@ -705,7 +669,6 @@
         }
       }
 
-      // 2️⃣ Local rules
       if (typeof getGeneralResponse === "function") {
         const generalReply = getGeneralResponse(userText);
         if (generalReply) {
@@ -716,7 +679,6 @@
         }
       }
 
-      // 3️⃣ Keyword match
       const reply = await keywordMatch(userText);
       removeTyping();
       await addTypedMessage(reply, true);
@@ -754,9 +716,6 @@
     });
   }
 
-  // ============================================
-  // UTIL
-  // ============================================
   function escapeHTML(str) {
     return String(str == null ? "" : str)
       .replace(/&/g,"&amp;").replace(/</g,"&lt;")
@@ -764,9 +723,6 @@
       .replace(/'/g,"&#39;");
   }
 
-  // ============================================
-  // BOOT
-  // ============================================
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initBot);
   } else {
