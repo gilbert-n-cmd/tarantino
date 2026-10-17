@@ -8,13 +8,20 @@ import {
   serverTimestamp, deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-async function waitForFirebase() {
-  if (window.aiBotFirebaseReady) return window.aiBotFirebaseReady;
-  if (window.tarantinoAuth?.db) return window.tarantinoAuth;
-  throw new Error("AI Firebase is not initialized.");
+function waitForFirebase() {
+  return new Promise((resolve) => {
+    if (window.tarantinoAuth?.db) return resolve(window.tarantinoAuth);
+    const check = setInterval(() => {
+      if (window.tarantinoAuth?.db) {
+        clearInterval(check);
+        resolve(window.tarantinoAuth);
+      }
+    }, 20);
+    setTimeout(() => clearInterval(check), 10000);
+  });
 }
 
-const chatStoreReady = (async () => {
+(async () => {
   const { db, auth } = await waitForFirebase();
 
   function requireUser() {
@@ -23,7 +30,7 @@ const chatStoreReady = (async () => {
     return uid;
   }
 
-  window.aiBotCreateSession = async (title = "New chat") => {
+  window.tarantinoCreateSession = async (title = "New chat") => {
     const uid = requireUser();
     const ref = await addDoc(collection(db, "users", uid, "sessions"), {
       title,
@@ -33,27 +40,7 @@ const chatStoreReady = (async () => {
     return ref.id;
   };
 
-  // Log every AI question for the admin FAQ Insights dashboard.
-  // This is intentionally separate from private per-user chat history.
-  // Guest questions are allowed in FAQ Insights, but guest chat history
-  // is not stored under /users because the guest has no account.
-  window.aiBotLogQuestion = async (question) => {
-    const text = String(question || "").trim();
-    if (!text) return null;
-
-    const uid = auth.currentUser?.uid || null;
-
-    const ref = await addDoc(collection(db, "faq_logs"), {
-      question: text.toLowerCase().replace(/\s+/g, " ").trim(),
-      originalQuestion: text,
-      userId: uid,
-      source: "ai-bot",
-      timestamp: serverTimestamp()
-    });
-    return ref.id;
-  };
-
-  window.aiBotSaveMessage = async (sessionId, sender, text) => {
+  window.tarantinoSaveMessage = async (sessionId, sender, text) => {
     const uid = requireUser();
     await addDoc(collection(db, "users", uid, "sessions", sessionId, "messages"), {
       sender,
@@ -67,7 +54,7 @@ const chatStoreReady = (async () => {
     );
   };
 
-  window.aiBotListSessions = async (max = 20) => {
+  window.tarantinoListSessions = async (max = 20) => {
     const uid = requireUser();
     const q = query(
       collection(db, "users", uid, "sessions"),
@@ -78,7 +65,7 @@ const chatStoreReady = (async () => {
     return snap.docs.map(d => ({ id: d.id, ...d.data() }));
   };
 
-  window.aiBotLoadMessages = async (sessionId) => {
+  window.tarantinoLoadMessages = async (sessionId) => {
     const uid = requireUser();
     const q = query(
       collection(db, "users", uid, "sessions", sessionId, "messages"),
@@ -88,14 +75,10 @@ const chatStoreReady = (async () => {
     return snap.docs.map(d => ({ id: d.id, ...d.data() }));
   };
 
-  window.aiBotDeleteSession = async (sessionId) => {
+  window.tarantinoDeleteSession = async (sessionId) => {
     const uid = requireUser();
     await deleteDoc(doc(db, "users", uid, "sessions", sessionId));
   };
 
   console.log("[Chat Store] ✅ Ready");
-  return true;
 })();
-
-window.aiBotChatReady = chatStoreReady;
-chatStoreReady.catch(err => console.error("[Chat Store] Initialization failed:", err));
