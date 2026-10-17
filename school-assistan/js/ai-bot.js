@@ -1,6 +1,7 @@
 /* ============================================
-   AI Guide Bot — COMPLETE FILE
-   Includes human-like typewriter effect & clean auth
+   AI Guide Bot — FINAL BULLETPROOF FILE
+   Includes human-like typewriter effect, clean auth, 
+   and fallback to local keyword matching.
    ============================================ */
 
 (function () {
@@ -159,7 +160,6 @@
 
     setupAuthForm();
 
-    // Delegated fallback for the auth button
     document.addEventListener("click", (e) => {
       const target = e.target.closest && e.target.closest("#ai-bot-auth");
       if (!target) return;
@@ -174,11 +174,7 @@
   // ============================================
   async function onLogin(e) {
     if (window.aiBotChatReady) {
-      try {
-        await window.aiBotChatReady;
-      } catch (err) {
-        console.error("[AI Bot] Chat store initialization failed:", err);
-      }
+      try { await window.aiBotChatReady; } catch (err) { console.error("[AI Bot] Chat store initialization failed:", err); }
     }
 
     isLoggedIn = true;
@@ -358,7 +354,6 @@
       submit.disabled = true;
       submit.textContent = "Connecting…";
 
-      // CLEANED UP AUTH INITIALIZATION
       try {
         const started = Date.now();
         while ((!window.tarantinoLogin || !window.tarantinoSignUp) && Date.now() - started < 10000) {
@@ -378,7 +373,6 @@
 
       submit.textContent = "Please wait…";
 
-      // CLEANED UP LOGIN CALLS
       try {
         if (authMode === "signup") {
           await window.tarantinoSignUp(email, password, name);
@@ -430,10 +424,6 @@
     messagesBox.innerHTML = "";
   }
 
-  // ============================================
-  // MESSAGE RENDERING
-  // ============================================
-
   function addMessage(text, sender, save = false) {
     const div = document.createElement("div");
     div.className = "msg " + sender;
@@ -441,8 +431,8 @@
     messagesBox.appendChild(div);
     messagesBox.scrollTop = messagesBox.scrollHeight;
 
-    if (save && isLoggedIn && currentSessionId && window.tarantinoSaveMessage) {
-      window.tarantinoSaveMessage(currentSessionId, sender, text).catch(err =>
+    if (save && isLoggedIn && currentSessionId && window.aiBotSaveMessage) {
+      window.aiBotSaveMessage(currentSessionId, sender, text).catch(err =>
         console.warn("[Bot] Failed to save message:", err)
       );
     }
@@ -484,8 +474,8 @@
     div.classList.add("done");
     div.classList.remove("typing-target");
 
-    if (save && isLoggedIn && currentSessionId && window.tarantinoSaveMessage) {
-      window.tarantinoSaveMessage(currentSessionId, "bot", html).catch(err =>
+    if (save && isLoggedIn && currentSessionId && window.aiBotSaveMessage) {
+      window.aiBotSaveMessage(currentSessionId, "bot", html).catch(err =>
         console.warn("[Bot] Failed to save message:", err)
       );
     }
@@ -653,6 +643,7 @@
     sendButton.disabled = true;
 
     try {
+      // 1️⃣ Try the Advanced Firestore Database Matcher
       if (typeof window.tarantinoSearchKnowledge === "function") {
         try {
           const hit = await window.tarantinoSearchKnowledge(userText);
@@ -665,10 +656,11 @@
             return;
           }
         } catch (kbErr) {
-          console.warn("[AI Bot] Knowledge search failed:", kbErr);
+          console.warn("[AI Bot] Advanced knowledge search failed, using fallback...", kbErr);
         }
       }
 
+      // 2️⃣ Try Local General Responses (Greetings, Math, etc)
       if (typeof getGeneralResponse === "function") {
         const generalReply = getGeneralResponse(userText);
         if (generalReply) {
@@ -679,6 +671,7 @@
         }
       }
 
+      // 3️⃣ Fallback to Built-in Keyword Matching (This guarantees it finds your saved data)
       const reply = await keywordMatch(userText);
       removeTyping();
       await addTypedMessage(reply, true);
