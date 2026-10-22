@@ -4,9 +4,11 @@ console.log("🟢 app.js loaded");
 import { db } from "./auth.js";
 import { logSearch } from "./search-analytics.js";
 import {
-  collection, query, orderBy, startAt, endAt, where,
-  limit, getDocs, startAfter
+  collection, query, orderBy, startAfter, limit, getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+import { searchAllCollections } from "./search-multi.js";
+import { findRelatedSearches } from "./related-searches.js";
 
 import {
   getHistory, addToHistory, removeFromHistory,
@@ -26,9 +28,9 @@ import { shareResource, focusSharedResult } from "./share.js";
 import { loadRelated, renderRelatedChips } from "./related.js";
 
 // ============================================================
-// COLLECTION
+// COLLECTION (primary — used for Load More pagination)
 // ============================================================
-const COLLECTION = "resources";
+const PRIMARY_COLLECTION = "resources";
 
 // ============================================================
 // DOM
@@ -54,6 +56,10 @@ const answerText     = document.getElementById("answerText");
 const answerRate     = document.getElementById("answerRate");
 const answerShare    = document.getElementById("answerShare");
 
+// Feature 18 — Related Searches
+const relatedSearches      = document.getElementById("relatedSearches");
+const relatedSearchesChips = document.getElementById("relatedSearchesChips");
+
 // ============================================================
 // STATE
 // ============================================================
@@ -65,6 +71,7 @@ let lastResults = [];
 let activeSuggestionIndex = -1;
 let suggestionItems = [];
 let currentAnswer = null;
+let currentSearchTerm = "";
 const paginator = createPaginator();
 const relatedCache = new Map();
 
@@ -257,74 +264,36 @@ clearBtn.addEventListener("click", () => {
 });
 
 // ============================================================
-// SEARCH
+// SEARCH (multi-collection)
 // ============================================================
 async function performSearch(term) {
   const requestId = ++currentRequestId;
-  const searchLower = term.toLowerCase().trim();
   const tokens = extractTokens(term);
 
+  currentSearchTerm = term;
   paginator.reset();
   hideAnswer();
 
   try {
-    let docs = [];
-    const prefixSnap = await getDocs(
-      query(
-        collection(db, COLLECTION),
-        orderBy("titleLower"),
-        startAt(searchLower),
-        endAt(searchLower + "\uf8ff"),
-        limit(PAGE_SIZE)
-      )
-    );
-    docs = prefixSnap.docs;
-
-    if (docs.length === 0 && tokens.length > 0) {
-      const seenIds = new Set();
-      const candidates = [];
-
-      for (const token of tokens) {
-        const kwSnap = await getDocs(
-          query(
-            collection(db, COLLECTION),
-            where("keywords", "array-contains", token),
-            limit(50)
-          )
-        );
-        for (const d of kwSnap.docs) {
-          if (seenIds.has(d.id)) continue;
-          seenIds.add(d.id);
-          const data = d.data();
-          const kws = Array.isArray(data.keywords) ? data.keywords : [];
-          const matches = tokens.filter(t => kws.includes(t)).length;
-          candidates.push({ doc: d, matches });
-        }
-        if (candidates.length >= PAGE_SIZE) break;
-      }
-
-      docs = candidates
-        .sort((a, b) => b.matches - a.matches)
-        .slice(0, PAGE_SIZE)
-        .map(c => c.doc);
-    }
+    // 🔑 Search across ALL configured collections in parallel
+    const docs = await searchAllCollections(term, PAGE_SIZE);
 
     if (requestId !== currentRequestId) return;
 
-    const lastDoc = docs[docs.length - 1];
-    if (lastDoc) paginator.setLastDoc(lastDoc);
     if (docs.length < PAGE_SIZE) paginator.markExhausted();
 
     addToHistory(term);
     logSearch(term, activeCategory);
 
-    lastResults = docs.map(d => ({ id: d.id, ...d.data() }));
+    lastResults = docs;
     applyCategoryAndRender(term);
 
     // Feature 1 — answer-first card
     if (lastResults.length > 0) {
       showAnswerIfStrongMatch(lastResults[0], term);
+      loadRelatedSearches(term);           // Feature 18
     } else {
+      hideRelatedSearches();               // Feature 18
       await suggestCorrection(term, tokens);
     }
   } catch (err) {
@@ -387,21 +356,78 @@ answerRate.addEventListener("click", async (e) => {
 });
 
 // ============================================================
-// LOAD MORE
+// RELATED SEARCHES (Feature 18)
+// ============================================================
+async function loadRelatedSearches(term) {
+  if (!relatedSearches || !relatedSearchesChips) return;
+
+  // Show skeleton immediately
+  relatedSearchesChips.innerHTML =
+    `<span class="rs-skeleton"></span><span class="rs-skeleton"></span><span class="rs-skeleton"></span>`;
+  relatedSearches.classList.remove("hidden");
+
+  try {
+    const related = await findRelatedSearches(term);
+    renderRelatedSearches(related, term);
+  } catch (err) {
+    console.warn("[RelatedSearches] failed:", err);
+    relatedSearches.classList.add("hidden");
+  }
+}
+
+function renderRelatedSearches(items, currentTerm) {
+  if (!relatedSearches || !relatedSearchesChips) return;
+
+  // Filter out the current term (in case it slipped through)
+  const filtered = items.filter(i =>
+    i.term.toLowerCase() !== currentTerm.toLowerCase()
+  );
+
+  if (!filtered.length) {
+    relatedSearches.classList.add("hidden");
+    return;
+  }
+
+  relatedSearchesChips.innerHTML = filtered.map(item => `
+    <button class="rs-chip" data-term="${escapeHtml(item.term)}" type="button">
+      <span>${escapeHtml(item.term)}</span>
+      ${item.count > 1 ? `<span class="rs-count">${item.count}</span>` : ""}
+    </button>
+  `).join("");
+
+  relatedSearchesChips.querySelectorAll(".rs-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      input.value = chip.dataset.term;
+      input.dispatchEvent(new Event("input"));
+      input.focus();
+    });
+  });
+
+  relatedSearches.classList.remove("hidden");
+}
+
+function hideRelatedSearches() {
+  if (relatedSearches) relatedSearches.classList.add("hidden");
+}
+
+// ============================================================
+// LOAD MORE (primary collection only)
 // ============================================================
 loadMoreBtn.addEventListener("click", loadMore);
 
 async function loadMore() {
+  // True cross-collection pagination needs a merged cursor strategy.
+  // For now, Load More only paginates the PRIMARY collection.
   if (paginator.exhausted || !paginator.lastDoc) return;
 
-  const term = input.value.trim().toLowerCase();
+  const term = currentSearchTerm.toLowerCase();
   loadMoreBtn.disabled = true;
   loadMoreBtn.textContent = "Loading…";
 
   try {
     const snap = await getDocs(
       query(
-        collection(db, COLLECTION),
+        collection(db, PRIMARY_COLLECTION),
         orderBy("titleLower"),
         startAfter(paginator.lastDoc),
         limit(PAGE_SIZE)
@@ -412,7 +438,11 @@ async function loadMore() {
     if (newDocs.length < PAGE_SIZE) paginator.markExhausted();
     if (newDocs.length) paginator.setLastDoc(newDocs[newDocs.length - 1]);
 
-    const items = newDocs.map(d => ({ id: d.id, ...d.data() }));
+    const items = newDocs.map(d => ({
+      id: d.id,
+      _collection: PRIMARY_COLLECTION,
+      ...d.data()
+    }));
     lastResults.push(...items);
     await appendResults(items, term);
 
@@ -530,12 +560,19 @@ function renderResultItem(term) {
     const category = item.category ?? "";
     const id = `desc-${item.id}`;
 
+    // Show collection badge only if it's NOT the primary collection
+    const collectionBadge =
+      item._collection && item._collection !== PRIMARY_COLLECTION
+        ? `<span class="cat-badge" style="background:#f3f4f6;color:#475569">${escapeHtml(item._collection)}</span>`
+        : "";
+
     return `
       <li data-result-id="${item.id}">
         <div class="result-body">
           <strong>
             ${highlightTokens(title, term)}
             ${category ? `<span class="cat-badge">${escapeHtml(category)}</span>` : ""}
+            ${collectionBadge}
           </strong>
           <div class="result-text" id="${id}" data-clamped="true">
             ${highlightTokens(description, term)}
@@ -637,6 +674,7 @@ function showLoading() {
   feedback.classList.add("hidden");
   resultsUl.innerHTML = "";
   loadMoreWrap.classList.add("hidden");
+  hideRelatedSearches();       // Feature 18
   removeDidYouMean();
 }
 
@@ -649,6 +687,7 @@ function showError(message) {
   spinner.classList.add("hidden");
   resultsUl.innerHTML = "";
   loadMoreWrap.classList.add("hidden");
+  hideRelatedSearches();       // Feature 18
   feedback.textContent = "⚠️ " + message;
   feedback.className = "feedback error";
 }
@@ -659,7 +698,9 @@ function resetUI(opts = {}) {
   feedback.textContent = "";
   resultsUl.innerHTML = "";
   loadMoreWrap.classList.add("hidden");
+  hideRelatedSearches();       // Feature 18
   lastResults = [];
+  currentSearchTerm = "";
   paginator.reset();
   removeDidYouMean();
   if (!opts.keepEmptyState) {
