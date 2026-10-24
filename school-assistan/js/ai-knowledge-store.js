@@ -1,10 +1,9 @@
 /* ============================================
    Firestore Knowledge Base — AI Bot Only
+   Strict Word-Boundary Matching
    ============================================ */
 
-import {
-  collection, getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 function waitForFirebase() {
   return new Promise((resolve) => {
@@ -21,11 +20,11 @@ function waitForFirebase() {
 
 (async () => {
   const { db } = await waitForFirebase();
-  console.log("[Knowledge] Starting…");
+  console.log("[Knowledge] Starting strict database matcher...");
 
   let cache = null;
   let cacheTime = 0;
-  const CACHE_TTL = 3 * 60 * 1000;
+  const CACHE_TTL = 3 * 60 * 1000; // 3 minutes
 
   async function loadKnowledge() {
     const now = Date.now();
@@ -34,10 +33,10 @@ function waitForFirebase() {
       const snap = await getDocs(collection(db, "knowledge"));
       cache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       cacheTime = now;
-      console.log(`[Knowledge] Loaded ${cache.length} entries`);
+      console.log(`[Knowledge] Loaded ${cache.length} entries from database`);
       return cache;
     } catch (err) {
-      console.warn("[Knowledge] Failed to load:", err);
+      console.warn("[Knowledge] Failed to load from Firestore:", err);
       return [];
     }
   }
@@ -55,15 +54,28 @@ function waitForFirebase() {
     for (const entry of entries) {
       let score = 0;
 
-      for (const kw of (entry.keywords || [])) {
-        const k = String(kw).toLowerCase();
-        if (text.includes(k)) score += k.length;
+      // 1. Check if the user's text exactly matches your database question
+      const q = (entry.question || "").toLowerCase();
+      if (q && (text.includes(q) || q.includes(text))) {
+        score += 100;
       }
 
-      const q = (entry.question || "").toLowerCase();
-      if (q && text.includes(q)) score += 100;
+      // 2. Check if the user's text contains any of your exact keywords
+      for (const kw of (entry.keywords || [])) {
+        const k = String(kw).toLowerCase().trim();
+        if (!k) continue;
+        
+        // Use word boundaries (\b) so "email" doesn't match inside "Gilbert"
+        // The 'i' flag makes it case-insensitive
+        const regex = new RegExp(`\\b${k}\\b`, 'i'); 
+        
+        if (regex.test(text)) {
+          score += 10; // Give a solid 10 points for a full word match
+        }
+      }
 
-      score += (Number(entry.priority) || 0) * 2;
+      // 3. Add priority (e.g., 10 points for priority 10)
+      score += (Number(entry.priority) || 0);
 
       if (score > bestScore) {
         bestScore = score;
@@ -71,21 +83,18 @@ function waitForFirebase() {
       }
     }
 
-    if (bestScore >= 4) {
-      console.log("[Knowledge] Match:", best.question, "| Score:", bestScore);
+    // Require a minimum score of 10 (meaning at least one full keyword matched)
+    if (bestScore >= 10) {
+      console.log("[Knowledge] ✅ Database match:", best.question, "| Score:", bestScore);
       return best;
     }
+    
+    console.log("[Knowledge] ❌ No match found in database. Best score:", bestScore);
     return null;
   }
 
-  function clearCache() {
-    cache = null;
-    cacheTime = 0;
-    console.log("[Knowledge] Cache cleared");
-  }
-
   window.tarantinoSearchKnowledge = searchKnowledge;
-  window.tarantinoClearKnowledgeCache = clearCache;
+  window.tarantinoClearKnowledgeCache = () => { cache = null; cacheTime = 0; };
 
   console.log("[Knowledge] ✅ Ready");
 })();

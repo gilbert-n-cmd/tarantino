@@ -1,7 +1,7 @@
 /* ============================================
-   AI Guide Bot — FINAL BULLETPROOF FILE
+   AI Guide Bot — DATABASE ONLY EDITION
    Includes human-like typewriter effect, clean auth, 
-   fallback matching, and Android keyboard fix.
+   and Android keyboard fix. No local fallback rules.
    ============================================ */
 
 (function () {
@@ -23,15 +23,12 @@
     if (botInitialized) return;
     botInitialized = true;
 
-    if (typeof SITE_ACTIONS === "undefined") {
-      console.error("[AI Bot] ai-knowledge.js not loaded");
-      return;
-    }
+    // Note: We removed the SITE_ACTIONS check because we are strictly database-driven now.
 
     // 1. Draw the HTML onto the page
     injectHTML();
     
-    // 2. Wait for the browser to paint the DOM (crucial for Android)
+    // 2. Wait 100ms for mobile browsers to paint the DOM (crucial for Android)
     await new Promise(r => setTimeout(r, 100));
     
     // 3. NOW grab the elements and attach events safely
@@ -179,9 +176,7 @@
     // ============================================
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', () => {
-        // Only run this on mobile screens
         if (botWindow.classList.contains('open') && window.innerWidth <= 600) {
-          // Resize the chat window to exactly match the visible screen area above the keyboard
           botWindow.style.height = `${window.visualViewport.height}px`;
           botWindow.style.top = `${window.visualViewport.offsetTop}px`;
         }
@@ -376,16 +371,16 @@
 
       try {
         const started = Date.now();
-        while ((!window.tarantinoLogin || !window.tarantinoSignUp) && Date.now() - started < 10000) {
+        while ((!window.tarantinoLogin || !window.tarantinoSignUp) && Date.now() - started < 5000) {
           await new Promise(resolve => setTimeout(resolve, 50));
         }
 
         if (!window.tarantinoLogin || !window.tarantinoSignUp) {
-          throw new Error("AI authentication module did not load within 10 seconds.");
+          throw new Error("Auth system offline. Please refresh the page.");
         }
       } catch (authInitError) {
         console.error("[AI Bot] Auth initialization failed:", authInitError);
-        errBox.textContent = "Authentication could not start. Check the browser console for the exact error.";
+        errBox.textContent = "Authentication could not start. Please refresh the page and try again.";
         submit.disabled = false;
         submit.textContent = authMode === "signup" ? "Sign Up" : "Sign In";
         return;
@@ -401,7 +396,7 @@
         }
         closeAuthModal();
       } catch (err) {
-        console.error("[Auth]", err);
+        console.error("[Auth Error]", err);
         errBox.textContent = friendlyAuthError(err);
       } finally {
         submit.disabled = false;
@@ -432,13 +427,11 @@
     botWindow.classList.toggle("open");
     const isOpen = botWindow.classList.contains("open");
     
-    // Hide the floating button when the chat is open
     botButton.style.display = isOpen ? "none" : "flex";
     
     if (isOpen) {
       setTimeout(() => inputField.focus(), 200);
     } else {
-      // RESET HEIGHT/Top styling when closing on mobile
       botWindow.style.height = '';
       botWindow.style.top = '';
     }
@@ -662,44 +655,34 @@
     respondTo(text);
   }
 
+  // ============================================
+  // STRICT DATABASE RESPONSE ONLY
+  // ============================================
   async function respondTo(userText) {
     showTyping();
     sendButton.disabled = true;
 
     try {
-      // 1️⃣ Try the Advanced Firestore Database Matcher
+      // 1️⃣ STRICT DATABASE SEARCH
       if (typeof window.tarantinoSearchKnowledge === "function") {
-        try {
-          const hit = await window.tarantinoSearchKnowledge(userText);
-          if (hit) {
-            removeTyping();
-            let reply = hit.answer || "Here's what I found:";
-            if (hit.url) reply += `<br><br>👉 <a href="${hit.url}" target="_blank">Open page</a>`;
-            await addTypedMessage(reply, true);
-            conversationHistory.push({ role: "assistant", content: reply });
-            return;
-          }
-        } catch (kbErr) {
-          console.warn("[AI Bot] Advanced knowledge search failed, using fallback...", kbErr);
-        }
-      }
-
-      // 2️⃣ Try Local General Responses (Greetings, Math, etc)
-      if (typeof getGeneralResponse === "function") {
-        const generalReply = getGeneralResponse(userText);
-        if (generalReply) {
+        const hit = await window.tarantinoSearchKnowledge(userText);
+        
+        if (hit) {
           removeTyping();
-          await addTypedMessage(generalReply, true);
-          conversationHistory.push({ role: "assistant", content: generalReply });
+          let reply = hit.answer || "Here's what I found:";
+          if (hit.url) {
+            reply += `<br><br>👉 <a href="${hit.url}" target="_blank">Open page</a>`;
+          }
+          await addTypedMessage(reply, true);
+          conversationHistory.push({ role: "assistant", content: reply });
           return;
         }
       }
 
-      // 3️⃣ Fallback to Built-in Keyword Matching
-      const reply = await keywordMatch(userText);
+      // 2️⃣ NO MATCH FOUND IN DATABASE
       removeTyping();
-      await addTypedMessage(reply, true);
-      conversationHistory.push({ role: "assistant", content: reply });
+      await addTypedMessage(FALLBACK_REPLY, true);
+      conversationHistory.push({ role: "assistant", content: FALLBACK_REPLY });
 
     } catch (err) {
       removeTyping();
@@ -709,28 +692,6 @@
       sendButton.disabled = false;
       inputField.focus();
     }
-  }
-
-  function keywordMatch(query) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const text = query.toLowerCase();
-        let best = null, bestScore = 0;
-        for (const key in SITE_ACTIONS) {
-          const action = SITE_ACTIONS[key];
-          let score = 0;
-          action.keywords.forEach(kw => {
-            if (text.includes(kw.toLowerCase())) score += kw.length;
-          });
-          if (score > bestScore) { bestScore = score; best = action; }
-        }
-        if (best) {
-          resolve(`${best.reply}<br><br>👉 <a href="${best.url}" target="_blank">Open page</a>`);
-        } else {
-          resolve(FALLBACK_REPLY);
-        }
-      }, 400 + Math.random() * 400);
-    });
   }
 
   function escapeHTML(str) {
