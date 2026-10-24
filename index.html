@@ -1613,21 +1613,19 @@ body {
 
 <script src="year.js"></script>
 
-  
-  <!-- 1. Knowledge (regular script — must load first) -->
-  <script src="school-assistan/js/ai-knowledge.js"></script>
+<!-- 1. Firebase config (MUST be a module) -->
+<script type="module" src="school-assistan/js/firebase-config.js"></script>
 
-  <!-- 2. Firebase config (regular script — must be before modules) -->
-  <script src="school-assistan/js/firebase-config.js"></script>
+<!-- 2. Firebase auth + Firestore + Knowledge Store (Modules) -->
+<script type="module" src="school-assistan/js/ai-auth.js"></script>
+<script type="module" src="school-assistan/js/ai-chat-store.js"></script>
+<script type="module" src="school-assistan/js/ai-knowledge-store.js"></script>
 
-  <!-- 3. Firebase auth + Firestore (ES modules) -->
-  <script type="module" src="school-assistan/js/ai-auth.js"></script>
-  <script type="module" src="school-assistan/js/ai-chat-store.js"></script>
+<!-- 3. Knowledge Base (Regular script — defines SITE_ACTIONS) -->
+<script src="school-assistan/js/ai-knowledge.js"></script>
 
-  <!-- 4. Main bot (regular script, loaded last) -->
-  <script src="school-assistan/js/ai-bot.js" defer></script>
-
-  <script type="module" src="school-assistan/js/ai-knowledge-store.js"></script>
+<!-- 4. Main bot (Regular script with defer) -->
+<script src="school-assistan/js/ai-bot.js" defer></script>
 
   <script type="module" src="search/scripts/app.js"></script>
 
