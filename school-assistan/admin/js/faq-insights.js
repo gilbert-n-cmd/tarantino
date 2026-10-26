@@ -56,8 +56,6 @@ import {
     if (list) list.textContent = "Loading…";
 
     try {
-      // Read the collection directly. Sorting is done in JavaScript so FAQ
-      // Insights does not depend on an index or on every document having a timestamp.
       const snap = await getDocs(collection(db, "faq_logs"));
       logs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       logs.sort((a, b) => {
@@ -81,7 +79,6 @@ import {
     const timeFilter = document.getElementById("faqTimeFilter")?.value || "all";
     const now = Date.now();
 
-    // Filter by time
     const filtered = logs.filter(l => {
       if (timeFilter === "all") return true;
       const t = l.timestamp?.toMillis?.() || 0;
@@ -90,7 +87,6 @@ import {
       return diffDays <= Number(timeFilter);
     });
 
-    // Group by normalized question
     const map = new Map();
     filtered.forEach(l => {
       const key = l.question || "(empty)";
@@ -119,19 +115,16 @@ import {
 
     let grouped = getGrouped();
 
-    // Search filter
     const search = (document.getElementById("faqSearch")?.value || "").toLowerCase().trim();
     if (search) {
       grouped = grouped.filter(g => g.question.includes(search));
     }
 
-    // Sort
     const sortBy = document.getElementById("faqSortBy")?.value || "count";
     if (sortBy === "count") grouped.sort((a, b) => b.count - a.count);
     if (sortBy === "recent") grouped.sort((a, b) => b.lastAsked - a.lastAsked);
     if (sortBy === "alpha") grouped.sort((a, b) => a.question.localeCompare(b.question));
 
-    // Update stats
     const totalEl = document.getElementById("faqTotal");
     if (totalEl) {
       totalEl.textContent = logs.length;
@@ -172,25 +165,34 @@ import {
       </div>
     `).join("");
 
-    // Wire "Add to Knowledge" buttons — opens the knowledge modal pre-filled
+    // ============================================
+    // ADMIN DASHBOARD ENHANCEMENT (#3)
+    // ============================================
     list.querySelectorAll("[data-add-faq]").forEach(btn => {
       btn.onclick = () => {
-        const question = btn.dataset.addFaq;
-        // Switch to knowledge tab
+        const rawQuestion = btn.dataset.addFaq;
+
+        // Switch to the Knowledge tab
         document.querySelectorAll(".faq-tab-btn").forEach(b => b.classList.remove("active"));
-        document.querySelector('[data-maintab="knowledge"]').classList.add("active");
-        document.getElementById("maintab-knowledge").style.display = "block";
-        document.getElementById("maintab-faq").style.display = "none";
-        
+        const kbTab = document.querySelector('[data-maintab="knowledge"]');
+        if (kbTab) kbTab.classList.add("active");
+
+        const kbSection = document.getElementById("maintab-knowledge");
+        const faqSection = document.getElementById("maintab-faq");
+        const chatsSection = document.getElementById("maintab-chats");
+        if (kbSection) kbSection.style.display = "block";
+        if (faqSection) faqSection.style.display = "none";
+        if (chatsSection) chatsSection.style.display = "none";
+
         // Open the knowledge modal with question pre-filled
         if (typeof window.openKnowledgeModal === "function") {
-          window.openKnowledgeModal(null, question);
+          window.openKnowledgeModal(null, rawQuestion);
         } else {
-          // Fallback: trigger the add button
-          document.getElementById("addEntryBtn")?.click();
+          const addBtn = document.getElementById("addEntryBtn");
+          if (addBtn) addBtn.click();
           setTimeout(() => {
             const qInput = document.getElementById("kQuestion");
-            if (qInput) qInput.value = question;
+            if (qInput) qInput.value = rawQuestion;
           }, 100);
         }
       };
@@ -232,7 +234,6 @@ import {
     if (wired) return;
     wired = true;
 
-    // Main tab switching. Do not depend on another admin script's global flag.
     document.querySelectorAll(".faq-tab-btn").forEach(btn => {
       btn.onclick = () => {
         document.querySelectorAll(".faq-tab-btn").forEach(b => b.classList.remove("active"));
@@ -261,8 +262,6 @@ import {
     console.log("[FAQ Insights] Wired successfully");
   }
 
-  // Boot independently. The admin page performs the actual admin check;
-  // this module only wires the UI and uses the already initialized Firebase DB.
   function boot() {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", wireUp, { once: true });

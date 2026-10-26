@@ -1,12 +1,11 @@
+
 /* ============================================
-   Admin User Chats Viewer
-   Reads the AI chat history stored under:
-   users/{uid}/sessions/{sessionId}/messages
+   Admin User Chats Viewer + Admin Reply Mode
    ============================================ */
 
 import {
-  collection, doc, getDoc, getDocs,
-  query, orderBy
+  collection, doc, getDoc, getDocs, query, orderBy,
+  addDoc, updateDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 async function waitForFirebase() {
@@ -15,30 +14,23 @@ async function waitForFirebase() {
     const start = Date.now();
     const timer = setInterval(() => {
       if (window.tarantinoAuth?.db && window.tarantinoAuth?.auth) {
-        clearInterval(timer);
-        resolve(window.tarantinoAuth);
+        clearInterval(timer); resolve(window.tarantinoAuth);
       } else if (Date.now() - start > 10000) {
-        clearInterval(timer);
-        reject(new Error("Firebase is not ready."));
+        clearInterval(timer); reject(new Error("Firebase is not ready."));
       }
     }, 50);
   });
 }
 
 const escapeHTML = (value) => String(value ?? "")
-  .replaceAll("&", "&amp;")
-  .replaceAll("<", "&lt;")
-  .replaceAll(">", "&gt;")
-  .replaceAll('"', "&quot;")
-  .replaceAll("'", "&#039;");
+  .replaceAll("&", "&amp;").replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
 
 let allUsers = [];
 let selectedUid = null;
 
 function formatDate(value) {
-  try {
-    return value?.toDate ? value.toDate().toLocaleString() : "—";
-  } catch (_) { return "—"; }
+  try { return value?.toDate ? value.toDate().toLocaleString() : "—"; } catch (_) { return "—"; }
 }
 
 async function isAdmin(db, auth) {
@@ -80,8 +72,7 @@ async function loadUsers() {
       uid: userDoc.id,
       email: data.email || "No email",
       displayName: data.displayName || data.email?.split("@")[0] || "User",
-      sessions,
-      messageCount,
+      sessions, messageCount,
       updatedAt: latest?.updatedAt || data.lastLogin || data.createdAt || null
     });
   }
@@ -101,9 +92,7 @@ async function loadUsers() {
 function renderUsers() {
   const box = document.getElementById("userChatUsers");
   const term = (document.getElementById("userChatSearch")?.value || "").trim().toLowerCase();
-  const users = allUsers.filter(u =>
-    !term || u.displayName.toLowerCase().includes(term) || u.email.toLowerCase().includes(term)
-  );
+  const users = allUsers.filter(u => !term || u.displayName.toLowerCase().includes(term) || u.email.toLowerCase().includes(term));
 
   if (!users.length) {
     box.innerHTML = '<div class="chat-empty-state">No users with saved chats.</div>';
@@ -114,7 +103,7 @@ function renderUsers() {
     <div class="chat-user-card ${selectedUid === u.uid ? "active" : ""}" data-uid="${escapeHTML(u.uid)}">
       <div class="chat-user-name">${escapeHTML(u.displayName)}</div>
       <div class="chat-user-meta">${escapeHTML(u.email)}</div>
-      <div class="chat-user-meta">${u.sessions.length} chat${u.sessions.length === 1 ? "" : "s"} · ${u.messageCount} messages · ${escapeHTML(formatDate(u.updatedAt))}</div>
+      <div class="chat-user-meta">${u.sessions.length} chat${u.sessions.length === 1 ? "" : "s"} · ${u.messageCount} messages</div>
     </div>
   `).join("");
 
@@ -153,13 +142,49 @@ function renderSelectedUser() {
         </div>
         ${s.messages.length ? s.messages.map(m => `
           <div class="chat-message ${m.sender === "user" ? "user" : "bot"}">
-            <div class="chat-message-label">${m.sender === "user" ? "User" : "AI Assistant"}</div>
+            <div class="chat-message-label">${m.sender === "user" ? "User" : (m.fromAdmin ? "Admin Reply" : "AI Assistant")}</div>
             <div>${escapeHTML(m.text || "")}</div>
           </div>
         `).join("") : '<div class="chat-message">No messages.</div>'}
       </div>
     `).join("")}
   `;
+}
+
+function bindAdminReply() {
+  const input = document.getElementById("adminReplyInput");
+  const btn = document.getElementById("adminSendBtn");
+  if (!input || !btn) return;
+
+  btn.onclick = async () => {
+    const text = input.value.trim();
+    if (!text || !selectedUid) return;
+
+    const user = allUsers.find(u => u.uid === selectedUid);
+    if (!user || !user.sessions.length) return;
+
+    const latestSession = user.sessions[0];
+    const { db } = await waitForFirebase();
+
+    try {
+      const messagesRef = collection(db, "users", selectedUid, "sessions", latestSession.id, "messages");
+      await addDoc(messagesRef, {
+        sender: "bot",
+        text: text,
+        createdAt: serverTimestamp(),
+        fromAdmin: true
+      });
+
+      const sessionRef = doc(db, "users", selectedUid, "sessions", latestSession.id);
+      await updateDoc(sessionRef, { updatedAt: serverTimestamp() });
+
+      input.value = "";
+      alert("✅ Reply sent to " + user.displayName);
+      loadUsers();
+    } catch (err) {
+      alert("Failed: " + err.message);
+    }
+  };
 }
 
 function bindUI() {
@@ -175,23 +200,19 @@ function bindUI() {
     });
   });
 
-  document.getElementById("refreshUserChatsBtn")?.addEventListener("click", () => {
-    loadUsers().catch(showError);
-  });
+  document.getElementById("refreshUserChatsBtn")?.addEventListener("click", () => loadUsers().catch(showError));
   document.getElementById("userChatSearch")?.addEventListener("input", renderUsers);
 }
 
 function showError(error) {
-  console.error("[Admin Chats]", error);
   document.getElementById("userChatUsers").innerHTML =
-    `<div class="chat-empty-state">Unable to load chats. ${escapeHTML(error?.message || "Please check Firestore permissions.")}</div>`;
+    `<div class="chat-empty-state">Unable to load chats. ${escapeHTML(error?.message || "Check Firestore permissions.")}</div>`;
 }
 
 (async function init() {
   try {
     await waitForFirebase();
     bindUI();
-  } catch (error) {
-    showError(error);
-  }
+    bindAdminReply();
+  } catch (error) { showError(error); }
 })();
