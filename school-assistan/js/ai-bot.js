@@ -1,7 +1,7 @@
 /* ============================================
    AI Guide Bot — FINAL EDITION
-   Includes: Voice Input, Voice Output, Network Handling,
-   Database Search, Android Keyboard Fix, Typewriter.
+   Includes: Voice Input (Android Fix), Voice Output, 
+   Network Handling, Database Search, Typewriter.
    ============================================ */
 
 (function () {
@@ -197,16 +197,38 @@
       const recognition = new SR();
       recognition.lang = "en-UG";
       recognition.interimResults = false;
+      
       let listening = false;
 
-      micBtn.addEventListener("click", () => {
-        if (listening) { recognition.stop(); return; }
+      micBtn.addEventListener("click", async () => {
+        if (listening) { 
+          recognition.stop(); 
+          return; 
+        }
+
+        micBtn.textContent = "⏳"; // Show loading while waiting for permission
+
+        // Step 1: Explicitly ask for microphone permission FIRST
+        try {
+          if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            await navigator.mediaDevices.getUserMedia({ audio: true });
+          }
+        } catch (permError) {
+          micBtn.textContent = "🎤";
+          alert("🎤 Microphone access denied.\n\nIf you are testing locally on your phone (file://), Android blocks the microphone. Please upload to GitHub Pages (https://) and test there.");
+          return;
+        }
+
+        // Step 2: Now that we have permission, start recognition
         try {
           recognition.start();
           listening = true;
           micBtn.textContent = "🔴";
           micBtn.title = "Listening... (tap to stop)";
-        } catch (err) { console.warn("[Voice] Could not start:", err); }
+        } catch (err) {
+          micBtn.textContent = "🎤";
+          console.warn("[Voice] Could not start:", err);
+        }
       });
 
       recognition.onresult = (e) => {
@@ -218,8 +240,27 @@
         handleSend();
       };
 
-      recognition.onerror = () => { listening = false; micBtn.textContent = "🎤"; micBtn.title = "Speak your question"; };
-      recognition.onend = () => { listening = false; micBtn.textContent = "🎤"; micBtn.title = "Speak your question"; };
+      recognition.onerror = (event) => {
+        listening = false;
+        micBtn.textContent = "🎤";
+        micBtn.title = "Speak your question";
+        
+        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+          alert("🎤 Microphone access blocked.\n\nThis usually happens on local files (file://). Please test on GitHub Pages (https://).");
+        } else if (event.error === "no-speech") {
+          console.log("No speech detected.");
+        } else if (event.error === "network") {
+          alert("🌐 Network error. Speech recognition needs internet.");
+        } else {
+          console.warn("[Voice] Error:", event.error);
+        }
+      };
+
+      recognition.onend = () => {
+        listening = false;
+        micBtn.textContent = "🎤";
+        micBtn.title = "Speak your question";
+      };
     } else {
       if (micBtn) micBtn.style.display = "none";
     }
