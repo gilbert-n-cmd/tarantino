@@ -1,4 +1,3 @@
-
 /* ============================================
    Firebase Auth + History Modal Styles
    ============================================ */
@@ -8,13 +7,23 @@
 #ai-history-modal {
   display: none;
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  z-index: 100000;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile keyboards */
+  background: rgba(0, 0, 0, 0.6);
+  
+  /* 🚨 CRITICAL FIX: Ensure it is always on top of the AI window */
+  z-index: 2147483647; 
+  
   justify-content: center;
   align-items: center;
   padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto; /* Allows scrolling if screen is tiny */
 }
+
 #ai-auth-modal.open,
 #ai-history-modal.open {
   display: flex;
@@ -34,10 +43,16 @@
   padding: 32px 28px;
   width: 100%;
   max-width: 420px;
+  
+  /* 🚨 CRITICAL FIX: Prevents the box from being too tall on small screens */
+  max-height: calc(100dvh - 40px); 
+  overflow-y: auto;
+  
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   position: relative;
   animation: slideUp 0.25s ease;
   font-family: 'Segoe UI', Tahoma, sans-serif;
+  box-sizing: border-box;
 }
 
 @keyframes slideUp {
@@ -54,6 +69,11 @@
   font-size: 20px;
   cursor: pointer;
   color: #94a3b8;
+  width: 44px; /* Larger tap target for mobile */
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .ai-auth-close:hover { color: #1f2937; }
 
@@ -184,80 +204,4 @@
 .ai-history-date {
   font-size: 11px;
   color: #94a3b8;
-}
-
-
-
-/* Mobile tap/stacking hardening */
-#ai-bot-header #ai-bot-auth {
-  position: relative !important;
-  z-index: 20 !important;
-  pointer-events: auto !important;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-#ai-auth-modal {
-  pointer-events: auto;
-}
-
-#ai-auth-modal.open {
-  pointer-events: auto;
-}
-
-/* ---------- Mobile Auth Fix ---------- */
-@media (max-width: 600px) {
-  #ai-auth-modal,
-  #ai-history-modal {
-    padding: 12px;
-    align-items: center;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .ai-auth-box,
-  .ai-history-box {
-    width: min(100%, 420px);
-    max-width: 100%;
-    max-height: calc(100dvh - 24px);
-    overflow-y: auto;
-    box-sizing: border-box;
-    padding: 28px 18px 20px;
-    margin: auto;
-  }
-
-  .ai-auth-box h2,
-  .ai-history-box h2 {
-    padding-right: 28px;
-    font-size: 20px;
-  }
-
-  #ai-auth-form input,
-  #ai-auth-submit {
-    min-height: 46px;
-    font-size: 16px;
-  }
-
-  .ai-auth-close {
-    top: 8px;
-    right: 8px;
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-    z-index: 2;
-  }
-}
-
-@media (max-width: 380px) {
-  #ai-auth-modal,
-  #ai-history-modal {
-    padding: 8px;
-  }
-
-  .ai-auth-box,
-  .ai-history-box {
-    max-height: calc(100dvh - 16px);
-    padding: 26px 14px 16px;
-    border-radius: 14px;
-  }
 }
