@@ -1,7 +1,6 @@
 /* ============================================
    AI Guide Bot — FINAL EDITION
-   Includes: Voice Input (Android Fix), Voice Output, 
-   Network Handling, Database Search, Typewriter.
+   Includes: Voice, Offline Sync, Typewriter, Auth Fix
    ============================================ */
 
 (function () {
@@ -196,7 +195,6 @@
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognition = new SR();
       
-      // 🚨 FIX: Changed from en-UG to en-US to prevent Android crash
       recognition.lang = "en-US"; 
       recognition.interimResults = false;
       
@@ -221,9 +219,7 @@
         }
 
         try {
-          // 🚨 FIX: Prevent other page scripts from stealing focus
           window._isListeningForMic = true; 
-          
           recognition.start();
           listening = true;
           micBtn.textContent = "🔴";
@@ -406,7 +402,7 @@
   }
 
   // ============================================
-  // AUTH FORM
+  // AUTH FORM (MATCHES ai-auth.js)
   // ============================================
   let authMode = "login";
   function setupAuthForm() {
