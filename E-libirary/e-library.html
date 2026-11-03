@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-Library — Bishop Angelo Tarantino Memorial SS</title>
+<style>
+  :root { --brand: #14532d; --brand-2: #166534; --bg: #f8fafc; --line: #e2e8f0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+         background: var(--bg); color: #0f172a; padding: 2rem 1rem; }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  
+  #app-container { display: none; }
+  #loading-screen { display: flex; justify-content: center; align-items: center; height: 80vh; font-size: 1.1rem; color: #64748b; font-weight: 600; }
+
+  .head { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+  h1 { color: var(--brand); margin: 0 0 .25rem; }
+  .sub { color: #64748b; margin: 0; font-size: .95rem; }
+  .user-bar { display: flex; gap: .75rem; align-items: center; font-size: .85rem; margin-top: 1rem; }
+  .link-btn { background: none; border: 0; color: #991b1b; font-weight: 600; cursor: pointer; font: inherit; text-decoration: underline; padding: 0; }
+
+  .controls { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center; }
+  .controls input, .controls select { padding: .65rem .75rem; border: 1px solid var(--line); border-radius: 8px; font: inherit; background: #fff; min-width: 160px; }
+  .controls input[type="search"] { flex: 1; min-width: 220px; }
+  .controls input:focus, .controls select:focus { outline: 2px solid var(--brand-2); border-color: var(--brand-2); }
+  
+  .controls input[type="date"] { font-weight: 600; color: var(--brand); cursor: pointer; }
+
+  .year-header { font-size: 1.2rem; font-weight: 700; color: var(--brand); border-bottom: 2px solid var(--brand); padding-bottom: .5rem; margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
+  
+  .book { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: .9rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .book-info h3 { margin: 0 0 .25rem; font-size: 1.05rem; }
+  .book-info p { margin: 0; font-size: .85rem; color: #64748b; }
+  .meta { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .35rem; }
+  .tag { font-size: .72rem; padding: .15rem .55rem; border-radius: 999px; background: #ecfdf5; color: var(--brand); font-weight: 600; }
+  .tag.level { background: #eff6ff; color: #1e40af; }
+  .downloads { font-size: .75rem; color: #64748b; margin-top: .35rem; }
+
+  .action-buttons { display: flex; gap: .5rem; flex-direction: column; }
+  .download-btn, .view-btn { padding: .55rem 1rem; border-radius: 8px; font-weight: 600; font-size: .85rem; white-space: nowrap; border: 0; cursor: pointer; display: inline-block; text-align: center; text-decoration: none; }
+  .download-btn { background: var(--brand); color: #fff; }
+  .download-btn:hover { background: var(--brand-2); }
+  .view-btn { background: #eff6ff; color: #1e40af; }
+  .view-btn:hover { background: #dbeafe; }
+
+  .empty { text-align: center; padding: 3rem 1rem; color: #64748b; }
+  @media (max-width: 600px) { .book { flex-direction: column; align-items: flex-start; } .action-buttons { width: 100%; flex-direction: row; } .action-buttons button { flex: 1; } }
+</style>
+</head>
+<body>
+
+<div id="loading-screen">Verifying secure connection...</div>
+
+<div class="wrap" id="app-container">
+  <div class="head">
+    <div>
+      <h1>E-Library</h1>
+      <p class="sub">Browse and download past papers, textbooks, and study resources.</p>
+      <div class="user-bar">
+        <span>Signed in as: <strong id="user-email"></strong></span>
+        <button class="link-btn" id="signout-btn">Sign out</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search by title or author…">
+    
+    <input id="filter-date" type="date">
+
+    <select id="filter-subject"><option value="">All subjects</option></select>
+    <select id="filter-level">
+      <option value="">All levels</option>
+      <option value="O-Level">O-Level</option>
+      <option value="A-Level">A-Level</option>
+      <option value="General">General</option>
+    </select>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, query, orderBy, onSnapshot,
+  doc, getDoc, updateDoc, increment, addDoc, serverTimestamp // <-- Added for Tracking
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAUExS9Nka5TfNXjRfjXtc2jwDPaixmfrU",
+  authDomain: "e-library-dd680.firebaseapp.com",
+  projectId: "e-library-dd680",
+  storageBucket: "e-library-dd680.firebasestorage.app",
+  messagingSenderId: "960704565735",
+  appId: "1:960704565735:web:a1856b2c3e583da559ad42"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+let allBooks = [];
+let ready = false;
+
+const today = new Date();
+const yyyy = today.getFullYear();
+const mm = String(today.getMonth() + 1).padStart(2, '0');
+const dd = String(today.getDate()).padStart(2, '0');
+const todayString = `${yyyy}-${mm}-${dd}`;
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "e-library-login.html";
+  } else {
+    document.getElementById("loading-screen").style.display = "none";
+    document.getElementById("app-container").style.display = "block";
+    document.getElementById("user-email").textContent = user.email;
+    
+    // Set calendar to today's date
+    document.getElementById("filter-date").value = todayString;
+
+    loadBooks();
+  }
+});
+
+document.getElementById("signout-btn").addEventListener("click", () => signOut(auth));
+
+function loadBooks() {
+  const qAll = query(collection(db, "library"), orderBy("created_at", "desc"));
+  onSnapshot(qAll, (snap) => {
+    allBooks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    ready = true;
+    
+    const subjects = [...new Set(allBooks.map(b => b.subject).filter(Boolean))].sort();
+    const $subject = document.getElementById("filter-subject");
+    if ($subject.options.length <= 1) {
+      subjects.forEach(s => {
+        const o = document.createElement("option"); o.value = s; o.textContent = s; $subject.appendChild(o);
+      });
+    }
+    
+    render();
+  });
+}
+
+const $search = document.getElementById("search");
+const $date = document.getElementById("filter-date");
+const $subject = document.getElementById("filter-subject");
+const $level = document.getElementById("filter-level");
+
+[$search, $date, $subject, $level].forEach(el => { el.addEventListener("input", render); el.addEventListener("change", render); });
+
+function render() {
+  if (!ready) return;
+  
+  const term = $search.value.trim().toLowerCase();
+  const selectedDate = $date.value;
+  const selectedYear = selectedDate ? selectedDate.split("-")[0] : "all";
+  const subject = $subject.value;
+  const level = $level.value;
+
+  const filtered = allBooks.filter(b => {
+    if (selectedYear !== "all" && b.year !== selectedYear) return false;
+    
+    if (subject && b.subject !== subject) return false;
+    if (level && b.level !== level) return false;
+    if (term) {
+      const hay = `${b.title || ""} ${b.author || ""} ${b.subject || ""}`.toLowerCase();
+      if (!hay.includes(term)) return false;
+    }
+    return true;
+  });
+
+  const $list = document.getElementById("list");
+  
+  if (filtered.length === 0) {
+    $list.innerHTML = `<div class="empty">No resources found for ${selectedYear === "all" ? "this selection" : selectedYear}.</div>`;
+    return;
+  }
+
+  const headerTitle = selectedYear === "all" ? "All Resources" : `Resources for ${selectedYear}`;
+
+  $list.innerHTML = `
+    <div class="year-header" style="margin-top: 0;">📅 ${headerTitle}</div>
+    ${filtered.map(b => `
+      <div class="book" data-id="${b.id}">
+        <div class="book-info">
+          <h3>${esc(b.title)}</h3>
+          <p>${esc(b.author || "Unknown author")}</p>
+          <div class="meta">
+            ${b.subject ? `<span class="tag">${esc(b.subject)}</span>` : ""}
+            ${b.level ? `<span class="tag level">${esc(b.level)}</span>` : ""}
+          </div>
+          <div class="downloads">⬇️ ${b.downloads || 0} downloads</div>
+        </div>
+        <div class="action-buttons">
+          <button class="view-btn" data-id="${b.id}">👁️ View</button>
+          <button class="download-btn" data-id="${b.id}">Download</button>
+        </div>
+      </div>
+    `).join("")}
+  `;
+
+  $list.querySelectorAll(".download-btn").forEach(btn => {
+    btn.addEventListener("click", () => handleDownload(btn.dataset.id, btn));
+  });
+
+  $list.querySelectorAll(".view-btn").forEach(btn => {
+    btn.addEventListener("click", () => viewBook(btn.dataset.id));
+  });
+}
+
+// 👁️ VIEW PDF + LOG TRACKING
+async function viewBook(bookId) {
+  try {
+    const docSnap = await getDoc(doc(db, "library", bookId));
+    if (!docSnap.exists()) throw new Error("Book not found");
+    const book = docSnap.data();
+
+    // 📝 LOG THE VIEW
+    await addDoc(collection(db, "activity_logs"), {
+      action: "VIEW",
+      email: auth.currentUser.email,
+      bookTitle: book.title,
+      timestamp: serverTimestamp()
+    });
+
+    if (book.base64File) {
+      const win = window.open();
+      win.document.write(`<iframe src="${book.base64File}" frameborder="0" style="border:0; width:100%; height:100%;" allowfullscreen></iframe>`);
+    } else if (book.fileUrl) {
+      window.open(book.fileUrl, '_blank');
+    } else {
+      alert("No file data found.");
+    }
+  } catch (err) {
+    alert("Error viewing: " + err.message);
+  }
+}
+
+// ⬇️ DOWNLOAD + LOG TRACKING
+async function handleDownload(bookId, btn) {
+  const originalText = btn.textContent;
+  btn.textContent = "Preparing...";
+  btn.disabled = true;
+
+  try {
+    const docRef = doc(db, "library", bookId);
+    const docSnap = await getDoc(docRef);
+    const book = docSnap.data();
+    let downloadUrl = "";
+
+    if (book.base64File) {
+      const base64Data = book.base64File.split(',')[1];
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) byteNumbers[i] = byteCharacters.charCodeAt(i);
+      const blob = new Blob([new Uint8Array(byteNumbers)], { type: 'application/pdf' });
+      downloadUrl = URL.createObjectURL(blob);
+    } else if (book.fileUrl) {
+      downloadUrl = book.fileUrl;
+    }
+
+    // 📝 LOG THE DOWNLOAD
+    await addDoc(collection(db, "activity_logs"), {
+      action: "DOWNLOAD",
+      email: auth.currentUser.email,
+      bookTitle: book.title,
+      timestamp: serverTimestamp()
+    });
+
+    const safeTitle = (book.title || "document").replace(/[^a-z0-9]/gi, '_');
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = `${safeTitle}.pdf`; 
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    if (book.base64File) setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    await updateDoc(docRef, { downloads: increment(1) });
+
+  } catch (err) {
+    alert("Failed to download: " + err.message);
+  } finally {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+</script>
+<script type="module" src="/tarantino/announcement.js"></script>
+</body>
+</html>
