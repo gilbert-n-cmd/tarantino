@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Library Login — Bishop Angelo Tarantino Memorial SS</title>
+<style>
+  :root { --brand: #14532d; --brand-2: #166534; --line: #e2e8f0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+         background: #f8fafc; color: #0f172a; min-height: 100vh;
+         display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 14px;
+          box-shadow: 0 6px 24px rgba(15,23,42,.06); max-width: 440px; width: 100%;
+          padding: 2rem; }
+  h1 { color: var(--brand); font-size: 1.4rem; margin: 0 0 .25rem; text-align: center; }
+  .sub { color: #64748b; font-size: .9rem; margin: 0 0 1.75rem; text-align: center; }
+  
+  label { display: block; font-weight: 600; font-size: .85rem; margin: .85rem 0 .35rem; }
+  input { width: 100%; padding: .65rem .75rem; border: 1px solid var(--line);
+          border-radius: 8px; font: inherit; background: #fff; }
+  input:focus { outline: 2px solid var(--brand-2); border-color: var(--brand-2); }
+  
+  button.submit { margin-top: 1.5rem; width: 100%; padding: .85rem;
+                  background: var(--brand); color: #fff; border: 0;
+                  border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer; }
+  button.submit:hover:not(:disabled) { background: var(--brand-2); }
+  button.submit:disabled { opacity: .6; cursor: not-allowed; }
+  
+  .msg { margin-top: 1rem; padding: .75rem 1rem; border-radius: 8px;
+         font-size: .88rem; display: none; }
+  .msg.ok  { display: block; background: #dcfce7; color: #166534; }
+  .msg.err { display: block; background: #fee2e2; color: #991b1b; }
+  .hidden { display: none; }
+  
+  .foot { margin-top: 1.25rem; font-size: .82rem; color: #64748b; text-align: center; }
+  .foot a { color: var(--brand); font-weight: 600; text-decoration: none; }
+  .contact-text { font-size: .8rem; color: #64748b; text-align: center; margin-top: 1rem; line-height: 1.4; }
+
+  /* Forgot password */
+  .forgot { text-align: right; margin-top: .5rem; }
+  .forgot a { font-size: .82rem; color: var(--brand); font-weight: 600; text-decoration: none; }
+  .forgot a:hover { text-decoration: underline; }
+
+  /* Divider */
+  .divider { display: flex; align-items: center; gap: .75rem; margin: 1.5rem 0 1rem;
+             color: #94a3b8; font-size: .78rem; }
+  .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  /* Google button */
+  .google-btn {
+    width: 100%; padding: .75rem; border: 1px solid var(--line); border-radius: 8px;
+    background: #fff; font: inherit; font-weight: 600; font-size: .9rem;
+    color: #0f172a; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; gap: .6rem; margin-top: .5rem;
+  }
+  .google-btn:hover { background: #f8fafc; }
+  .google-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+  /* Reset password panel */
+  .reset-panel { margin-top: 1rem; padding: 1rem; background: #f8fafc;
+                 border: 1px solid var(--line); border-radius: 8px; }
+  .reset-panel p { margin: 0 0 .75rem; font-size: .85rem; color: #64748b; }
+  .reset-actions { display: flex; gap: .5rem; margin-top: .75rem; }
+  .reset-actions button { flex: 1; padding: .6rem; border-radius: 6px; font: inherit;
+                          font-weight: 600; font-size: .85rem; cursor: pointer; border: 1px solid var(--line); }
+  .reset-send { background: var(--brand); color: #fff; border-color: var(--brand); }
+  .reset-cancel { background: #fff; color: #0f172a; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>E-Library Access</h1>
+  <p class="sub">Sign in with your school account to access the library.</p>
+
+  <!-- ═══════════ SIGN IN ═══════════ -->
+  <form id="form-signin" novalidate>
+    <label>Email</label>
+    <input id="in-email" type="email" required autocomplete="email">
+
+    <label>Password</label>
+    <input id="in-pass" type="password" required autocomplete="current-password" minlength="6">
+
+    <div class="forgot">
+      <a href="#" id="show-reset">Forgot password?</a>
+    </div>
+
+    <button class="submit" id="in-btn" type="submit">Sign In</button>
+    <div class="msg" id="in-msg"></div>
+  </form>
+
+  <!-- ═══════════ FORGOT PASSWORD PANEL ═══════════ -->
+  <div id="reset-panel" class="reset-panel hidden">
+    <p>Enter the email you registered with. We'll send a reset link.</p>
+    <input id="reset-email" type="email" placeholder="you@example.com" autocomplete="email">
+    <div class="reset-actions">
+      <button type="button" class="reset-cancel" id="reset-cancel">Cancel</button>
+      <button type="button" class="reset-send" id="reset-send">Send link</button>
+    </div>
+    <div class="msg" id="reset-msg"></div>
+  </div>
+
+  <!-- ═══════════ DIVIDER + GOOGLE ═══════════ -->
+  <div class="divider">OR</div>
+  <button type="button" class="google-btn" id="google-btn">
+    <svg width="18" height="18" viewBox="0 0 48 48">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+    </svg>
+    Continue with Google
+  </button>
+
+  <p class="contact-text">
+    Don't have an account?<br>
+    Please contact the school administrator to create one for you.
+  </p>
+
+  <div class="foot">
+    <a href="e-library.html">← Back to E-Library</a>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, signInWithEmailAndPassword, 
+  onAuthStateChanged, sendPasswordResetEmail,
+  signInWithPopup, GoogleAuthProvider
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAUExS9Nka5TfNXjRfjXtc2jwDPaixmfrU",
+  authDomain: "e-library-dd680.firebaseapp.com",
+  projectId: "e-library-dd680",
+  storageBucket: "e-library-dd680.firebasestorage.app",
+  messagingSenderId: "960704565735",
+  appId: "1:960704565735:web:a1856b2c3e583da559ad42"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const fIn     = document.getElementById("form-signin");
+const inMsg   = document.getElementById("in-msg");
+const resetP  = document.getElementById("reset-panel");
+const resetM  = document.getElementById("reset-msg");
+const googleBtn = document.getElementById("google-btn");
+
+function showMsg(el, text, type) {
+  el.textContent = text;
+  el.className = "msg " + type;
+}
+
+// Redirect to library if already signed in
+onAuthStateChanged(auth, (user) => {
+  if (user) location.href = "e-library.html";
+});
+
+// ───── Sign in ─────
+fIn.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById("in-btn");
+  btn.disabled = true;
+  showMsg(inMsg, "Signing in…", "ok");
+  try {
+    await signInWithEmailAndPassword(
+      auth,
+      document.getElementById("in-email").value.trim(),
+      document.getElementById("in-pass").value
+    );
+  } catch (err) {
+    showMsg(inMsg, friendly(err.code), "err");
+    btn.disabled = false;
+  }
+});
+
+// ───── Forgot password ─────
+const resetEmail = document.getElementById("reset-email");
+
+document.getElementById("show-reset").addEventListener("click", (e) => {
+  e.preventDefault();
+  resetP.classList.remove("hidden");
+  resetEmail.value = document.getElementById("in-email").value.trim();
+  resetM.className = "msg";
+  resetEmail.focus();
+});
+
+document.getElementById("reset-cancel").addEventListener("click", () => {
+  resetP.classList.add("hidden");
+  resetM.className = "msg";
+});
+
+document.getElementById("reset-send").addEventListener("click", async () => {
+  const email = resetEmail.value.trim();
+  if (!email) return showMsg(resetM, "Enter your email address.", "err");
+
+  const btn = document.getElementById("reset-send");
+  btn.disabled = true;
+  showMsg(resetM, "Sending…", "ok");
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showMsg(resetM, "✅ Reset link sent. Check your inbox.", "ok");
+  } catch (err) {
+    showMsg(resetM, friendly(err.code), "err");
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+// ───── Google sign-in ─────
+googleBtn.addEventListener("click", async () => {
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: "select_account" });
+
+  googleBtn.disabled = true;
+  try {
+    await signInWithPopup(auth, provider);
+    // onAuthStateChanged redirects to library
+  } catch (err) {
+    if (err.code !== "auth/popup-closed-by-user") {
+      showMsg(inMsg, friendly(err.code), "err");
+    }
+    googleBtn.disabled = false;
+  }
+});
+
+// ───── Friendly errors ─────
+function friendly(code) {
+  switch (code) {
+    case "auth/invalid-email":            return "That email address is not valid.";
+    case "auth/user-not-found":           return "No account with that email. Please contact the admin.";
+    case "auth/wrong-password":           return "Incorrect password.";
+    case "auth/invalid-credential":       return "Incorrect email or password.";
+    case "auth/too-many-requests":        return "Too many attempts. Try again later.";
+    case "auth/popup-blocked":            return "Popup blocked. Allow popups for this site and retry.";
+    case "auth/operation-not-allowed":    return "Google sign-in is not enabled. Ask admin to enable it.";
+    case "auth/unauthorized-domain":      return "This domain is not authorized in Firebase. Ask admin.";
+    default:                              return "Error: " + code;
+  }
+}
+</script>
+</body>
+</html>
