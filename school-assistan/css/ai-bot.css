@@ -6,7 +6,7 @@
 /* Floating AI Icon — transparent, blue icon only */
 #ai-bot-button {
   position: fixed;
-  bottom: 100px;
+  bottom: 120px;
   right: 24px;
   width: 60px;
   height: 60px;
@@ -302,7 +302,7 @@
   }
 
   #ai-bot-button {
-    bottom: 100px;
+    bottom: 120px;
     right: 20px;
     width: 60px;
     height: 60px;
