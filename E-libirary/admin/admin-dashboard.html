@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Master Dashboard — E-Library</title>
+<style>
+  :root { --brand: #14532d; --line: #e2e8f0; --bg: #f8fafc; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); margin: 0; padding: 2rem 1rem; color: #0f172a; }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+  h1 { color: var(--brand); margin: 0; font-size: 1.5rem; }
+  .logout-btn { background: #991b1b; color: #fff; border: 0; padding: .6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; }
+  .logout-btn:hover { background: #7f1d1d; }
+  
+  .nav-links { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+  .nav-links a { text-decoration: none; background: #fff; color: var(--brand); border: 1px solid var(--line); padding: .6rem 1.2rem; border-radius: 8px; font-weight: 600; font-size: .9rem; }
+  .nav-links a:hover { background: #ecfdf5; border-color: var(--brand); }
+
+  .grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+  @media(min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 1.5rem; max-height: 500px; overflow-y: auto; }
+  .card h2 { margin: 0 0 1rem; font-size: 1.1rem; color: var(--brand); border-bottom: 2px solid var(--line); padding-bottom: .5rem; position: sticky; top: 0; background: #fff; }
+  
+  .log-item { padding: .75rem 0; border-bottom: 1px solid var(--line); font-size: .9rem; }
+  .log-item:last-child { border-bottom: 0; }
+  .log-time { font-size: .75rem; color: #64748b; display: block; margin-bottom: .2rem; }
+  .log-user { font-weight: 600; color: #1e40af; }
+  .log-action { font-weight: 600; color: var(--brand); }
+  .log-book { font-style: italic; color: #64748b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  
+  <div class="header">
+    <h1>📊 Master Admin Dashboard</h1>
+    <button class="logout-btn" id="logout-btn">Logout</button>
+  </div>
+
+  <div class="nav-links">
+    <a href="admin.html">← Back to Main Admin</a>
+    <a href="admin.html">📚 Manage Library Books</a>
+  </div>
+
+  <div class="grid">
+    <!-- Active Users -->
+    <div class="card">
+      <h2>🟢 Recent Logins</h2>
+      <div id="login-list">Loading...</div>
+    </div>
+
+    <!-- Activity Feed -->
+    <div class="card">
+      <h2>👁️ Live Activity Feed</h2>
+      <div id="activity-list">Loading...</div>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { 
+  getFirestore, collection, query, orderBy, limit, onSnapshot 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAUExS9Nka5TfNXjRfjXtc2jwDPaixmfrU",
+  authDomain: "e-library-dd680.firebaseapp.com",
+  projectId: "e-library-dd680",
+  storageBucket: "e-library-dd680.firebasestorage.app",
+  messagingSenderId: "960704565735",
+  appId: "1:960704565735:web:a1856b2c3e583da559ad42"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const ADMIN_EMAIL = "gilbertatuma700@gmail.com";
+
+onAuthStateChanged(auth, (user) => {
+  if (!user || user.email !== ADMIN_EMAIL) {
+    window.location.href = "admin-login.html";
+  } else {
+    loadDashboard();
+  }
+});
+
+document.getElementById("logout-btn").addEventListener("click", async () => {
+  await signOut(auth);
+  window.location.href = "admin-login.html";
+});
+
+function loadDashboard() {
+  const qLogs = query(collection(db, "activity_logs"), orderBy("timestamp", "desc"), limit(50));
+  
+  onSnapshot(qLogs, (snap) => {
+    const loginContainer = document.getElementById("login-list");
+    const activityContainer = document.getElementById("activity-list");
+    
+    let loginHTML = "";
+    let activityHTML = "";
+
+    snap.forEach(doc => {
+      const data = doc.data();
+      const time = data.timestamp?.toDate().toLocaleString() || "Just now";
+      
+      if (data.action === "LOGIN") {
+        loginHTML += `
+          <div class="log-item">
+            <span class="log-time">${time}</span>
+            <span class="log-user">${data.email}</span> logged in.
+          </div>
+        `;
+      } else if (data.action === "VIEW" || data.action === "DOWNLOAD") {
+        activityHTML += `
+          <div class="log-item">
+            <span class="log-time">${time}</span>
+            <span class="log-user">${data.email}</span> 
+            <span class="log-action">${data.action === "VIEW" ? "viewed" : "downloaded"}</span> 
+            <span class="log-book">"${data.bookTitle}"</span>
+          </div>
+        `;
+      }
+    });
+
+    loginContainer.innerHTML = loginHTML || "<p style='color:#64748b'>No recent logins.</p>";
+    activityContainer.innerHTML = activityHTML || "<p style='color:#64748b'>No recent activity.</p>";
+  }, (err) => {
+    console.error(err);
+    document.getElementById("login-list").innerHTML = "Error loading logs. Check Firestore rules.";
+  });
+}
+</script>
+</body>
+</html>

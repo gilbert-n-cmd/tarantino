@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Upload to E-Library — Admin</title>
+<style>
+  :root { --brand: #14532d; --brand-2: #166534; --line: #e2e8f0; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; color: #0f172a; }
+  h1 { color: var(--brand); margin-bottom: .25rem; }
+  .sub { color: #64748b; font-size: .9rem; margin-bottom: 1.5rem; }
+  
+  /* 🎯 Top Navigation Bar */
+  .top-nav { display: flex; justify-content: space-between; align-items: center; background: #fff; border: 1px solid var(--line); padding: .75rem 1rem; border-radius: 10px; margin-bottom: 2rem; }
+  .nav-links { display: flex; gap: .75rem; flex-wrap: wrap; }
+  .nav-link { text-decoration: none; font-weight: 600; font-size: .85rem; padding: .4rem .8rem; border-radius: 6px; }
+  .link-dashboard { background: #eff6ff; color: #1e40af; }
+  .link-dashboard:hover { background: #dbeafe; }
+  .link-back { background: #f8fafc; color: #64748b; border: 1px solid var(--line); }
+  .link-back:hover { background: #f1f5f9; }
+  .logout-btn { background: #fee2e2; color: #991b1b; border: 0; padding: .45rem .9rem; border-radius: 6px; font-weight: 600; font-size: .85rem; cursor: pointer; }
+  .logout-btn:hover { background: #fecaca; }
+  
+  label { display: block; font-weight: 600; margin: 1rem 0 .35rem; font-size: .9rem; }
+  input, select { width: 100%; padding: .65rem .75rem; border: 1px solid var(--line); border-radius: 8px; font: inherit; background: #fff; }
+  input:focus, select:focus { outline: 2px solid var(--brand-2); border-color: var(--brand-2); }
+  
+  input[type="date"] { font-weight: 600; color: var(--brand); cursor: pointer; }
+
+  button#upload-btn { margin-top: 1.5rem; width: 100%; padding: .85rem; background: var(--brand); color: #fff; border: 0; border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer; }
+  button#upload-btn:hover:not(:disabled) { background: var(--brand-2); }
+  button#upload-btn:disabled { opacity: .6; cursor: not-allowed; }
+  
+  #progress { margin-top: 1rem; font-size: .9rem; color: #64748b; padding: .75rem 1rem; border-radius: 8px; background: #f8fafc; display: none; }
+  #progress.show { display: block; }
+  #progress.ok  { background: #dcfce7; color: #166534; }
+  #progress.err { background: #fee2e2; color: #991b1b; }
+  
+  .auth-note { background: #fef3c7; color: #92400e; padding: .75rem 1rem; border-radius: 8px; font-size: .85rem; margin-bottom: 1rem; display: none; }
+  .auth-note.show { display: block; }
+
+  hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
+  
+  .manage-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+  .manage-header h3 { margin: 0; }
+  .filter-controls { display: flex; align-items: center; gap: .5rem; font-size: .85rem; font-weight: 600; }
+  .filter-controls input[type="date"] { width: auto; padding: .4rem .6rem; }
+
+  .year-group { margin-top: 1.5rem; }
+  .year-header { font-size: 1.1rem; font-weight: 700; color: var(--brand); border-bottom: 2px solid var(--brand); padding-bottom: .5rem; margin-bottom: 1rem; }
+
+  .book-item { display: flex; justify-content: space-between; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 1rem; margin-bottom: .75rem; gap: 1rem; }
+  .book-info { flex: 1; }
+  .book-info h4 { margin: 0 0 .25rem; font-size: 1rem; }
+  .book-info p { margin: 0; font-size: .8rem; color: #64748b; }
+  
+  .actions { display: flex; gap: .5rem; }
+  .btn { padding: .45rem .75rem; border-radius: 6px; font-weight: 600; font-size: .8rem; cursor: pointer; border: 0; text-decoration: none; display: inline-block; }
+  .btn-view { background: #eff6ff; color: #1e40af; }
+  .btn-view:hover { background: #dbeafe; }
+  .btn-edit { background: #fef3c7; color: #92400e; }
+  .btn-edit:hover { background: #fde68a; }
+  .btn-delete { background: #fee2e2; color: #991b1b; }
+  .btn-delete:hover { background: #fecaca; }
+
+  @media (max-width: 600px) { .book-item { flex-direction: column; align-items: flex-start; } .actions { width: 100%; margin-top: .5rem; } .btn { flex: 1; text-align: center; } }
+</style>
+</head>
+<body>
+
+  <div class="top-nav">
+    <div class="nav-links">
+      <a href="admin-dashboard.html" class="nav-link link-dashboard">📊 Master Dashboard</a>
+      <a href="admin.html" class="nav-link link-back">← Back to Main Admin</a>
+    </div>
+    <button class="logout-btn" id="logout-btn">Logout</button>
+  </div>
+
+  <h1>Upload Resource</h1>
+  <p class="sub">Add a book or past paper directly to Firestore (Max 900KB).</p>
+
+  <div id="auth-note" class="auth-note">
+    ⚠️ You must be signed in as an admin to upload. <a href="admin-login.html" style="color:#92400e;font-weight:bold">Sign in here</a> first.
+  </div>
+
+  <form id="upload-form">
+    <label>Title *</label>
+    <input id="title" required maxlength="200" placeholder="e.g. Physics Paper 1 2023">
+
+    <label>Year * (Calendar)</label>
+    <input id="year-date" type="date" required>
+
+    <label>Author / Source</label>
+    <input id="author" maxlength="120" placeholder="e.g. UNEB">
+
+    <label>Subject</label>
+    <input id="subject" maxlength="60" placeholder="e.g. Physics">
+
+    <label>Level</label>
+    <select id="level">
+      <option value="O-Level">O-Level</option>
+      <option value="A-Level">A-Level</option>
+      <option value="General">General</option>
+    </select>
+
+    <label>PDF File * (Max 900KB)</label>
+    <input id="file" type="file" accept="application/pdf" required>
+
+    <button type="submit" id="upload-btn" disabled>Checking login…</button>
+    <div id="progress"></div>
+  </form>
+
+  <hr>
+
+  <div class="manage-header">
+    <h3>Manage Uploaded Books</h3>
+    <div class="filter-controls">
+      <label for="manage-filter-date" style="margin:0;">Filter by Date:</label>
+      <input id="manage-filter-date" type="date">
+    </div>
+  </div>
+  
+  <div id="manage-list">Loading books...</div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { 
+      getFirestore, collection, addDoc, serverTimestamp, 
+      query, orderBy, onSnapshot, doc, deleteDoc, updateDoc, getDoc 
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAUExS9Nka5TfNXjRfjXtc2jwDPaixmfrU",
+      authDomain: "e-library-dd680.firebaseapp.com",
+      projectId: "e-library-dd680",
+      storageBucket: "e-library-dd680.firebasestorage.app",
+      messagingSenderId: "960704565735",
+      appId: "1:960704565735:web:a1856b2c3e583da559ad42"
+    };
+
+    const app     = initializeApp(firebaseConfig);
+    const db      = getFirestore(app);
+    const auth    = getAuth(app);
+
+    const form     = document.getElementById("upload-form");
+    const btn      = document.getElementById("upload-btn");
+    const prog     = document.getElementById("progress");
+    const authNote = document.getElementById("auth-note");
+    const manageList = document.getElementById("manage-list");
+    const dateInput = document.getElementById("year-date");
+    const manageFilterDate = document.getElementById("manage-filter-date");
+    const logoutBtn = document.getElementById("logout-btn");
+
+    let currentUser = null;
+    let allBooks = []; 
+
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const todayString = `${yyyy}-${mm}-${dd}`;
+    
+    dateInput.value = todayString;
+    manageFilterDate.value = todayString; 
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "admin-login.html";
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        btn.disabled = false;
+        btn.textContent = "Upload to Firestore";
+        authNote.classList.remove("show");
+        loadBooksToManage(); 
+      } else {
+        currentUser = null;
+        btn.disabled = true;
+        btn.textContent = "Not signed in";
+        authNote.classList.add("show");
+        manageList.innerHTML = "Please sign in to manage books.";
+      }
+    });
+
+    function setProg(text, cls) {
+      prog.textContent = text;
+      prog.className = "show" + (cls ? " " + cls : "");
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!currentUser) return setProg("Error: You are not signed in.", "err");
+
+      const file = document.getElementById("file").files[0];
+      if (!file) return setProg("Please select a PDF file.", "err");
+      if (file.type !== "application/pdf") return setProg("Only PDF files are allowed.", "err");
+      if (file.size > 900 * 1024) return setProg("File is too large for Firestore. Must be under 900KB.", "err");
+
+      const selectedDate = dateInput.value;
+      if (!selectedDate) return setProg("Please select a date for the year.", "err");
+      const yearValue = selectedDate.split("-")[0];
+
+      btn.disabled = true;
+      setProg("Converting and uploading to Firestore…");
+
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const base64String = reader.result;
+
+          await addDoc(collection(db, "library"), {
+            title:      document.getElementById("title").value.trim(),
+            year:       yearValue,
+            author:     document.getElementById("author").value.trim(),
+            subject:    document.getElementById("subject").value.trim(),
+            level:      document.getElementById("level").value,
+            fileName:   file.name,
+            base64File: base64String,
+            uploadedBy: currentUser.uid,
+            created_at: serverTimestamp(),
+            downloads:  0
+          });
+
+          setProg("✅ Uploaded successfully!", "ok");
+          form.reset();
+          dateInput.value = todayString;
+          btn.disabled = false;
+        } catch (err) {
+          console.error(err);
+          setProg("Failed to save: " + err.message, "err");
+          btn.disabled = false;
+        }
+      };
+      reader.onerror = () => { setProg("Failed to read the file.", "err"); btn.disabled = false; };
+      reader.readAsDataURL(file);
+    });
+
+    function loadBooksToManage() {
+      const q = query(collection(db, "library"), orderBy("created_at", "desc"));
+      onSnapshot(q, (snap) => {
+        allBooks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderManagedBooks(); 
+      });
+    }
+
+    manageFilterDate.addEventListener("change", renderManagedBooks);
+
+    function renderManagedBooks() {
+      if (allBooks.length === 0) {
+        manageList.innerHTML = "<p style='color:#64748b'>No books uploaded yet.</p>";
+        return;
+      }
+
+      const selectedFilterDate = manageFilterDate.value;
+      const selectedFilterYear = selectedFilterDate ? selectedFilterDate.split("-")[0] : "all";
+
+      const filteredBooks = allBooks.filter(b => {
+        if (selectedFilterYear === "all") return true;
+        return b.year === selectedFilterYear;
+      });
+
+      if (filteredBooks.length === 0) {
+        manageList.innerHTML = `<p style='color:#64748b'>No books found for ${selectedFilterYear}.</p>`;
+        return;
+      }
+
+      const grouped = {};
+      filteredBooks.forEach(b => {
+        const year = b.year || "Unknown Year";
+        if (!grouped[year]) grouped[year] = [];
+        grouped[year].push(b);
+      });
+
+      const sortedYears = Object.keys(grouped).sort((a, b) => {
+        if (a === "Unknown Year") return 1;
+        if (b === "Unknown Year") return -1;
+        return b.localeCompare(a);
+      });
+
+      manageList.innerHTML = sortedYears.map(year => {
+        return `
+          <div class="year-group">
+            <div class="year-header">📅 ${year}</div>
+            ${grouped[year].map(b => `
+              <div class="book-item">
+                <div class="book-info">
+                  <h4>${esc(b.title)}</h4>
+                  <p>${esc(b.author || 'Unknown')} • ${esc(b.subject || 'General')} • ${esc(b.level || 'General')}</p>
+                </div>
+                <div class="actions">
+                  <button class="btn btn-view" data-id="${b.id}">👁️ View</button>
+                  <button class="btn btn-edit" data-id="${b.id}" data-title="${esc(b.title)}" data-year="${esc(b.year || '')}" data-author="${esc(b.author || '')}" data-subject="${esc(b.subject || '')}" data-level="${esc(b.level || 'General')}">✏️ Edit</button>
+                  <button class="btn btn-delete" data-id="${b.id}" data-title="${esc(b.title)}">🗑️ Delete</button>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }).join("");
+
+      manageList.querySelectorAll(".btn-view").forEach(btn => btn.addEventListener("click", () => viewBook(btn.dataset.id)));
+      manageList.querySelectorAll(".btn-edit").forEach(btn => btn.addEventListener("click", () => editBook(btn.dataset.id, btn.dataset.title, btn.dataset.year, btn.dataset.author, btn.dataset.subject, btn.dataset.level)));
+      manageList.querySelectorAll(".btn-delete").forEach(btn => btn.addEventListener("click", () => deleteBook(btn.dataset.id, btn.dataset.title)));
+    }
+
+    async function viewBook(bookId) {
+      try {
+        const docSnap = await getDoc(doc(db, "library", bookId));
+        if (!docSnap.exists()) throw new Error("Book not found");
+
+        const book = docSnap.data();
+        if (book.base64File) {
+          const win = window.open();
+          win.document.write(`<iframe src="${book.base64File}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
+        } else if (book.fileUrl) {
+          window.open(book.fileUrl, '_blank');
+        } else {
+          alert("No file data found.");
+        }
+      } catch (err) {
+        alert("Error viewing: " + err.message);
+      }
+    }
+
+    async function editBook(bookId, currentTitle, currentYear, currentAuthor, currentSubject, currentLevel) {
+      const newTitle = prompt("Edit Title:", currentTitle);
+      if (newTitle === null) return; 
+
+      const newYearInput = prompt("Edit Year (4 digits, e.g. 2026):", currentYear || yyyy);
+      if (newYearInput === null) return;
+
+      const newAuthor = prompt("Edit Author:", currentAuthor);
+      if (newAuthor === null) return;
+
+      const newSubject = prompt("Edit Subject:", currentSubject);
+      if (newSubject === null) return;
+
+      const newLevel = prompt("Edit Level (O-Level, A-Level, General):", currentLevel);
+      if (newLevel === null) return;
+
+      try {
+        await updateDoc(doc(db, "library", bookId), {
+          title: newTitle.trim(),
+          year: newYearInput.trim(),
+          author: newAuthor.trim(),
+          subject: newSubject.trim(),
+          level: newLevel.trim()
+        });
+        alert("✅ Book details updated!");
+      } catch (err) {
+        alert("Failed to update: " + err.message);
+      }
+    }
+
+    async function deleteBook(bookId, title) {
+      const confirmed = confirm(`Delete "${title}"?\nThis will remove it for everyone permanently.`);
+      if (!confirmed) return;
+
+      try {
+        await deleteDoc(doc(db, "library", bookId));
+      } catch (err) {
+        alert("Failed to delete: " + err.message);
+      }
+    }
+
+    function esc(s) {
+      return String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+    }
+  </script>
+</body>
+</html>
