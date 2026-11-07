@@ -1,14 +1,12 @@
-// scripts/app.js
+// search/scripts/app.js
 console.log("🟢 app.js loaded");
 
 import { db } from "./auth.js";
 import { logSearch } from "./search-analytics.js";
 import {
-  collection, query, orderBy, startAfter, limit, getDocs
+  collection, query, orderBy, startAt, endAt, where,
+  limit, getDocs, startAfter
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-import { searchAllCollections } from "./search-multi.js";
-import { findRelatedSearches } from "./related-searches.js";
 
 import {
   getHistory, addToHistory, removeFromHistory,
@@ -19,7 +17,6 @@ import { loadPopular, renderPopular, hidePopular } from "./empty-state.js";
 import { highlightTokens, escapeHtml, extractTokens } from "./highlight.js";
 import { createPaginator } from "./pagination.js";
 import { findClosest } from "./fuzzy.js";
-
 import { recordVote, hasVoted } from "./feedback.js";
 import { initQuickLinks } from "./quick-links.js";
 import { initContactFloat } from "./contact-float.js";
@@ -28,13 +25,10 @@ import { shareResource, focusSharedResult } from "./share.js";
 import { loadRelated, renderRelatedChips } from "./related.js";
 
 // ============================================================
-// COLLECTION (primary — used for Load More pagination)
+// COLLECTION & DOM
 // ============================================================
-const PRIMARY_COLLECTION = "resources";
+const COLLECTION = "resources";
 
-// ============================================================
-// DOM
-// ============================================================
 const input          = document.getElementById("searchInput");
 const spinner        = document.getElementById("spinner");
 const clearBtn       = document.getElementById("clearBtn");
@@ -43,12 +37,11 @@ const resultsUl      = document.getElementById("results");
 const filterBar      = document.getElementById("filterBar");
 const suggestionsBox = document.getElementById("suggestionsBox");
 const searchWrapper  = document.getElementById("searchWrapper");
-const trendingBar    = document.getElementById("trendingBar");
-const trendingChips  = document.getElementById("trendingChips");
 const emptyState     = document.getElementById("emptyState");
 const loadMoreWrap   = document.getElementById("loadMoreWrap");
 const loadMoreBtn    = document.getElementById("loadMoreBtn");
 const loadMoreStatus = document.getElementById("loadMoreStatus");
+const quickLinks     = document.getElementById("quickLinks"); // 👈 NEW
 
 const answerCard     = document.getElementById("answerCard");
 const answerTitle    = document.getElementById("answerTitle");
@@ -56,9 +49,9 @@ const answerText     = document.getElementById("answerText");
 const answerRate     = document.getElementById("answerRate");
 const answerShare    = document.getElementById("answerShare");
 
-// Feature 18 — Related Searches
-const relatedSearches      = document.getElementById("relatedSearches");
-const relatedSearchesChips = document.getElementById("relatedSearchesChips");
+const searchBar      = document.getElementById("searchBar");
+const searchCloseBtn = document.getElementById("searchCloseBtn");
+const searchToggleBtn= document.querySelector(".search-toggle");
 
 // ============================================================
 // STATE
@@ -71,7 +64,8 @@ let lastResults = [];
 let activeSuggestionIndex = -1;
 let suggestionItems = [];
 let currentAnswer = null;
-let currentSearchTerm = "";
+let cachedTrending = []; 
+
 const paginator = createPaginator();
 const relatedCache = new Map();
 
@@ -92,19 +86,7 @@ const PAGE_SIZE = 20;
   });
   initAnnouncements();
 
-  const trending = await fetchTrending(5);
-  if (trending.length) {
-    trendingBar.classList.remove("hidden");
-    trendingChips.innerHTML = trending
-      .map(t => `<button class="trend-chip" data-term="${escapeHtml(t.term)}">${escapeHtml(t.term)}</button>`)
-      .join("");
-    trendingChips.querySelectorAll(".trend-chip").forEach(btn => {
-      btn.addEventListener("click", () => {
-        input.value = btn.dataset.term;
-        input.dispatchEvent(new Event("input"));
-      });
-    });
-  }
+  cachedTrending = await fetchTrending(5);
 
   const popular = await loadPopular(6);
   renderPopular(popular, emptyState, (title) => {
@@ -114,44 +96,68 @@ const PAGE_SIZE = 20;
 })();
 
 // ============================================================
-// CATEGORY FILTER
+// OVERLAY OPEN/CLOSE
 // ============================================================
-filterBar.addEventListener("click", (e) => {
-  const chip = e.target.closest(".filter-chip");
-  if (!chip) return;
-  activeCategory = chip.dataset.category;
-  filterBar.querySelectorAll(".filter-chip")
-    .forEach(c => c.classList.toggle("active", c === chip));
-  const term = input.value.trim();
-  if (term) applyCategoryAndRender(term);
+function openSearch() {
+  if (!searchBar) return;
+  searchBar.style.display = "block";
+  document.body.classList.add("search-open");
+  requestAnimationFrame(() => input?.focus());
+}
+
+function closeSearch() {
+  if (!searchBar) return;
+  searchBar.style.display = "none";
+  document.body.classList.remove("search-open");
+}
+
+searchToggleBtn?.addEventListener("click", (e) => { e.preventDefault(); openSearch(); });
+searchCloseBtn?.addEventListener("click", (e) => { e.preventDefault(); closeSearch(); });
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && searchBar && searchBar.style.display === "block") closeSearch();
 });
 
 // ============================================================
-// INPUT EVENTS
+// INPUT EVENTS (VidMate Style Hiding/Showing)
 // ============================================================
 input.addEventListener("input", () => {
   const term = input.value.trim();
   clearBtn.classList.toggle("hidden", term.length === 0);
 
+  // 1. Show/Hide Quick Links & Filter Bar based on typing
+  if (term.length > 0) {
+    quickLinks?.classList.add("hidden");
+    filterBar?.classList.add("hidden");
+  } else {
+    quickLinks?.classList.remove("hidden");
+    filterBar?.classList.remove("hidden");
+  }
+
+  // 2. Show suggestions (Recent/Popular if empty, matches if typing)
   clearTimeout(suggestTimer);
   suggestTimer = setTimeout(() => showSuggestions(term), 120);
 
-  clearTimeout(debounceTimer);
+  // 3. If empty, clear main results and show empty state
   if (!term) {
     resetUI({ keepEmptyState: true });
     showEmptyStateIfIdle();
     return;
   }
 
+  // 4. If typing, hide empty state, show loading, and run search
   hidePopular(emptyState);
-  hideSuggestions();
   hideAnswer();
   showLoading();
-  debounceTimer = setTimeout(() => performSearch(term), 300);
+  
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    hideSuggestions(); // Hide dropdown when actual search runs
+    performSearch(term);
+  }, 300);
 });
 
 input.addEventListener("focus", () => {
-  if (!input.value.trim()) showSuggestions("");
+  showSuggestions(input.value.trim());
 });
 
 input.addEventListener("blur", () => {
@@ -182,10 +188,34 @@ input.addEventListener("keydown", (e) => {
 });
 
 // ============================================================
-// SUGGESTIONS
+// SUGGESTIONS DROPDOWN
 // ============================================================
 async function showSuggestions(term) {
-  const data = await buildSuggestions(term);
+  const isTyping = term.length > 0;
+  let data;
+
+  if (isTyping) {
+    data = await buildSuggestions(term);
+  } else {
+    const history = getHistory();
+    const sections = [];
+
+    if (history.length > 0) {
+      sections.push({
+        label: "Recent Searches",
+        items: history.map(h => ({ type: "history", text: h }))
+      });
+    }
+
+    if (cachedTrending.length > 0) {
+      sections.push({
+        label: "Popular Right Now",
+        items: cachedTrending.map(t => ({ type: "popular", text: t.term, count: t.count }))
+      });
+    }
+    data = { sections };
+  }
+
   if (!data.sections.length) return hideSuggestions();
 
   const flat = [];
@@ -193,13 +223,17 @@ async function showSuggestions(term) {
     const items = section.items.map(item => {
       flat.push(item);
       const idx = flat.length - 1;
+      
       const icon = item.type === "resource" ? "📄"
                  : item.type === "popular" ? "🔥"
                  : "🕘";
-      const count = item.count ? `<span class="sug-count">${item.count}×</span>` : "";
+                 
+      const count = item.count ? `<span class="sug-count">${item.count}</span>` : "";
+      
       const removeBtn = item.type === "history"
         ? `<button class="sug-remove" data-remove="${escapeHtml(item.text)}" aria-label="Remove">✕</button>`
         : "";
+        
       return `
         <button class="sug-item" data-index="${idx}" data-text="${escapeHtml(item.text)}">
           <span class="sug-icon">${icon}</span>
@@ -230,7 +264,7 @@ async function showSuggestions(term) {
     el.addEventListener("click", (e) => {
       e.stopPropagation();
       removeFromHistory(el.dataset.remove);
-      showSuggestions(input.value.trim());
+      showSuggestions(input.value.trim()); 
     });
   });
 }
@@ -252,48 +286,74 @@ document.addEventListener("click", (e) => {
 });
 
 // ============================================================
-// CLEAR
+// CLEAR BUTTON
 // ============================================================
 clearBtn.addEventListener("click", () => {
   input.value = "";
   input.focus();
   clearBtn.classList.add("hidden");
+  
+  // Show Quick Links & Filter Bar again
+  quickLinks?.classList.remove("hidden");
+  filterBar?.classList.remove("hidden");
+
   hideAnswer();
   resetUI({ keepEmptyState: true });
   showEmptyStateIfIdle();
+  showSuggestions(""); 
 });
 
 // ============================================================
-// SEARCH (multi-collection)
+// SEARCH & RENDER
 // ============================================================
 async function performSearch(term) {
   const requestId = ++currentRequestId;
+  const searchLower = term.toLowerCase().trim();
   const tokens = extractTokens(term);
 
-  currentSearchTerm = term;
   paginator.reset();
   hideAnswer();
 
   try {
-    // 🔑 Search across ALL configured collections in parallel
-    const docs = await searchAllCollections(term, PAGE_SIZE);
+    let docs = [];
+    const prefixSnap = await getDocs(
+      query(collection(db, COLLECTION), orderBy("titleLower"), startAt(searchLower), endAt(searchLower + "\uf8ff"), limit(PAGE_SIZE))
+    );
+    docs = prefixSnap.docs;
+
+    if (docs.length === 0 && tokens.length > 0) {
+      const seenIds = new Set();
+      const candidates = [];
+      for (const token of tokens) {
+        const kwSnap = await getDocs(query(collection(db, COLLECTION), where("keywords", "array-contains", token), limit(50)));
+        for (const d of kwSnap.docs) {
+          if (seenIds.has(d.id)) continue;
+          seenIds.add(d.id);
+          const data = d.data();
+          const kws = Array.isArray(data.keywords) ? data.keywords : [];
+          const matches = tokens.filter(t => kws.includes(t)).length;
+          candidates.push({ doc: d, matches });
+        }
+        if (candidates.length >= PAGE_SIZE) break;
+      }
+      docs = candidates.sort((a, b) => b.matches - a.matches).slice(0, PAGE_SIZE).map(c => c.doc);
+    }
 
     if (requestId !== currentRequestId) return;
 
+    const lastDoc = docs[docs.length - 1];
+    if (lastDoc) paginator.setLastDoc(lastDoc);
     if (docs.length < PAGE_SIZE) paginator.markExhausted();
 
     addToHistory(term);
     logSearch(term, activeCategory);
 
-    lastResults = docs;
+    lastResults = docs.map(d => ({ id: d.id, ...d.data() }));
     applyCategoryAndRender(term);
 
-    // Feature 1 — answer-first card
     if (lastResults.length > 0) {
       showAnswerIfStrongMatch(lastResults[0], term);
-      loadRelatedSearches(term);           // Feature 18
     } else {
-      hideRelatedSearches();               // Feature 18
       await suggestCorrection(term, tokens);
     }
   } catch (err) {
@@ -304,148 +364,26 @@ async function performSearch(term) {
 }
 
 // ============================================================
-// ANSWER CARD (Feature 1)
-// ============================================================
-function showAnswerIfStrongMatch(item, term) {
-  const tokens = extractTokens(term);
-  if (tokens.length === 0) return;
-
-  const kws = Array.isArray(item.keywords) ? item.keywords : [];
-  const matchCount = tokens.filter(t => kws.includes(t)).length;
-  const ratio = matchCount / tokens.length;
-
-  // Show answer card only if >60% of tokens match
-  if (ratio < 0.6) return;
-
-  currentAnswer = item;
-  answerTitle.textContent = item.title || "Untitled";
-  answerText.textContent = item.description || item.answer || "";
-  answerCard.classList.remove("hidden");
-
-  // Rate buttons
-  const prev = hasVoted(item.id);
-  answerRate.querySelectorAll(".rate-btn").forEach(btn => {
-    btn.disabled = !!prev;
-    btn.classList.toggle("voted-" + (prev === "yes" ? "yes" : "no"), prev === btn.dataset.vote);
-  });
-
-  // Share button
-  answerShare.onclick = () => shareResource(item.id, item.title);
-}
-
-function hideAnswer() {
-  answerCard.classList.add("hidden");
-  currentAnswer = null;
-}
-
-// Attach rate button handler once
-answerRate.addEventListener("click", async (e) => {
-  const btn = e.target.closest(".rate-btn");
-  if (!btn || !currentAnswer) return;
-  if (btn.disabled) return;
-
-  const vote = btn.dataset.vote;
-  const result = await recordVote(currentAnswer.id, vote);
-
-  if (result.ok) {
-    answerRate.querySelectorAll(".rate-btn").forEach(b => {
-      b.disabled = true;
-      if (b === btn) b.classList.add("voted-" + (vote === "yes" ? "yes" : "no"));
-    });
-  }
-});
-
-// ============================================================
-// RELATED SEARCHES (Feature 18)
-// ============================================================
-async function loadRelatedSearches(term) {
-  if (!relatedSearches || !relatedSearchesChips) return;
-
-  // Show skeleton immediately
-  relatedSearchesChips.innerHTML =
-    `<span class="rs-skeleton"></span><span class="rs-skeleton"></span><span class="rs-skeleton"></span>`;
-  relatedSearches.classList.remove("hidden");
-
-  try {
-    const related = await findRelatedSearches(term);
-    renderRelatedSearches(related, term);
-  } catch (err) {
-    console.warn("[RelatedSearches] failed:", err);
-    relatedSearches.classList.add("hidden");
-  }
-}
-
-function renderRelatedSearches(items, currentTerm) {
-  if (!relatedSearches || !relatedSearchesChips) return;
-
-  // Filter out the current term (in case it slipped through)
-  const filtered = items.filter(i =>
-    i.term.toLowerCase() !== currentTerm.toLowerCase()
-  );
-
-  if (!filtered.length) {
-    relatedSearches.classList.add("hidden");
-    return;
-  }
-
-  relatedSearchesChips.innerHTML = filtered.map(item => `
-    <button class="rs-chip" data-term="${escapeHtml(item.term)}" type="button">
-      <span>${escapeHtml(item.term)}</span>
-      ${item.count > 1 ? `<span class="rs-count">${item.count}</span>` : ""}
-    </button>
-  `).join("");
-
-  relatedSearchesChips.querySelectorAll(".rs-chip").forEach(chip => {
-    chip.addEventListener("click", () => {
-      input.value = chip.dataset.term;
-      input.dispatchEvent(new Event("input"));
-      input.focus();
-    });
-  });
-
-  relatedSearches.classList.remove("hidden");
-}
-
-function hideRelatedSearches() {
-  if (relatedSearches) relatedSearches.classList.add("hidden");
-}
-
-// ============================================================
-// LOAD MORE (primary collection only)
+// LOAD MORE
 // ============================================================
 loadMoreBtn.addEventListener("click", loadMore);
-
 async function loadMore() {
-  // True cross-collection pagination needs a merged cursor strategy.
-  // For now, Load More only paginates the PRIMARY collection.
   if (paginator.exhausted || !paginator.lastDoc) return;
-
-  const term = currentSearchTerm.toLowerCase();
+  const term = input.value.trim().toLowerCase();
   loadMoreBtn.disabled = true;
   loadMoreBtn.textContent = "Loading…";
 
   try {
     const snap = await getDocs(
-      query(
-        collection(db, PRIMARY_COLLECTION),
-        orderBy("titleLower"),
-        startAfter(paginator.lastDoc),
-        limit(PAGE_SIZE)
-      )
+      query(collection(db, COLLECTION), orderBy("titleLower"), startAfter(paginator.lastDoc), limit(PAGE_SIZE))
     );
-
     const newDocs = snap.docs;
     if (newDocs.length < PAGE_SIZE) paginator.markExhausted();
     if (newDocs.length) paginator.setLastDoc(newDocs[newDocs.length - 1]);
 
-    const items = newDocs.map(d => ({
-      id: d.id,
-      _collection: PRIMARY_COLLECTION,
-      ...d.data()
-    }));
+    const items = newDocs.map(d => ({ id: d.id, ...d.data() }));
     lastResults.push(...items);
     await appendResults(items, term);
-
     updateLoadMoreUI();
   } catch (err) {
     console.error("Load more failed:", err);
@@ -472,9 +410,7 @@ function updateLoadMoreUI() {
 // ============================================================
 async function suggestCorrection(term, tokens) {
   try {
-    const snap = await getDocs(
-      query(collection(db, "searchCounts"), orderBy("count", "desc"), limit(200))
-    );
+    const snap = await getDocs(query(collection(db, "searchCounts"), orderBy("count", "desc"), limit(200)));
     const candidates = snap.docs.map(d => d.data().term).filter(Boolean);
     if (!candidates.length) return;
 
@@ -488,13 +424,9 @@ async function suggestCorrection(term, tokens) {
     if (!corrections.length) return;
 
     let suggested = term;
-    for (const c of corrections) {
-      suggested = suggested.replace(new RegExp(`\\b${c.from}\\b`, "gi"), c.to);
-    }
+    for (const c of corrections) suggested = suggested.replace(new RegExp(`\\b${c.from}\\b`, "gi"), c.to);
     showDidYouMean(suggested);
-  } catch (err) {
-    console.warn("[DidYouMean] failed:", err);
-  }
+  } catch (err) { console.warn("[DidYouMean] failed:", err); }
 }
 
 function showDidYouMean(suggestion) {
@@ -511,9 +443,51 @@ function showDidYouMean(suggestion) {
   feedback.parentNode.insertBefore(el, feedback);
 }
 
-function removeDidYouMean() {
-  document.getElementById("didYouMean")?.remove();
+function removeDidYouMean() { document.getElementById("didYouMean")?.remove(); }
+
+// ============================================================
+// ANSWER CARD
+// ============================================================
+function showAnswerIfStrongMatch(item, term) {
+  const tokens = extractTokens(term);
+  if (tokens.length === 0) return;
+
+  const kws = Array.isArray(item.keywords) ? item.keywords : [];
+  const matchCount = tokens.filter(t => kws.includes(t)).length;
+  const ratio = matchCount / tokens.length;
+  if (ratio < 0.6) return;
+
+  currentAnswer = item;
+  answerTitle.textContent = item.title || "Untitled";
+  answerText.textContent = item.description || item.answer || "";
+  answerCard.classList.remove("hidden");
+
+  const prev = hasVoted(item.id);
+  answerRate.querySelectorAll(".rate-btn").forEach(btn => {
+    btn.disabled = !!prev;
+    btn.classList.toggle("voted-" + (prev === "yes" ? "yes" : "no"), prev === btn.dataset.vote);
+  });
+
+  answerShare.onclick = () => shareResource(item.id, item.title);
 }
+
+function hideAnswer() {
+  answerCard.classList.add("hidden");
+  currentAnswer = null;
+}
+
+answerRate.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".rate-btn");
+  if (!btn || !currentAnswer || btn.disabled) return;
+  const vote = btn.dataset.vote;
+  const result = await recordVote(currentAnswer.id, vote);
+  if (result.ok) {
+    answerRate.querySelectorAll(".rate-btn").forEach(b => {
+      b.disabled = true;
+      if (b === btn) b.classList.add("voted-" + (vote === "yes" ? "yes" : "no"));
+    });
+  }
+});
 
 // ============================================================
 // RENDER
@@ -521,9 +495,7 @@ function removeDidYouMean() {
 function applyCategoryAndRender(term) {
   spinner.classList.add("hidden");
   let items = lastResults;
-  if (activeCategory !== "all") {
-    items = items.filter(i => i.category === activeCategory);
-  }
+  if (activeCategory !== "all") items = items.filter(i => i.category === activeCategory);
   renderResults(items, term);
   updateLoadMoreUI();
 }
@@ -540,7 +512,6 @@ async function renderResults(items, term) {
 
   feedback.classList.add("hidden");
   resultsUl.innerHTML = items.map(renderResultItem(term)).join("");
-
   await enrichResults(items);
   focusSharedResult();
 }
@@ -550,9 +521,6 @@ async function appendResults(items, term) {
   await enrichResults(items);
 }
 
-/**
- * Renders a single result <li>.
- */
 function renderResultItem(term) {
   return (item) => {
     const title = item.title ?? "Untitled";
@@ -560,27 +528,18 @@ function renderResultItem(term) {
     const category = item.category ?? "";
     const id = `desc-${item.id}`;
 
-    // Show collection badge only if it's NOT the primary collection
-    const collectionBadge =
-      item._collection && item._collection !== PRIMARY_COLLECTION
-        ? `<span class="cat-badge" style="background:#f3f4f6;color:#475569">${escapeHtml(item._collection)}</span>`
-        : "";
-
     return `
       <li data-result-id="${item.id}">
         <div class="result-body">
           <strong>
             ${highlightTokens(title, term)}
             ${category ? `<span class="cat-badge">${escapeHtml(category)}</span>` : ""}
-            ${collectionBadge}
           </strong>
           <div class="result-text" id="${id}" data-clamped="true">
             ${highlightTokens(description, term)}
           </div>
           <div class="result-actions">
-            <button class="share-btn" data-share-id="${item.id}" data-share-title="${escapeHtml(title)}">
-              🔗 Share
-            </button>
+            <button class="share-btn" data-share-id="${item.id}" data-share-title="${escapeHtml(title)}">🔗 Share</button>
           </div>
           <div class="related-slot" data-related-for="${item.id}"></div>
         </div>
@@ -589,11 +548,7 @@ function renderResultItem(term) {
   };
 }
 
-/**
- * After rendering, wire share buttons + load related for each card.
- */
 async function enrichResults(items) {
-  // Read more + share buttons
   applyReadMoreButtons(resultsUl);
 
   resultsUl.querySelectorAll(".share-btn:not([data-wired])").forEach(btn => {
@@ -604,7 +559,6 @@ async function enrichResults(items) {
     });
   });
 
-  // Related chips (lazy)
   for (const item of items) {
     const slot = resultsUl.querySelector(`[data-related-for="${item.id}"]`);
     if (!slot || slot.dataset.loaded === "1") continue;
@@ -617,7 +571,6 @@ async function enrichResults(items) {
     }
     if (related.length) {
       slot.innerHTML = renderRelatedChips(related);
-      // Wire related chips to trigger a new search
       slot.querySelectorAll(".related-chip").forEach(chip => {
         chip.addEventListener("click", () => {
           input.value = chip.dataset.relatedTitle;
@@ -628,14 +581,9 @@ async function enrichResults(items) {
   }
 }
 
-/**
- * Adds "Read more" buttons where the description overflows 3 lines.
- * Called via double-rAF so layout has settled.
- */
 function applyReadMoreButtons(scope = document) {
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    const texts = scope.querySelectorAll(".result-text:not([data-processed])");
-    texts.forEach((el) => {
+    scope.querySelectorAll(".result-text:not([data-processed])").forEach(el => {
       el.dataset.processed = "1";
       if (el.scrollHeight <= el.clientHeight + 2) return;
 
@@ -651,30 +599,23 @@ function applyReadMoreButtons(scope = document) {
         btn.textContent = expanded ? "Show less" : "Read more";
         btn.setAttribute("aria-expanded", expanded ? "true" : "false");
       });
-
       el.insertAdjacentElement("afterend", btn);
     });
   }));
 }
 
 // ============================================================
-// EMPTY STATE
-// ============================================================
-function showEmptyStateIfIdle() {
-  if (!input.value.trim() && !lastResults.length) {
-    emptyState.classList.remove("hidden");
-  }
-}
-
-// ============================================================
 // UI STATES
 // ============================================================
+function showEmptyStateIfIdle() {
+  if (!input.value.trim() && !lastResults.length) emptyState.classList.remove("hidden");
+}
+
 function showLoading() {
   spinner.classList.remove("hidden");
   feedback.classList.add("hidden");
   resultsUl.innerHTML = "";
   loadMoreWrap.classList.add("hidden");
-  hideRelatedSearches();       // Feature 18
   removeDidYouMean();
 }
 
@@ -687,7 +628,6 @@ function showError(message) {
   spinner.classList.add("hidden");
   resultsUl.innerHTML = "";
   loadMoreWrap.classList.add("hidden");
-  hideRelatedSearches();       // Feature 18
   feedback.textContent = "⚠️ " + message;
   feedback.className = "feedback error";
 }
@@ -698,9 +638,7 @@ function resetUI(opts = {}) {
   feedback.textContent = "";
   resultsUl.innerHTML = "";
   loadMoreWrap.classList.add("hidden");
-  hideRelatedSearches();       // Feature 18
   lastResults = [];
-  currentSearchTerm = "";
   paginator.reset();
   removeDidYouMean();
   if (!opts.keepEmptyState) {
