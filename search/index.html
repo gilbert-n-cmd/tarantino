@@ -16,7 +16,7 @@
 </head>
 <body>
 
-  <!-- ===== ANNOUNCEMENT BANNER (Feature 5) ===== -->
+  <!-- ===== ANNOUNCEMENT BANNER ===== -->
   <div id="announcementBar" class="announcement-bar hidden">
     <span class="ann-icon">📢</span>
     <span id="announcementText" class="ann-text"></span>
@@ -48,7 +48,7 @@
       <div id="suggestionsBox" class="suggestions hidden" role="listbox"></div>
     </div>
 
-    <!-- ===== QUICK LINKS (Feature 3) ===== -->
+    <!-- ===== QUICK LINKS (Horizontal Scroll) ===== -->
     <section id="quickLinks" class="quick-links">
       <a class="quick-tile" data-category="fees" href="#">
         <span class="qt-icon">💰</span>
@@ -76,20 +76,7 @@
       </a>
     </section>
 
-    <!-- ===== TRENDING ===== -->
-    <div id="trendingBar" class="trending-bar hidden">
-      <span class="trending-label">🔥 Frequently asked:</span>
-      <div id="trendingChips" class="trending-chips"></div>
-    </div>
-
-    <!-- ===== EMPTY STATE / QUICK PRODUCTS ===== -->
-    <section id="emptyState" class="empty-state hidden">
-      <h2>Popular right now</h2>
-      <p class="muted">Explore what others are finding</p>
-      <ul id="popularList" class="popular-list"></ul>
-    </section>
-
-    <!-- ===== CATEGORY FILTERS ===== -->
+    <!-- ===== CATEGORY FILTERS (Horizontal Scroll) ===== -->
     <div id="filterBar" class="filter-bar" role="tablist" aria-label="Filter by category">
       <button class="filter-chip active" data-category="all">All</button>
       <button class="filter-chip" data-category="fees">💰 Fees</button>
@@ -105,7 +92,14 @@
     <!-- ===== FEEDBACK ===== -->
     <div id="feedback" class="feedback hidden" role="status" aria-live="polite"></div>
 
-    <!-- ===== ANSWER-FIRST RESULT (Feature 1) ===== -->
+    <!-- ===== EMPTY STATE / QUICK PRODUCTS ===== -->
+    <section id="emptyState" class="empty-state hidden">
+      <h2>Popular right now</h2>
+      <p class="muted">Explore what others are finding</p>
+      <ul id="popularList" class="popular-list"></ul>
+    </section>
+
+    <!-- ===== ANSWER-FIRST RESULT ===== -->
     <section id="answerCard" class="answer-card hidden">
       <div class="answer-head">
         <span class="answer-label">💡 Quick answer</span>
@@ -131,6 +125,12 @@
       <span id="loadMoreStatus" class="muted"></span>
     </div>
 
+    <!-- ===== RELATED SEARCHES ===== -->
+    <section id="relatedSearches" class="related-searches hidden">
+      <div class="rs-label">🔍 People also searched for</div>
+      <div id="relatedSearchesChips" class="rs-chips"></div>
+    </section>
+    
     <!-- ===== FOOTER ===== -->
     <footer class="page-foot">
       <a href="admin/login.html" class="admin-link">🔐 Admin</a>
@@ -138,7 +138,7 @@
 
   </main>
 
-  <!-- ===== CONTACT FLOAT BUTTON (Feature 4) ===== -->
+  <!-- ===== CONTACT FLOAT BUTTON ===== -->
   <div id="contactFloat" class="contact-float">
     <button id="contactToggle" class="contact-toggle" aria-label="Contact us">
       <span class="cf-icon">💬</span>
