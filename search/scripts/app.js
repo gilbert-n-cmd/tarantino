@@ -41,7 +41,7 @@ const emptyState     = document.getElementById("emptyState");
 const loadMoreWrap   = document.getElementById("loadMoreWrap");
 const loadMoreBtn    = document.getElementById("loadMoreBtn");
 const loadMoreStatus = document.getElementById("loadMoreStatus");
-const quickLinks     = document.getElementById("quickLinks"); // 👈 NEW
+const quickLinks     = document.getElementById("quickLinks");
 
 const answerCard     = document.getElementById("answerCard");
 const answerTitle    = document.getElementById("answerTitle");
@@ -118,40 +118,30 @@ document.addEventListener("keydown", (e) => {
 });
 
 // ============================================================
-// INPUT EVENTS (VidMate Style Hiding/Showing)
+// INPUT EVENTS
 // ============================================================
 input.addEventListener("input", () => {
   const term = input.value.trim();
   clearBtn.classList.toggle("hidden", term.length === 0);
 
-  // 1. Show/Hide Quick Links & Filter Bar based on typing
-  if (term.length > 0) {
-    quickLinks?.classList.add("hidden");
-    filterBar?.classList.add("hidden");
-  } else {
-    quickLinks?.classList.remove("hidden");
-    filterBar?.classList.remove("hidden");
-  }
-
-  // 2. Show suggestions (Recent/Popular if empty, matches if typing)
+  // We are KEEPING the Quick Links and Filter Bar visible now
+  
   clearTimeout(suggestTimer);
   suggestTimer = setTimeout(() => showSuggestions(term), 120);
 
-  // 3. If empty, clear main results and show empty state
   if (!term) {
     resetUI({ keepEmptyState: true });
     showEmptyStateIfIdle();
     return;
   }
 
-  // 4. If typing, hide empty state, show loading, and run search
   hidePopular(emptyState);
   hideAnswer();
   showLoading();
   
   clearTimeout(debounceTimer);
   debounceTimer = setTimeout(() => {
-    hideSuggestions(); // Hide dropdown when actual search runs
+    hideSuggestions(); 
     performSearch(term);
   }, 300);
 });
@@ -293,10 +283,6 @@ clearBtn.addEventListener("click", () => {
   input.focus();
   clearBtn.classList.add("hidden");
   
-  // Show Quick Links & Filter Bar again
-  quickLinks?.classList.remove("hidden");
-  filterBar?.classList.remove("hidden");
-
   hideAnswer();
   resetUI({ keepEmptyState: true });
   showEmptyStateIfIdle();
