@@ -37,101 +37,122 @@
 }
 .announcement-bar .ann-close:hover { background: rgba(0,0,0,0.15); }
 
-/* ---------- QUICK LINKS (Feature 3) ---------- */
 /* ============================================
    HORIZONTAL SCROLLING QUICK LINKS
    ============================================ */
 .quick-links {
-  display: flex;
-  overflow-x: auto;
-  gap: 0.6rem;
-  margin-top: 1rem;
-  padding-bottom: 0.5rem;
-  scrollbar-width: none; /* Hide scrollbar Firefox */
-  -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  gap: 0.6rem !important;
+  margin-top: 1rem !important;
+  padding-bottom: 0.5rem !important;
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
 }
 .quick-links::-webkit-scrollbar {
-  display: none; /* Hide scrollbar Chrome/Safari */
+  display: none; 
 }
 
 .quick-tile {
-  flex: 0 0 auto; /* Prevents squishing */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  min-width: 90px;
-  padding: 0.8rem 0.6rem;
+  flex: 0 0 auto !important; 
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+  min-width: 90px !important;
+  padding: 0.8rem 0.6rem !important;
   background: #fff !important;
   border: 1px solid #e5e7eb !important;
-  border-radius: 12px;
-  text-decoration: none;
+  border-radius: 12px !important;
+  text-decoration: none !important;
   color: #111827 !important;
-  box-shadow: 0 1px 2px rgba(16,24,40,0.04);
-  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  box-shadow: 0 1px 2px rgba(16,24,40,0.04) !important;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s !important;
 }
 .quick-tile:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(16,24,40,0.08);
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.08) !important;
   border-color: #c7d2fe !important;
-  text-decoration: none;
+  text-decoration: none !important;
 }
-.quick-tile .qt-icon { font-size: 1.4rem; line-height: 1; }
-.quick-tile .qt-label { font-size: 0.75rem; font-weight: 600; text-align: center; color: #334155; white-space: nowrap; }
+.quick-tile .qt-icon { font-size: 1.4rem !important; line-height: 1 !important; }
+.quick-tile .qt-label { font-size: 0.75rem !important; font-weight: 600 !important; text-align: center !important; color: #334155 !important; white-space: nowrap !important; }
 
 /* ============================================
-   HORIZONTAL SCROLLING FILTER CHIPS
+   HORIZONTAL SCROLLING FILTER CHIPS (NUCLEAR OVERRIDE)
    ============================================ */
 /* ============================================
-   HORIZONTAL SCROLLING FILTER CHIPS
+   HORIZONTAL SCROLLING FILTER CHIPS (ULTIMATE OVERRIDE)
    ============================================ */
-.filter-bar {
-  display: flex;
-  flex-wrap: nowrap !important; /* Forces them onto one line */
-  overflow-x: auto !important;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+nav.cat-filters {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important; 
+  overflow-x: auto !important;  
+  overflow-y: hidden !important;
+  gap: 0.5rem !important;
+  margin-top: 0.75rem !important;
+  padding-bottom: 0.5rem !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  justify-content: flex-start !important;
+  scrollbar-width: none !important; 
+  -ms-overflow-style: none !important; 
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
-.filter-bar::-webkit-scrollbar {
-  display: none;
+nav.cat-filters::-webkit-scrollbar {
+  display: none !important;
 }
 
-.filter-chip {
-  flex: 0 0 auto; /* Prevents them from shrinking */
-  font-family: inherit;
-  font-size: 0.85rem;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
+nav.cat-filters button.filter-chip {
+  flex: 0 0 auto !important; 
+  font-family: inherit !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 1rem !important;
+  margin: 0 !important;
   
-  /* 👇 OVERRIDE YOUR GLOBAL STYLES 👇 */
-  background: #fff !important; 
+  /* RESET EVERYTHING GLOBAL CSS MIGHT HAVE ADDED */
+  background-color: #ffffff !important; 
+  background-image: none !important;
   border: 1px solid #e5e7eb !important;
-  border-radius: 999px !important;
+  border-radius: 999px !important; 
   color: #6b7280 !important;
   box-shadow: 0 1px 2px rgba(16,24,40,0.04) !important;
   
-  cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
+  cursor: pointer !important;
+  transition: all 0.15s !important;
+  white-space: nowrap !important;
+  height: auto !important;
+  width: auto !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  line-height: 1.5 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-transform: none !important;
+  outline: none !important;
 }
 
-.filter-chip:hover {
+nav.cat-filters button.filter-chip:hover {
   border-color: #cbd5e1 !important;
   color: #111827 !important;
-  background: #fff !important;
+  background-color: #f8fafc !important;
 }
 
-.filter-chip.active {
-  background: #4f46e5 !important;
+nav.cat-filters button.filter-chip.active {
+  background-color: #4f46e5 !important;
+  background-image: none !important;
   border-color: #4f46e5 !important;
-  color: #fff !important;
+  color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(79,70,229,0.3) !important;
 }
-
 /* ---------- CONTACT FLOAT (Feature 4) ---------- */
 .contact-float {
   position: fixed;
@@ -391,7 +412,6 @@
   border: 1px dashed #e5e7eb;
   border-radius: 12px;
 }
-
 
 /* ---------- RELATED SEARCHES (Feature 18) ---------- */
 .related-searches {
