@@ -77,12 +77,9 @@ const PAGE_SIZE = 20;
 (async function init() {
   initContactFloat();
   initQuickLinks((category) => {
-    activeCategory = category;
-    filterBar.querySelectorAll(".filter-chip")
-      .forEach(c => c.classList.toggle("active", c.dataset.category === category));
-    const term = input.value.trim() || category;
-    input.value = term;
-    input.dispatchEvent(new Event("input"));
+    // When a quick link is clicked, simulate clicking the matching filter chip
+    const chip = filterBar.querySelector(`[data-category="${category}"]`);
+    if (chip) chip.click();
   });
   initAnnouncements();
 
@@ -115,6 +112,48 @@ searchToggleBtn?.addEventListener("click", (e) => { e.preventDefault(); openSear
 searchCloseBtn?.addEventListener("click", (e) => { e.preventDefault(); closeSearch(); });
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && searchBar && searchBar.style.display === "block") closeSearch();
+});
+
+// ============================================================
+// CATEGORY FILTER (Fixed logic)
+// ============================================================
+filterBar.addEventListener("click", (e) => {
+  const chip = e.target.closest(".filter-chip");
+  if (!chip) return;
+  
+  // 1. Update state
+  activeCategory = chip.dataset.category;
+  
+  // 2. Reset all chips to default inline styles
+  filterBar.querySelectorAll(".filter-chip").forEach(c => {
+    c.style.backgroundColor = "#fff";
+    c.style.borderColor = "#e5e7eb";
+    c.style.color = "#6b7280";
+    c.style.boxShadow = "0 1px 2px rgba(16,24,40,0.04)";
+  });
+  
+  // 3. Highlight the clicked chip
+  chip.style.backgroundColor = "#4f46e5";
+  chip.style.borderColor = "#4f46e5";
+  chip.style.color = "#fff";
+  chip.style.boxShadow = "0 4px 12px rgba(79,70,229,0.3)";
+
+  // 4. Trigger the search!
+  const term = input.value.trim();
+  
+  if (term.length > 0) {
+    // If user already typed something, filter those results
+    applyCategoryAndRender(term);
+  } else if (activeCategory !== "all") {
+    // If input is empty and they clicked a category (e.g. "Fees"), 
+    // auto-fill the input and run the search
+    input.value = activeCategory;
+    input.dispatchEvent(new Event("input"));
+  } else {
+    // If they clicked "All" with an empty input, reset the UI
+    resetUI({ keepEmptyState: true });
+    showEmptyStateIfIdle();
+  }
 });
 
 // ============================================================
