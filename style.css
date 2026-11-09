@@ -875,87 +875,72 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     
     
 @media (max-width: 768px) {
-  /* 1. Hide the email and the text pipe */
+  /* 1. Hide the email */
   .header-contact a[href^="mailto:"] {
     display: none !important;
   }
+
+  /* 2. Hide the pipe "|" using font-size */
   .header-contact {
     font-size: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center;
   }
 
-  /* 2. Stack the Top Bar vertically */
+  /* 3. Top bar layout */
   header .top-bar {
     display: flex !important;
-    flex-direction: column !important; /* Stack top to bottom */
+    flex-direction: row !important;
+    justify-content: space-between !important;
     align-items: center !important;
-    padding: 15px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    gap: 15px !important; /* Space between name and buttons */
+    padding: 10px 15px !important;
+    gap: 10px !important;
+    flex-wrap: nowrap !important; /* Prevent wrapping */
   }
 
-  /* 3. SHOW and CENTER the School Name on top */
+  /* 4. Hide the big logo and badge on the left */
   header .school-brand {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    order: 1 !important; /* Forces it to the top */
-    width: 100% !important;
-  }
-
-  header .school-brand .logo {
-    font-size: 16px !important;
-    text-align: center !important;
-    display: block !important;
-    line-height: 1.4 !important;
-  }
-
-  /* Hide the big logo image to save space */
-  header .school-brand .school-badge {
     display: none !important;
   }
 
-  /* 4. Put the Buttons and Socials in a row below */
-  header .header-contact {
-    order: 2 !important;
-    display: flex !important;
-    justify-content: flex-start !important; /* Call Now on left */
-    flex: 1 !important;
-    margin: 0 !important;
-  }
-
+  /* 5. The right section contains Socials + Portal */
   header .right-section {
-    order: 3 !important;
     display: flex !important;
-    justify-content: space-between !important; /* Socials middle, Portal right */
     align-items: center !important;
-    flex: 1 !important;
+    justify-content: space-between !important;
+    flex: 1 !important; /* Take up all space between Call and edge */
+    margin-left: 15px !important;
   }
 
-  /* 5. Social Icons */
+  /* 6. Put social icons in a row in the middle */
   header .socials-icons {
     display: flex !important;
     gap: 12px !important;
-    justify-content: center !important;
-    margin: 0 auto !important;
+    align-items: center !important;
+    margin: 0 auto !important; /* Center the group */
   }
 
+  /* 7. Social Icon Sizes */
   header .socials-icons a {
     font-size: 20px !important;
     color: white !important;
+    text-decoration: none;
   }
 
-  /* 6. The Buttons */
-  .header-contact .cta-btn,
-  #portalBtn {
+  /* 8. Call Now Button */
+  .header-contact .cta-btn {
     font-size: 14px !important;
     margin: 0 !important;
-    padding: 8px 16px !important;
+    padding: 8px 12px !important;
     white-space: nowrap !important;
   }
 
-  /* Optional: Button backgrounds */
-  .header-contact .cta-btn {
-    background: rgba(255, 255, 255, 0.1) !important;
+  /* 9. Portal Button */
+  #portalBtn {
+    font-size: 14px !important;
+    margin: 0 !important;
+    padding: 8px 12px !important;
+    white-space: nowrap !important;
   }
 }
