@@ -875,42 +875,69 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     
     
 @media (max-width: 768px) {
-  /* Hide email */
+  /* 1. Hide the email and the text pipe */
   .header-contact a[href^="mailto:"] {
     display: none !important;
   }
-
-  /* Hide the pipe */
   .header-contact {
-    font-size: 0; 
+    font-size: 0 !important;
   }
 
-  /* Stack the whole top bar into neat rows, but keep the buttons side by side */
+  /* 2. Top Bar acts as the main container */
   header .top-bar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-  }
-
-  /* Put Call and Portal in one row */
-  header .top-bar > .header-contact,
-  header .top-bar > .right-section {
-    display: contents; /* Makes their children part of the parent flex flow */
-  }
-
-  /* Now force all buttons to be in a single row */
-  header .top-bar {
+    display: flex !important;
     flex-direction: row !important;
-    flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 10px 20px !important; /* Space on edges */
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
-  /* Style the buttons for the row */
+  /* 3. Hide the logo/brand on mobile to save space */
+  header .school-brand {
+    display: none !important;
+  }
+
+  /* 4. Call Now section takes up left side */
+  header .header-contact {
+    flex: 1 !important;
+    display: flex !important;
+    justify-content: flex-start !important; /* Align left */
+  }
+
+  /* 5. Right section (Socials + Portal) takes up right side */
+  header .right-section {
+    flex: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important; /* Spread socials to middle, portal to right */
+  }
+
+  /* 6. Social Icons */
+  header .socials-icons {
+    display: flex !important;
+    gap: 12px !important;
+    justify-content: center !important;
+    margin: 0 auto !important; /* Push to center of remaining space */
+  }
+
+  header .socials-icons a {
+    font-size: 20px !important;
+    color: white !important;
+  }
+
+  /* 7. The Buttons */
   .header-contact .cta-btn,
   #portalBtn {
     font-size: 14px !important;
     margin: 0 !important;
-    padding: 8px 16px;
+    padding: 8px 16px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Optional: Subtle background for buttons to make them pop */
+  .header-contact .cta-btn {
+    background: rgba(255, 255, 255, 0.1) !important;
   }
 }
