@@ -874,46 +874,43 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     }
     
     
-/* ============================================
-   TOP BAR - MOBILE LAYOUT
-   ============================================ */
 @media (max-width: 768px) {
-
-  /* 1. Hide the email completely */
+  /* Hide email */
   .header-contact a[href^="mailto:"] {
     display: none !important;
   }
 
-  /* 2. Hide the pipe separator "|" */
+  /* Hide the pipe */
   .header-contact {
-    /* This hides the text node containing the | */
     font-size: 0; 
   }
 
-  /* 3. Put the remaining items (Call button & Portal link) in a row */
-  .header-contact {
+  /* Stack the whole top bar into neat rows, but keep the buttons side by side */
+  header .top-bar {
     display: flex;
-    flex-direction: row;      /* Side by side */
-    justify-content: center;  /* Centered */
-    align-items: center;      /* Vertically aligned */
-    gap: 15px;                /* Space between them */
-    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
   }
 
-  /* 4. Bring the font size back for the button and link */
+  /* Put Call and Portal in one row */
+  header .top-bar > .header-contact,
+  header .top-bar > .right-section {
+    display: contents; /* Makes their children part of the parent flex flow */
+  }
+
+  /* Now force all buttons to be in a single row */
+  header .top-bar {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Style the buttons for the row */
   .header-contact .cta-btn,
-  .header-contact #portalBtn {
-    font-size: 14px;          /* Reset font size */
-  }
-
-  /* 5. Make the Call button look nicer on mobile */
-  .header-contact .cta-btn {
+  #portalBtn {
+    font-size: 14px !important;
     margin: 0 !important;
     padding: 8px 16px;
-  }
-
-  /* 6. Make sure the Portal button has no extra margin */
-  .header-contact #portalBtn {
-    margin: 0 !important;
   }
 }
