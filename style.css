@@ -909,9 +909,9 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     padding: 8px 16px !important;
   }
 
-  /* Optional: Hide the school logo/badge on mobile to keep it clean */
+  /* Optional: Hide the school logo/badge on mobile to keep it clean 
   header .school-badge,
   header .socials-icons {
     display: none !important;
-  }
+  }*/
 }
