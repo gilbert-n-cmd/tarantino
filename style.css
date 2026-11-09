@@ -933,8 +933,8 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     font-size: 40px !important; /* 👈 Increased icon size */
     color: white !important;
     text-decoration: none;
-    height: 40px;
-    margin: 0 10px; /* Space between icons */
+    height: 30px;
+    margin: 0 6px; /* Space between icons */
     background: rgba(255, 255, 255, 0.1); /* Subtle circle */
     border-radius: 50%;
     transition: all 0.3s ease;
