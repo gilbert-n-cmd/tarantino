@@ -894,7 +894,7 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     box-sizing: border-box !important;
   }
 
-  /* 3. Hide the logo/brand on mobile to save space */
+  /* 3. Hide the logo/brand on mobile to save space 
   header .school-brand {
     display: none !important;
   }
