@@ -899,7 +899,7 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     flex-wrap: nowrap !important; /* Prevent wrapping */
   }
 
-  /* 4. Hide the big logo and badge on the left */
+  /* 4. Hide the big logo and badge on the left 
   header .school-brand {
     display: none !important;
   }
