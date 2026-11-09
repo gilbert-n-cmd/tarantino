@@ -875,78 +875,74 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     
     
 @media (max-width: 768px) {
-  /* 1. Hide the email */
+  /* 1. Hide the email and pipe */
   .header-contact a[href^="mailto:"] {
     display: none !important;
   }
-
-  /* 2. Hide the text pipe "|" */
   .header-contact {
     font-size: 0; 
+    order: 1; /* Call Now on the left */
   }
 
-  /* 3. Setup the top bar layout */
+  /* 2. Setup the top bar */
   header .top-bar {
     display: flex !important;
     flex-direction: row !important;
-    flex-wrap: wrap !important;      /* Allow wrapping if screen is very small */
-    justify-content: space-between !important; /* Extremes */
+    justify-content: space-between !important;
     align-items: center !important;
-    padding: 15px 15px !important;
+    padding: 12px 15px !important;
     gap: 10px !important;
   }
 
-  /* 4. Break the inner containers */
+  /* 3. Break the containers so items can flow freely */
   header .school-brand,
-  header .right-section,
-  header .header-contact {
+  header .right-section {
     display: contents !important; 
   }
 
-  /* 5. Hide the big school logo text and badge */
+  /* 4. Hide the logo text and big badge */
   header .logo,
   header .school-badge {
     display: none !important;
   }
 
-  /* 6. Style the Call & Portal Buttons */
-  .header-contact .cta-btn,
-  #portalBtn {
+  /* 5. Style the Call Now button */
+  .header-contact .cta-btn {
     font-size: 14px !important;
     margin: 0 !important;
-    padding: 8px 16px !important;
+    padding: 10px 18px !important;
     white-space: nowrap;
   }
 
-  /* 7. SPACE & STYLE THE SOCIAL ICONS */
-  /* Group the icons together in the middle */
+  /* 6. Style the Portal button */
+  #portalBtn {
+    order: 3; /* Portal on the right */
+    font-size: 14px !important;
+    margin: 0 !important;
+    padding: 10px 18px !important;
+    white-space: nowrap;
+  }
+
+  /* 7. 🚀 THE MAGIC: Make social icons fill the middle space */
   header .top-bar > a[target="_blank"] {
-    display: inline-flex !important;
+    order: 2; /* Put icons in the middle */
+    flex: 1; /* Allow them to grow and fill empty space */
+    display: flex !important;
+    justify-content: center; /* Center the icon within its space */
     align-items: center;
-    justify-content: center;
-    font-size: 18px !important; /* Size of icons */
+    font-size: 24px !important; /* 👈 Increased icon size */
     color: white !important;
     text-decoration: none;
-    width: 32px;
-    height: 32px;
-    background: rgba(255, 255, 255, 0.1); /* Subtle background circle */
+    height: 40px;
+    margin: 0 4px; /* Space between icons */
+    background: rgba(255, 255, 255, 0.1); /* Subtle circle */
     border-radius: 50%;
-    margin: 0 3px; /* Space between icons */
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
   }
 
-  /* Add a container effect around the icons by wrapping them (optional visual trick) */
+  /* Hover effect for icons */
   header .top-bar > a[target="_blank"]:hover {
     background: rgba(255, 255, 255, 0.3);
-  }
-
-  /* 8. Ensure the icons sit in the middle and don't push the buttons off */
-  .header-contact { order: 1; flex: 1; text-align: left; }
-  #portalBtn { order: 3; flex: 1; text-align: right; }
-  header .top-bar > a[target="_blank"] { order: 2; flex: 0 0 auto; }
-  
-  /* Make the right-section behave so it doesn't break flex */
-  header .right-section {
-     display: contents !important;
+    transform: scale(1.1);
   }
 }
