@@ -880,38 +880,73 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     display: none !important;
   }
 
-  /* 2. Hide the "|" pipe */
+  /* 2. Hide the text pipe "|" */
   .header-contact {
     font-size: 0; 
   }
 
-  /* 3. Force the top bar into a horizontal row */
+  /* 3. Setup the top bar layout */
   header .top-bar {
     display: flex !important;
     flex-direction: row !important;
-    justify-content: space-between !important; /* Pushes to extremes */
+    flex-wrap: wrap !important;      /* Allow wrapping if screen is very small */
+    justify-content: space-between !important; /* Extremes */
     align-items: center !important;
-    padding: 10px 15px !important;
+    padding: 15px 15px !important;
+    gap: 10px !important;
   }
 
-  /* 4. Break the inner containers so their children act as direct items */
+  /* 4. Break the inner containers */
   header .school-brand,
   header .right-section,
   header .header-contact {
     display: contents !important; 
   }
 
-  /* 5. Reset font sizes and spacing */
+  /* 5. Hide the big school logo text and badge */
+  header .logo,
+  header .school-badge {
+    display: none !important;
+  }
+
+  /* 6. Style the Call & Portal Buttons */
   .header-contact .cta-btn,
   #portalBtn {
     font-size: 14px !important;
     margin: 0 !important;
     padding: 8px 16px !important;
+    white-space: nowrap;
   }
 
-  /* Optional: Hide the school logo/badge on mobile to keep it clean 
-  header .school-badge,
-  header .socials-icons {
-    display: none !important;
-  }*/
+  /* 7. SPACE & STYLE THE SOCIAL ICONS */
+  /* Group the icons together in the middle */
+  header .top-bar > a[target="_blank"] {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px !important; /* Size of icons */
+    color: white !important;
+    text-decoration: none;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.1); /* Subtle background circle */
+    border-radius: 50%;
+    margin: 0 3px; /* Space between icons */
+    transition: background 0.3s ease;
+  }
+
+  /* Add a container effect around the icons by wrapping them (optional visual trick) */
+  header .top-bar > a[target="_blank"]:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  /* 8. Ensure the icons sit in the middle and don't push the buttons off */
+  .header-contact { order: 1; flex: 1; text-align: left; }
+  #portalBtn { order: 3; flex: 1; text-align: right; }
+  header .top-bar > a[target="_blank"] { order: 2; flex: 0 0 auto; }
+  
+  /* Make the right-section behave so it doesn't break flex */
+  header .right-section {
+     display: contents !important;
+  }
 }
