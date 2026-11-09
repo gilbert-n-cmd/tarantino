@@ -874,3 +874,23 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     }
     
     
+/* Hide email on tablets and phones */
+@media (max-width: 768px) {
+  .header-contact a[href^="mailto:"] {
+    display: none;
+  }
+
+  /* Hide the separator line too (the "|" character) */
+  .header-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* Hide on very small phones as well */
+@media (max-width: 480px) {
+  .header-contact a[href^="mailto:"] {
+    display: none;
+  }
+}
