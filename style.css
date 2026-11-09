@@ -883,43 +883,61 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     font-size: 0 !important;
   }
 
-  /* 2. Top Bar acts as the main container */
+  /* 2. Stack the Top Bar vertically */
   header .top-bar {
     display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
+    flex-direction: column !important; /* Stack top to bottom */
     align-items: center !important;
-    padding: 10px 20px !important; /* Space on edges */
+    padding: 15px !important;
     width: 100% !important;
     box-sizing: border-box !important;
+    gap: 15px !important; /* Space between name and buttons */
   }
 
-  /* 3. Hide the logo/brand on mobile to save space 
+  /* 3. SHOW and CENTER the School Name on top */
   header .school-brand {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    order: 1 !important; /* Forces it to the top */
+    width: 100% !important;
+  }
+
+  header .school-brand .logo {
+    font-size: 16px !important;
+    text-align: center !important;
+    display: block !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Hide the big logo image to save space */
+  header .school-brand .school-badge {
     display: none !important;
   }
 
-  /* 4. Call Now section takes up left side */
+  /* 4. Put the Buttons and Socials in a row below */
   header .header-contact {
-    flex: 1 !important;
+    order: 2 !important;
     display: flex !important;
-    justify-content: flex-start !important; /* Align left */
+    justify-content: flex-start !important; /* Call Now on left */
+    flex: 1 !important;
+    margin: 0 !important;
   }
 
-  /* 5. Right section (Socials + Portal) takes up right side */
   header .right-section {
-    flex: 1 !important;
+    order: 3 !important;
     display: flex !important;
+    justify-content: space-between !important; /* Socials middle, Portal right */
     align-items: center !important;
-    justify-content: space-between !important; /* Spread socials to middle, portal to right */
+    flex: 1 !important;
   }
 
-  /* 6. Social Icons */
+  /* 5. Social Icons */
   header .socials-icons {
     display: flex !important;
     gap: 12px !important;
     justify-content: center !important;
-    margin: 0 auto !important; /* Push to center of remaining space */
+    margin: 0 auto !important;
   }
 
   header .socials-icons a {
@@ -927,7 +945,7 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     color: white !important;
   }
 
-  /* 7. The Buttons */
+  /* 6. The Buttons */
   .header-contact .cta-btn,
   #portalBtn {
     font-size: 14px !important;
@@ -936,7 +954,7 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     white-space: nowrap !important;
   }
 
-  /* Optional: Subtle background for buttons to make them pop */
+  /* Optional: Button backgrounds */
   .header-contact .cta-btn {
     background: rgba(255, 255, 255, 0.1) !important;
   }
