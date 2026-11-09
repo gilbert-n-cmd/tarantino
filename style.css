@@ -875,42 +875,43 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     
     
 @media (max-width: 768px) {
-  /* Hide email */
+  /* 1. Hide the email */
   .header-contact a[href^="mailto:"] {
     display: none !important;
   }
 
-  /* Hide the pipe */
+  /* 2. Hide the "|" pipe */
   .header-contact {
     font-size: 0; 
   }
 
-  /* Stack the whole top bar into neat rows, but keep the buttons side by side */
+  /* 3. Force the top bar into a horizontal row */
   header .top-bar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-  }
-
-  /* Put Call and Portal in one row */
-  header .top-bar > .header-contact,
-  header .top-bar > .right-section {
-    display: contents; /* Makes their children part of the parent flex flow */
-  }
-
-  /* Now force all buttons to be in a single row */
-  header .top-bar {
+    display: flex !important;
     flex-direction: row !important;
-    flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between !important; /* Pushes to extremes */
+    align-items: center !important;
+    padding: 10px 15px !important;
   }
 
-  /* Style the buttons for the row */
+  /* 4. Break the inner containers so their children act as direct items */
+  header .school-brand,
+  header .right-section,
+  header .header-contact {
+    display: contents !important; 
+  }
+
+  /* 5. Reset font sizes and spacing */
   .header-contact .cta-btn,
   #portalBtn {
     font-size: 14px !important;
     margin: 0 !important;
-    padding: 8px 16px;
+    padding: 8px 16px !important;
+  }
+
+  /* Optional: Hide the school logo/badge on mobile to keep it clean */
+  header .school-badge,
+  header .socials-icons {
+    display: none !important;
   }
 }
