@@ -874,23 +874,46 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     }
     
     
-/* Hide email on tablets and phones */
+/* ============================================
+   TOP BAR - MOBILE LAYOUT
+   ============================================ */
 @media (max-width: 768px) {
+
+  /* 1. Hide the email completely */
   .header-contact a[href^="mailto:"] {
-    display: none;
+    display: none !important;
   }
 
-  /* Hide the separator line too (the "|" character) */
+  /* 2. Hide the pipe separator "|" */
+  .header-contact {
+    /* This hides the text node containing the | */
+    font-size: 0; 
+  }
+
+  /* 3. Put the remaining items (Call button & Portal link) in a row */
   .header-contact {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    flex-direction: row;      /* Side by side */
+    justify-content: center;  /* Centered */
+    align-items: center;      /* Vertically aligned */
+    gap: 15px;                /* Space between them */
+    width: 100%;
   }
-}
 
-/* Hide on very small phones as well */
-@media (max-width: 480px) {
-  .header-contact a[href^="mailto:"] {
-    display: none;
+  /* 4. Bring the font size back for the button and link */
+  .header-contact .cta-btn,
+  .header-contact #portalBtn {
+    font-size: 14px;          /* Reset font size */
+  }
+
+  /* 5. Make the Call button look nicer on mobile */
+  .header-contact .cta-btn {
+    margin: 0 !important;
+    padding: 8px 16px;
+  }
+
+  /* 6. Make sure the Portal button has no extra margin */
+  .header-contact #portalBtn {
+    margin: 0 !important;
   }
 }
