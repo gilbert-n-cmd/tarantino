@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin — Alumni Registration</title>
 
-<!-- Leaflet Map CSS (For Feature 5) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
 <style>
@@ -41,7 +40,6 @@
   #login-panel { max-width: 460px; margin: 4rem auto; }
   #admin-panel { display: none; }
 
-  /* ⭐ Feature 3: Dashboard Stats */
   .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
   .stat-card { background: #f8fafc; border: 1px solid var(--line); border-radius: 10px; padding: 1rem; text-align: center; }
   .stat-card h4 { margin: 0 0 .5rem; font-size: .85rem; color: #64748b; text-transform: uppercase; letter-spacing: .5px; }
@@ -67,7 +65,6 @@
   .toolbar { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
   .toolbar input[type=search] { flex: 1; min-width: 200px; }
 
-  /* Modal Styles */
   .modal-bg {
     display: none; position: fixed; inset: 0; background: rgba(15,23,42,.55);
     align-items: center; justify-content: center; padding: 1rem; z-index: 50;
@@ -86,8 +83,6 @@
           font-size: .82rem; margin-top: .5rem; }
 
   .empty { color: #64748b; font-size: .9rem; padding: 1.5rem 0; text-align: center; }
-
-  /* ⭐ Feature 5: Map */
   #map-container { height: 400px; width: 100%; border-radius: 10px; border: 1px solid var(--line); display: none; }
 </style>
 </head>
@@ -117,7 +112,6 @@
     <button id="logout-btn" class="gray small">Log out</button>
   </div>
 
-  <!-- ⭐ Feature 3: Dashboard Stats -->
   <div class="stats-grid">
     <div class="stat-card"><h4>Total Alumni</h4><div class="num" id="stat-total">0</div></div>
     <div class="stat-card"><h4>Pending</h4><div class="num" id="stat-pending" style="color:#d97706;">0</div></div>
@@ -133,16 +127,14 @@
     <button class="tab" data-tab="map">Alumni Map</button>
   </div>
 
-  <!-- Toolbar (Search/Refresh/Export) -->
   <div class="toolbar" id="search-toolbar">
     <input type="search" id="search" placeholder="Search name, email, course, year…">
-    <button id="export-btn" class="green">Export CSV</button> <!-- Feature 1 -->
+    <button id="export-btn" class="green">Export CSV</button>
     <button id="refresh-btn" class="gray">Refresh</button>
   </div>
 
   <div id="msg" class="msg"></div>
 
-  <!-- Main Table View -->
   <div class="table-wrap" id="alumni-table-wrap">
     <table>
       <thead>
@@ -156,7 +148,7 @@
         <tr><td colspan="8" class="empty">Loading…</td></tr>
       </tbody>
     </table>
-    <!-- Bulk Action Buttons -->
+    
     <div id="bulk-actions" style="display:none; margin-top:1rem; padding:1rem; background:#f8fafc; border-radius:8px; border:1px solid var(--line);">
       <span style="font-weight:600; font-size:.9rem;" id="bulk-count">0 selected</span>
       <button class="green small" id="bulk-approve" style="margin-left:1rem;">Approve Selected</button>
@@ -164,7 +156,6 @@
     </div>
   </div>
 
-  <!-- Roles View -->
   <div class="table-wrap" id="roles-table-wrap" style="display:none;">
     <table>
       <thead>
@@ -176,7 +167,6 @@
     </table>
   </div>
 
-  <!-- ⭐ Feature 4: Broadcast View -->
   <div id="broadcast-view" style="display:none;">
     <h3 style="margin-top:0; color:var(--brand);">Send Broadcast Email</h3>
     <p class="sub">This will open your email app with all approved alumni in the BCC field.</p>
@@ -187,7 +177,6 @@
     <button class="green" id="broadcast-btn" style="margin-top:1rem;">Open Email Draft (BCC)</button>
   </div>
 
-  <!-- ⭐ Feature 5: Map View -->
   <div id="map-view" style="display:none;">
     <div id="map-container"></div>
   </div>
@@ -198,17 +187,17 @@
   <div class="modal" id="modal"></div>
 </div>
 
-<!-- Leaflet JS (Feature 5) -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getFirestore, collection, doc, getDoc, getDocs, updateDoc,
   deleteDoc, setDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
-  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
+  createUserWithEmailAndPassword, getApp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -224,7 +213,6 @@ const app  = initializeApp(firebaseConfig);
 const db   = getFirestore(app);
 const auth = getAuth(app);
 
-// ─── UI Elements ───
 const loginPanel   = document.getElementById("login-panel");
 const loginForm    = document.getElementById("login-form");
 const loginMsg     = document.getElementById("login-msg");
@@ -248,7 +236,6 @@ const searchToolbar   = document.getElementById("search-toolbar");
 const broadcastView   = document.getElementById("broadcast-view");
 const mapView         = document.getElementById("map-view");
 
-// Bulk UI
 const bulkHeader = document.getElementById("bulk-header");
 const bulkActions = document.getElementById("bulk-actions");
 const bulkCount = document.getElementById("bulk-count");
@@ -256,7 +243,6 @@ const selectAll = document.getElementById("select-all");
 const bulkApprove = document.getElementById("bulk-approve");
 const bulkReject = document.getElementById("bulk-reject");
 
-// State
 let currentTab = "pending";
 let allDocs    = [];
 let allRoles   = [];
@@ -266,16 +252,12 @@ let lastVerifiedUid = null;
 let selectedIds = new Set();
 let mapInstance = null;
 
-// ─── Helpers ───
 function show(text, type) { msg.textContent = text; msg.className = "msg " + type; }
 function loginShow(text, type) { loginMsg.textContent = text; loginMsg.className = "msg " + type; }
 function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
 function escapeHtml(s) { return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 function escapeAttr(s) { return escapeHtml(s); }
 
-// ═══════════════════════════════════════════════════════
-//  ROLE LOOKUP
-// ═══════════════════════════════════════════════════════
 async function fetchRole(uid, attempt = 1) {
   try {
     const snap = await getDoc(doc(db, "roles", uid));
@@ -333,9 +315,6 @@ async function verifyRoleNow() {
   else showAccessDenied(user, reason);
 }
 
-// ═══════════════════════════════════════════════════════
-//  LOGIN
-// ═══════════════════════════════════════════════════════
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   loginBtn.disabled = true;
@@ -351,9 +330,6 @@ loginForm.addEventListener("submit", async (e) => {
 
 logoutBtn.addEventListener("click", () => signOut(auth));
 
-// ═══════════════════════════════════════════════════════
-//  AUTH STATE
-// ═══════════════════════════════════════════════════════
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     authCheckInFlight = false; lastVerifiedUid = null; currentRole = null;
@@ -372,9 +348,6 @@ onAuthStateChanged(auth, async (user) => {
   else showAccessDenied(user, reason);
 });
 
-// ═══════════════════════════════════════════════════════
-//  TAB SWITCHING (Handles all 5 tabs)
-// ═══════════════════════════════════════════════════════
 function switchTab(name) {
   currentTab = name;
   tabs.forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
@@ -390,7 +363,6 @@ function switchTab(name) {
   broadcastView.style.display = isBroadcast ? "block" : "none";
   mapView.style.display = isMap ? "block" : "none";
 
-  // Show/hide Bulk tools depending on tab
   const showBulk = isAlumni && name === "pending";
   bulkHeader.style.display = showBulk ? "table-cell" : "none";
   bulkActions.style.display = (showBulk && selectedIds.size > 0) ? "flex" : "none";
@@ -399,15 +371,11 @@ function switchTab(name) {
   else if (isAlumni) loadAlumni();
   else if (isMap) loadMap();
   else if (isBroadcast) {
-    // Pre-fill broadcast body from existing "send credentials" template (optional)
     document.getElementById("broadcast-subject").value = "Alumni Update — Bishop Angelo Tarantino Memorial SS";
   }
 }
 tabs.forEach((t) => t.addEventListener("click", () => switchTab(t.dataset.tab)));
 
-// ═══════════════════════════════════════════════════════
-//  LOAD ALUMNI (Updates Stats + Table + Map Data)
-// ═══════════════════════════════════════════════════════
 async function loadAlumni() {
   clearMsg();
   rows.innerHTML = '<tr><td colspan="8" class="empty">Loading…</td></tr>';
@@ -423,11 +391,10 @@ async function loadAlumni() {
       return tb - ta;
     });
 
-    // Update Dashboard Stats
     document.getElementById("stat-total").textContent = allDocs.length;
     document.getElementById("stat-pending").textContent = allDocs.filter(d => !d.approved).length;
     document.getElementById("stat-approved").textContent = allDocs.filter(d => d.approved).length;
-    document.getElementById("stat-location").textContent = allDocs.filter(d => d.share_location && d.live_location).length;
+    document.getElementById("stat-location").textContent = allDocs.filter(d => d.share_location === true).length;
 
     renderRows();
   } catch (err) {
@@ -461,7 +428,6 @@ function renderRows() {
     const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
     const status = d.approved ? `<span class="pill approved">Approved</span>` : `<span class="pill pending">Pending</span>`;
     
-    // Feature 6: Checkbox for bulk actions (only on Pending tab)
     const checkbox = (currentTab === "pending") 
       ? `<td><input type="checkbox" class="bulk-cb" data-id="${escapeAttr(d.id)}"></td>` 
       : "";
@@ -485,13 +451,11 @@ function renderRows() {
     </tr>`;
   }).join("");
 
-  // Wire single actions
   rows.querySelectorAll("[data-approve]").forEach((b) => b.addEventListener("click", () => openApproval(b.dataset.approve)));
   rows.querySelectorAll("[data-view]").forEach((b) => b.addEventListener("click", () => openApproval(b.dataset.view, true)));
   rows.querySelectorAll("[data-send]").forEach((b) => b.addEventListener("click", () => openSendCredentials(b.dataset.send)));
   rows.querySelectorAll("[data-reject]").forEach((b) => b.addEventListener("click", () => rejectDoc(b.dataset.reject)));
 
-  // Wire bulk checkboxes
   rows.querySelectorAll(".bulk-cb").forEach((cb) => {
     cb.addEventListener("change", (e) => {
       if (e.target.checked) selectedIds.add(e.target.dataset.id);
@@ -504,9 +468,6 @@ function renderRows() {
   });
 }
 
-// ═══════════════════════════════════════════════════════
-//  BULK ACTIONS (Feature 6)
-// ═══════════════════════════════════════════════════════
 selectAll.addEventListener("change", (e) => {
   const checked = e.target.checked;
   rows.querySelectorAll(".bulk-cb").forEach((cb) => {
@@ -525,7 +486,7 @@ bulkApprove.addEventListener("click", async () => {
   );
   await Promise.all(promises);
   show(`${selectedIds.size} approved.`, "ok");
-  loadAlumni(); // Refresh stats & table
+  loadAlumni();
 });
 
 bulkReject.addEventListener("click", async () => {
@@ -536,9 +497,6 @@ bulkReject.addEventListener("click", async () => {
   loadAlumni();
 });
 
-// ═══════════════════════════════════════════════════════
-//  CSV EXPORT (Feature 1)
-// ═══════════════════════════════════════════════════════
 exportBtn.addEventListener("click", () => {
   if (allDocs.length === 0) return alert("No data to export.");
   const headers = ["Name", "Email", "Phone", "Courses", "Graduation Year", "Stream", "Occupation", "Employer", "Location", "Status"];
@@ -567,9 +525,6 @@ exportBtn.addEventListener("click", () => {
   window.URL.revokeObjectURL(url);
 });
 
-// ═══════════════════════════════════════════════════════
-//  BROADCAST EMAIL (Feature 4)
-// ═══════════════════════════════════════════════════════
 document.getElementById("broadcast-btn").addEventListener("click", () => {
   const approved = allDocs.filter(d => d.approved && d.email);
   if (approved.length === 0) return alert("No approved alumni to email.");
@@ -582,21 +537,17 @@ document.getElementById("broadcast-btn").addEventListener("click", () => {
   window.open(mailtoLink, "_blank");
 });
 
-// ═══════════════════════════════════════════════════════
-//  MAP (Feature 5)
-// ═══════════════════════════════════════════════════════
 function loadMap() {
   const mapContainer = document.getElementById("map-container");
   mapContainer.style.display = "block";
   
   if (!mapInstance) {
-    mapInstance = L.map('map-container').setView([20, 0], 2); // World view initially
+    mapInstance = L.map('map-container').setView([20, 0], 2);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap'
     }).addTo(mapInstance);
   }
 
-  // Clear existing markers
   mapInstance.eachLayer((layer) => {
     if (layer instanceof L.Marker) mapInstance.removeLayer(layer);
   });
@@ -604,20 +555,13 @@ function loadMap() {
   const located = allDocs.filter(d => d.share_location && d.live_location && d.live_location.latitude);
   
   if (located.length === 0) {
-    // Fallback: If no GPS coords, try geocoding the text location
-    allDocs.filter(d => d.approved && d.location).forEach(async (d) => {
-      try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(d.location)}`);
-        const data = await res.json();
-        if (data.length > 0) {
-          const lat = parseFloat(data[0].lat);
-          const lon = parseFloat(data[0].lon);
-          L.marker([lat, lon]).addTo(mapInstance).bindPopup(`<b>${escapeHtml(d.full_name)}</b><br>${escapeHtml(d.location)}`);
-        }
-      } catch(e) {}
-    });
+    mapContainer.innerHTML = `<div style="display:flex; height:100%; align-items:center; justify-content:center; background:#f8fafc; color:#64748b; font-size:1.1rem; border-radius:10px;">No GPS coordinates found. Users must allow browser location access.</div>`;
   } else {
-    // Use GPS coords
+    mapContainer.innerHTML = ""; 
+    if (!mapInstance) {
+        mapInstance = L.map('map-container').setView([20, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(mapInstance);
+    }
     const bounds = L.latLngBounds();
     located.forEach(d => {
       const lat = d.live_location.latitude;
@@ -629,9 +573,6 @@ function loadMap() {
   }
 }
 
-// ═══════════════════════════════════════════════════════
-//  ROLES (Unchanged)
-// ═══════════════════════════════════════════════════════
 async function loadRoles() {
   clearMsg();
   roleRows.innerHTML = '<tr><td colspan="5" class="empty">Loading…</td></tr>';
@@ -695,9 +636,6 @@ async function deleteRole(uid) {
   catch (err) { show("Error: " + err.message, "err"); }
 }
 
-// ═══════════════════════════════════════════════════════
-//  MODALS (Approve & Send Credentials)
-// ═══════════════════════════════════════════════════════
 function openApproval(id, viewOnly = false) {
   const d = allDocs.find((x) => x.id === id);
   if (!d) return;
@@ -716,7 +654,7 @@ function openApproval(id, viewOnly = false) {
     <h3>Approve registration</h3>
     ${detailsHtml(d)}
     <div class="warn">
-      <b>Important:</b> Clicking approve will mark them as approved in the database and open your email app with the credentials. <b>You must manually create their account in the Firebase Console.</b>
+      <b>Important:</b> Clicking approve will <b>automatically create</b> their Firebase Authentication account and open your email app with the credentials.
     </div>
     <div style="margin-top:1rem;">
       <label>Login email (used to sign in)</label>
@@ -724,7 +662,7 @@ function openApproval(id, viewOnly = false) {
       <label style="margin-top:.75rem;">Generated password</label>
       <div class="cred-row"><input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly><button class="small gray" id="copy-pass">Copy</button><button class="small" id="regen-pass">Regenerate</button></div>
     </div>
-    <div class="modal-actions"><button class="gray" id="modal-close">Cancel</button><button class="green" id="modal-confirm">Approve &amp; open email</button></div>
+    <div class="modal-actions"><button class="gray" id="modal-close">Cancel</button><button class="green" id="modal-confirm">Approve &amp; create user</button></div>
     <div class="msg" id="modal-msg" style="margin-top:1rem;"></div>
   `;
   modalBg.classList.add("active");
@@ -741,20 +679,47 @@ function openApproval(id, viewOnly = false) {
   document.getElementById("modal-confirm").onclick = async () => {
     const confirmBtn = document.getElementById("modal-confirm");
     confirmBtn.disabled = true;
-    confirmBtn.textContent = "Saving…";
+    confirmBtn.textContent = "Creating user…";
+    mmsg.className = "msg info";
+    mmsg.textContent = "Creating Auth account…";
+
     try {
+      // ⭐ THE TRICK: Create a temporary secondary app instance in the browser
+      const secondaryApp = initializeApp(firebaseConfig, "Secondary-" + Date.now());
+      const secondaryAuth = getAuth(secondaryApp);
+      
+      // Create the user (this won't affect the Admin's current session)
+      await createUserWithEmailAndPassword(secondaryAuth, emailIn.value.trim().toLowerCase(), passIn.value);
+      
+      // Clean up the secondary app
+      await deleteApp(secondaryApp);
+
+      mmsg.textContent = "Saving to database…";
+
+      // Save to Firestore
       await updateDoc(doc(db, "alumni", id), {
-        approved: true, approved_at: serverTimestamp(), approved_by: auth.currentUser.email, login_email: emailIn.value.trim().toLowerCase()
+        approved: true, 
+        approved_at: serverTimestamp(), 
+        approved_by: auth.currentUser.email, 
+        login_email: emailIn.value.trim().toLowerCase()
       });
+
+      // Open Email Draft
       openEmailDraft(d, emailIn.value.trim(), passIn.value);
+      
       mmsg.className = "msg ok";
-      mmsg.innerHTML = `Approved! Email draft opened.`;
+      mmsg.innerHTML = `✅ Account created and email draft opened!`;
       setTimeout(() => { closeModal(); loadAlumni(); }, 1500);
     } catch (err) {
+      console.error(err);
       mmsg.className = "msg err";
-      mmsg.textContent = err.message;
+      if (err.code === "auth/email-already-in-use") {
+        mmsg.textContent = "This email is already registered in Firebase Authentication.";
+      } else {
+        mmsg.textContent = err.message;
+      }
       confirmBtn.disabled = false;
-      confirmBtn.textContent = "Approve & open email";
+      confirmBtn.textContent = "Approve & create user";
     }
   };
 }
@@ -836,7 +801,6 @@ async function rejectDoc(id) {
   catch (err) { show("Error: " + err.message, "err"); }
 }
 
-// ─── Utilities ───
 function generatePassword(length = 14) {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*";
   let out = "";
