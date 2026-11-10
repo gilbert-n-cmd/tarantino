@@ -223,7 +223,6 @@ async function fetchRole(uid, attempt = 1) {
     return { role: data.role || null, reason: data.role ? null : "no-role-field" };
   } catch (err) {
     console.error("[admin] Role lookup failed (attempt " + attempt + "):", err);
-    // Retry once on transient errors (rules propagation, network)
     if (attempt < 2 && (err.code === "permission-denied" || err.code === "unavailable")) {
       await new Promise((r) => setTimeout(r, 800));
       return fetchRole(uid, attempt + 1);
@@ -314,7 +313,7 @@ async function verifyRoleNow() {
 }
 
 // ═══════════════════════════════════════════════════════
-//  LOGIN — only signs in; onAuthStateChanged handles the rest
+//  LOGIN
 // ═══════════════════════════════════════════════════════
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -325,7 +324,6 @@ loginForm.addEventListener("submit", async (e) => {
       document.getElementById("login_email").value.trim(),
       document.getElementById("login_password").value);
     loginShow("Verifying access…", "info");
-    // onAuthStateChanged will fire and verify
   } catch (err) {
     console.error(err);
     loginShow(
@@ -341,10 +339,9 @@ loginForm.addEventListener("submit", async (e) => {
 logoutBtn.addEventListener("click", () => signOut(auth));
 
 // ═══════════════════════════════════════════════════════
-//  AUTH STATE — race-safe, does NOT auto-logout on errors
+//  AUTH STATE
 // ═══════════════════════════════════════════════════════
 onAuthStateChanged(auth, async (user) => {
-  // Logout: clear everything
   if (!user) {
     authCheckInFlight = false;
     lastVerifiedUid = null;
@@ -359,10 +356,7 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  // Dedupe: already verified this UID → don't re-check
   if (user.uid === lastVerifiedUid && currentRole === "admin") return;
-
-  // Prevent concurrent checks (the race that bounced you)
   if (authCheckInFlight) return;
   authCheckInFlight = true;
 
@@ -375,7 +369,6 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  // ⚠️ Do NOT sign out — show what's wrong and let them retry.
   showAccessDenied(user, reason);
 });
 
@@ -444,11 +437,15 @@ function renderRows() {
     const status = d.approved
       ? `<span class="pill approved">Approved</span>`
       : `<span class="pill pending">Pending</span>`;
+      
+    // ⭐ Added "Send credentials" for approved users
     const actions = d.approved
       ? `<button class="small gray" data-view="${escapeAttr(d.id)}">View</button>
+         <button class="small" data-send="${escapeAttr(d.id)}">Send credentials</button>
          <button class="small red" data-reject="${escapeAttr(d.id)}">Revoke</button>`
       : `<button class="small green" data-approve="${escapeAttr(d.id)}">Approve</button>
          <button class="small red" data-reject="${escapeAttr(d.id)}">Reject</button>`;
+         
     return `<tr>
       <td>${escapeHtml(d.full_name || "")}</td>
       <td>${escapeHtml(d.email || "")}</td>
@@ -464,6 +461,8 @@ function renderRows() {
     b.addEventListener("click", () => openApproval(b.dataset.approve)));
   rows.querySelectorAll("[data-view]").forEach((b) =>
     b.addEventListener("click", () => openApproval(b.dataset.view, true)));
+  rows.querySelectorAll("[data-send]").forEach((b) =>
+    b.addEventListener("click", () => openSendCredentials(b.dataset.send)));
   rows.querySelectorAll("[data-reject]").forEach((b) =>
     b.addEventListener("click", () => rejectDoc(b.dataset.reject)));
 }
@@ -586,10 +585,7 @@ function openApproval(id, viewOnly = false) {
     ${detailsHtml(d)}
 
     <div class="warn">
-      <b>Important:</b> The Firebase Client SDK cannot create user accounts.
-      Copy the credentials below into
-      <b>Firebase Console → Authentication → Users → Add user</b>,
-      then send them to the alumnus by email.
+      <b>Important:</b> Clicking approve will mark them as approved in the database and open your email app with the credentials. <b>You must manually create their account in the Firebase Console.</b>
     </div>
 
     <div style="margin-top:1rem;">
@@ -608,7 +604,7 @@ function openApproval(id, viewOnly = false) {
 
     <div class="modal-actions">
       <button class="gray" id="modal-close">Cancel</button>
-      <button class="green" id="modal-confirm">Mark approved</button>
+      <button class="green" id="modal-confirm">Approve &amp; open email</button>
     </div>
 
     <div class="msg" id="modal-msg" style="margin-top:1rem;"></div>
@@ -640,24 +636,13 @@ function openApproval(id, viewOnly = false) {
         login_email: emailIn.value.trim().toLowerCase(),
       });
 
-      const subject = encodeURIComponent("Your alumni directory access — Bishop Angelo Tarantino Memorial SS");
-      const body = encodeURIComponent(
-        `Hello ${d.full_name || ""},\n\n` +
-        `Your alumni registration has been approved. You can now log in to the alumni directory.\n\n` +
-        `Email:    ${emailIn.value.trim()}\n` +
-        `Password: ${passIn.value}\n\n` +
-        `Log in here: ${location.origin}${location.pathname.replace(/admin\.html?$/i, "")}\n\n` +
-        `Please change your password after your first login.\n\n` +
-        `— Bishop Angelo Tarantino Memorial SS`
-      );
-      const mailto = `mailto:${encodeURIComponent(d.email || "")}?subject=${subject}&body=${body}`;
+      // ⭐ OPEN EMAIL DRAFT INSTEAD OF MAILTO LINK
+      openEmailDraft(d, emailIn.value.trim(), passIn.value);
 
       mmsg.className = "msg ok";
-      mmsg.innerHTML = `Approved! ` +
-        `<a href="${escapeAttr(mailto)}" target="_blank" rel="noopener">Open email draft</a> ` +
-        `(or copy the credentials above).`;
+      mmsg.innerHTML = `Approved! Email draft opened.`;
 
-      setTimeout(() => { closeModal(); loadAlumni(); }, 1200);
+      setTimeout(() => { closeModal(); loadAlumni(); }, 1500);
     } catch (err) {
       console.error(err);
       mmsg.className = "msg err";
@@ -665,9 +650,109 @@ function openApproval(id, viewOnly = false) {
         ? "Permission denied. Your role may have been revoked."
         : "Error: " + err.message;
       confirmBtn.disabled = false;
-      confirmBtn.textContent = "Mark approved";
+      confirmBtn.textContent = "Approve & open email";
     }
   };
+}
+
+// ═══════════════════════════════════════════════════════
+//  SEND CREDENTIALS MODAL — for already-approved alumni
+// ═══════════════════════════════════════════════════════
+function openSendCredentials(id) {
+  const d = allDocs.find((x) => x.id === id);
+  if (!d) return;
+
+  const email = d.login_email || d.email || "";
+  const proposedPassword = generatePassword(14);
+
+  modal.innerHTML = `
+    <h3>Send credentials</h3>
+    ${detailsHtml(d)}
+
+    <div class="warn">
+      This will open your email app to send these credentials to <b>${escapeHtml(d.email || "")}</b>.
+    </div>
+
+    <div style="margin-top:1rem;">
+      <label>Login email</label>
+      <div class="cred-row">
+        <input id="cred-email" value="${escapeAttr(email)}" readonly>
+        <button class="small gray" id="copy-email">Copy</button>
+      </div>
+      <label style="margin-top:.75rem;">Password</label>
+      <div class="cred-row">
+        <input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly>
+        <button class="small gray" id="copy-pass">Copy</button>
+        <button class="small" id="regen-pass">Regenerate</button>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="gray" id="modal-close">Cancel</button>
+      <button class="green" id="modal-confirm">Open email draft</button>
+    </div>
+
+    <div class="msg" id="modal-msg" style="margin-top:1rem;"></div>
+  `;
+  modalBg.classList.add("active");
+
+  const passIn = document.getElementById("cred-pass");
+  const mmsg   = document.getElementById("modal-msg");
+
+  document.getElementById("copy-email").onclick = () =>
+    copyToClipboard(email, mmsg, "Email copied.");
+  document.getElementById("copy-pass").onclick  = () =>
+    copyToClipboard(passIn.value, mmsg, "Password copied.");
+  document.getElementById("regen-pass").onclick = () => {
+    passIn.value = generatePassword(14);
+    mmsg.className = "msg info";
+    mmsg.textContent = "New password generated.";
+  };
+  document.getElementById("modal-close").onclick = closeModal;
+
+  document.getElementById("modal-confirm").onclick = async () => {
+    const confirmBtn = document.getElementById("modal-confirm");
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = "Opening…";
+
+    try {
+      openEmailDraft(d, email, passIn.value);
+      mmsg.className = "msg ok";
+      mmsg.innerHTML = `✅ Email draft opened.`;
+      setTimeout(closeModal, 1500);
+    } catch (err) {
+      console.error(err);
+      mmsg.className = "msg err";
+      mmsg.textContent = err.message || "Failed to open email.";
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = "Open email draft";
+    }
+  };
+}
+
+// ═══════════════════════════════════════════════════════
+//  OPEN EMAIL DRAFT FUNCTION
+// ═══════════════════════════════════════════════════════
+function openEmailDraft(alumni, email, password) {
+  const subject = encodeURIComponent("Your alumni directory access — Bishop Angelo Tarantino Memorial SS");
+  
+  const bodyText = 
+`Hello ${alumni.full_name || ""},
+
+Your alumni registration has been approved. You can now log in to the alumni directory.
+
+Email:    ${email}
+Password: ${password}
+
+Log in here: ${location.origin}${location.pathname.replace(/admin\.html?$/i, "")}
+
+Please change your password after your first login.
+
+— Bishop Angelo Tarantino Memorial SS`;
+
+  const body = encodeURIComponent(bodyText);
+  const mailtoLink = `mailto:${encodeURIComponent(alumni.email || "")}?subject=${subject}&body=${body}`;
+  window.open(mailtoLink, "_blank");
 }
 
 function detailsHtml(d) {
