@@ -38,9 +38,7 @@
   .msg { margin-top: 1rem; padding: .8rem 1rem; border-radius: 8px; font-size: .9rem; display: none; }
   .msg.ok  { display: block; background: #dcfce7; color: #166534; }
   .msg.err { display: block; background: #fee2e2; color: #991b1b; }
-  .msg.info { display: block; background: #dbeafe; color: #1e40af; }
-  #stop-sharing { display: none; background: #b91c1c; margin-top: .5rem; }
-  #stop-sharing:hover { background: #991b1b; }
+  .msg.info{ display: block; background: #dbeafe; color: #1e40af; }
 
   /* Directory styles */
   .directory { margin-top: 1.5rem; }
@@ -91,8 +89,7 @@
 
       <div>
         <label for="graduation_year">Year of graduation</label>
-        <input id="graduation_year" name="graduation_year" type="number"
-               min="1950" max="2100" placeholder="e.g. 2015">
+        <input id="graduation_year" name="graduation_year" type="number" min="1950" max="2100" placeholder="e.g. 2015">
       </div>
 
       <div>
@@ -102,8 +99,7 @@
 
       <div class="full">
         <label for="courses">Course(s) pursued <span class="req">*</span></label>
-        <input id="courses" name="courses" required maxlength="200"
-               placeholder="e.g. BSc Computer Science, MBA">
+        <input id="courses" name="courses" required maxlength="200" placeholder="e.g. BSc Computer Science, MBA">
         <small style="color:#64748b; font-size:.78rem;">Separate multiple courses with commas.</small>
       </div>
 
@@ -140,15 +136,13 @@
 
       <div class="full">
         <label for="bio">Short bio</label>
-        <textarea id="bio" name="bio" maxlength="500"
-                  placeholder="Tell us what you've been up to since school."></textarea>
+        <textarea id="bio" name="bio" maxlength="500" placeholder="Tell us what you've been up to since school."></textarea>
       </div>
 
       <div class="full check">
         <input id="consent_public" name="consent_public" type="checkbox" checked>
         <label for="consent_public">
-          I agree to have my name, graduation year, courses and occupation shown in the alumni directory
-          (visible only to approved alumni who log in).
+          I agree to have my name, graduation year, courses and occupation shown in the public alumni directory.
         </label>
       </div>
 
@@ -212,20 +206,19 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getFirestore, collection, addDoc, doc, getDoc, query, where, getDocs,
-  serverTimestamp
+  serverTimestamp, GeoPoint, updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// ─── REPLACE WITH YOUR FIREBASE CONFIG ───
 const firebaseConfig = {
-  apiKey: "AIzaSyCVJT7FQcfX9OWf-HgD2Xd_M_hBp0v1Pf0",
-  authDomain: "alumni-74176.firebaseapp.com",
-  projectId: "alumni-74176",
-  storageBucket: "alumni-74176.firebasestorage.app",
+  apiKey:            "AIzaSyCVJT7FQcfX9OWf-HgD2Xd_M_hBp0v1Pf0",
+  authDomain:        "alumni-74176.firebaseapp.com",
+  projectId:         "alumni-74176",
+  storageBucket:     "alumni-74176.firebasestorage.app",
   messagingSenderId: "952137152614",
-  appId: "1:952137152614:web:d9c5aea4643fcc585915a7"
+  appId:             "1:952137152614:web:d9c5aea4643fcc585915a7"
 };
 
 const app  = initializeApp(firebaseConfig);
@@ -254,7 +247,6 @@ const dirMsg       = document.getElementById("dir-msg");
 const searchInput  = document.getElementById("search");
 const refreshBtn   = document.getElementById("refresh-btn");
 
-// ─── State ───
 let allMembers = [];
 
 function show(text, type) { msg.textContent = text; msg.className = "msg " + type; }
@@ -262,7 +254,7 @@ function loginShow(text, type) { loginMsg.textContent = text; loginMsg.className
 function dirShow(text, type) { dirMsg.textContent = text; dirMsg.className = "msg " + type; }
 
 // ════════════════════════════════════════════════════════════════
-//  REGISTRATION — no auth required, creates an unapproved record
+//  REGISTRATION — Fetches GPS if checkbox is ticked
 // ════════════════════════════════════════════════════════════════
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -275,6 +267,7 @@ form.addEventListener("submit", async (e) => {
   if (!form.consent_public.checked) return show("Please tick the directory consent box.", "err");
 
   const year = form.graduation_year.value ? Number(form.graduation_year.value) : null;
+  const shareLocation = form.share_location.checked;
 
   const data = {
     full_name:       form.full_name.value.trim(),
@@ -289,17 +282,32 @@ form.addEventListener("submit", async (e) => {
     linkedin:        form.linkedin.value.trim(),
     bio:             form.bio.value.trim(),
     consent_public:  form.consent_public.checked,
-    share_location:  form.share_location.checked,
-    approved:        false,          // admin flips this to true after review
+    share_location:  shareLocation,
+    approved:        false,
     created_at:      serverTimestamp(),
+    live_location:   null, // Will be set if they share
   };
 
   btn.disabled = true;
   btn.textContent = "Submitting…";
+  show("Submitting registration…", "info");
+
+  // ⭐ NEW: Fetch GPS coordinates if they checked the box
+  if (shareLocation && navigator.geolocation) {
+    try {
+      const pos = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000 });
+      });
+      data.live_location = new GeoPoint(pos.coords.latitude, pos.coords.longitude);
+    } catch (err) {
+      console.warn("Geolocation failed or denied:", err);
+      // We don't block registration, just proceed without coords
+    }
+  }
 
   try {
     await addDoc(collection(db, "alumni"), data);
-    show("Registration submitted! You'll receive login credentials by email once approved by the school admin.", "ok");
+    show("Registration submitted! You'll receive login credentials by email once approved.", "ok");
     form.reset();
   } catch (err) {
     console.error(err);
@@ -345,9 +353,6 @@ logoutBtn.addEventListener("click", async () => {
   loginShow("Logged out.", "info");
 });
 
-// ════════════════════════════════════════════════════════════════
-//  AUTH STATE — toggles login box vs directory content
-// ════════════════════════════════════════════════════════════════
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     loginBox.classList.add("active");
@@ -361,7 +366,6 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  // Signed in — verify they're an approved alumnus
   loginBox.classList.remove("active");
   loginMsg.className = "msg";
   loginMsg.textContent = "";
@@ -373,7 +377,6 @@ onAuthStateChanged(auth, async (user) => {
     const snap = await getDocs(q);
 
     if (snap.empty) {
-      // Not approved (or not registered). Kick them out.
       await signOut(auth);
       loginBox.classList.add("active");
       loginShow("This account is not approved yet. Please contact the school admin.", "err");
