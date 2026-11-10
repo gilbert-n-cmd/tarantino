@@ -4,99 +4,45 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin — Alumni Registration</title>
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
 <style>
-  :root { --brand: #004080; --brand-2: #166534; --line: #e2e8f0; --bg: #f8fafc; }
+  :root { --brand: #004080; --line: #e2e8f0; --bg: #f8fafc; }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-         background: var(--bg); color: #0f172a; padding: 2rem 1rem; }
-  .wrap { max-width: 1000px; margin: 0 auto 1.5rem; background: #fff; border: 1px solid var(--line);
-          border-radius: 14px; padding: 2rem; box-shadow: 0 6px 24px rgba(15,23,42,.06); }
+  body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: #0f172a; padding: 2rem 1rem; }
+  .wrap { max-width: 1000px; margin: 0 auto 1.5rem; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 2rem; box-shadow: 0 6px 24px rgba(15,23,42,.06); }
   h1 { margin: 0 0 .25rem; font-size: 1.5rem; color: var(--brand); }
   .sub { margin: 0 0 1.5rem; color: #64748b; font-size: .9rem; }
   label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .35rem; }
-  input, select, textarea {
-    width: 100%; padding: .6rem .7rem; border: 1px solid var(--line);
-    border-radius: 8px; font: inherit; background: #fff;
-  }
-  input:focus, select:focus, textarea:focus { outline: 2px solid var(--brand-2); border-color: var(--brand-2); }
-  button {
-    padding: .65rem 1.1rem; border: 0; border-radius: 8px; font: inherit; font-weight: 600;
-    cursor: pointer; background: var(--brand); color: #fff;
-  }
+  input { width: 100%; padding: .6rem .7rem; border: 1px solid var(--line); border-radius: 8px; font: inherit; }
+  button { padding: .65rem 1.1rem; border: 0; border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer; background: var(--brand); color: #fff; }
   button:hover:not(:disabled) { background: #00325f; }
   button:disabled { opacity: .55; cursor: not-allowed; }
-  button.green  { background: var(--brand-2); } button.green:hover:not(:disabled) { background: #14532d; }
-  button.red    { background: #b91c1c; }        button.red:hover:not(:disabled)    { background: #991b1b; }
-  button.gray   { background: #64748b; }        button.gray:hover:not(:disabled)   { background: #475569; }
-  button.small  { padding: .4rem .7rem; font-size: .8rem; }
   .msg { margin-top: 1rem; padding: .8rem 1rem; border-radius: 8px; font-size: .9rem; display: none; }
-  .msg.ok  { display: block; background: #dcfce7; color: #166534; }
+  .msg.ok { display: block; background: #dcfce7; color: #166534; }
   .msg.err { display: block; background: #fee2e2; color: #991b1b; }
-  .msg.info{ display: block; background: #dbeafe; color: #1e40af; }
-
+  .msg.info { display: block; background: #dbeafe; color: #1e40af; }
+  
   #login-panel { max-width: 460px; margin: 4rem auto; }
   #admin-panel { display: none; }
-
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-  .stat-card { background: #f8fafc; border: 1px solid var(--line); border-radius: 10px; padding: 1rem; text-align: center; }
-  .stat-card h4 { margin: 0 0 .5rem; font-size: .85rem; color: #64748b; text-transform: uppercase; letter-spacing: .5px; }
-  .stat-card .num { font-size: 1.8rem; font-weight: 700; color: var(--brand); }
-
-  .tabs { display: flex; gap: .5rem; border-bottom: 2px solid var(--line); margin-bottom: 1.25rem; flex-wrap: wrap; }
-  .tab { padding: .6rem 1rem; border: 0; background: none; border-radius: 0; color: #64748b;
-         font-weight: 600; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer; }
-  .tab:hover { background: #f1f5f9; }
-  .tab.active { color: var(--brand); border-bottom-color: var(--brand); }
-
-  .table-wrap { overflow-x: auto; }
+  
+  .table-wrap { overflow-x: auto; margin-top: 1rem; }
   table { width: 100%; border-collapse: collapse; font-size: .85rem; }
-  th, td { text-align: left; padding: .55rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { background: #f1f5f9; font-weight: 600; position: sticky; top: 0; }
-  tr:hover { background: #fafcff; }
+  th, td { text-align: left; padding: .55rem .6rem; border-bottom: 1px solid var(--line); }
+  th { background: #f1f5f9; font-weight: 600; }
   .pill { display: inline-block; padding: .15rem .5rem; border-radius: 999px; font-size: .72rem; font-weight: 600; }
-  .pill.pending  { background: #fef3c7; color: #92400e; }
-  .pill.approved { background: #dcfce7; color: #166534; }
-  .pill.admin    { background: #dbeafe; color: #1e40af; }
-  .pill.member   { background: #e0e7ff; color: #3730a3; }
-
-  .toolbar { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
-  .toolbar input[type=search] { flex: 1; min-width: 200px; }
-
-  .modal-bg {
-    display: none; position: fixed; inset: 0; background: rgba(15,23,42,.55);
-    align-items: center; justify-content: center; padding: 1rem; z-index: 50;
-  }
-  .modal-bg.active { display: flex; }
-  .modal { background: #fff; border-radius: 14px; padding: 1.75rem; max-width: 560px; width: 100%;
-           box-shadow: 0 20px 50px rgba(15,23,42,.3); max-height: 90vh; overflow-y: auto; }
-  .modal h3 { margin: 0 0 1rem; font-size: 1.15rem; color: var(--brand); }
-  .modal .kv { display: grid; grid-template-columns: 130px 1fr; gap: .35rem 1rem; font-size: .88rem; margin-bottom: 1rem; }
-  .modal .kv dt { font-weight: 600; color: #475569; }
-  .modal .kv dd { margin: 0; word-break: break-word; }
-  .cred-row { display: flex; gap: .5rem; align-items: center; margin-bottom: .4rem; }
-  .cred-row input { font-family: ui-monospace, monospace; font-size: .85rem; }
-  .modal-actions { display: flex; gap: .75rem; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap; }
-  .warn { background: #fef3c7; color: #92400e; padding: .6rem .8rem; border-radius: 8px;
-          font-size: .82rem; margin-top: .5rem; }
-
-  .empty { color: #64748b; font-size: .9rem; padding: 1.5rem 0; text-align: center; }
-  #map-container { height: 400px; width: 100%; border-radius: 10px; border: 1px solid var(--line); display: none; }
+  .pill.admin { background: #dbeafe; color: #1e40af; }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- LOGIN PANEL -->
 <div id="login-panel" class="wrap">
   <h1>Admin Login</h1>
   <p class="sub">Sign in with your administrator account.</p>
   <form id="login-form">
     <label for="login_email">Email</label>
-    <input id="login_email" type="email" required autocomplete="username">
+    <input id="login_email" type="email" required>
     <label for="login_password" style="margin-top:.75rem;">Password</label>
-    <input id="login_password" type="password" required autocomplete="current-password">
+    <input id="login_password" type="password" required>
     <button type="submit" id="login-btn" style="margin-top:1rem; width:100%;">Sign in</button>
     <div class="msg" id="login-msg"></div>
   </form>
@@ -104,101 +50,34 @@
 
 <!-- ADMIN PANEL -->
 <div id="admin-panel" class="wrap">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:.5rem;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
     <div>
       <h1 style="margin:0;">Admin Panel</h1>
-      <p class="sub" style="margin:0;">Signed in as <b id="admin-email"></b> · <span id="admin-role" class="pill admin">admin</span></p>
+      <p class="sub" style="margin:0;">Signed in as <b id="admin-email"></b> · <span class="pill admin">admin</span></p>
     </div>
-    <button id="logout-btn" class="gray small">Log out</button>
+    <button id="logout-btn" style="background:#64748b;">Log out</button>
   </div>
-
-  <div class="stats-grid">
-    <div class="stat-card"><h4>Total Alumni</h4><div class="num" id="stat-total">0</div></div>
-    <div class="stat-card"><h4>Pending</h4><div class="num" id="stat-pending" style="color:#d97706;">0</div></div>
-    <div class="stat-card"><h4>Approved</h4><div class="num" id="stat-approved" style="color:var(--brand-2);">0</div></div>
-    <div class="stat-card"><h4>Sharing Location</h4><div class="num" id="stat-location" style="color:#1e40af;">0</div></div>
-  </div>
-
-  <div class="tabs">
-    <button class="tab active" data-tab="pending">Pending approvals</button>
-    <button class="tab" data-tab="approved">Approved alumni</button>
-    <button class="tab" data-tab="roles">Roles</button>
-    <button class="tab" data-tab="broadcast">Broadcast Email</button>
-    <button class="tab" data-tab="map">Alumni Map</button>
-  </div>
-
-  <div class="toolbar" id="search-toolbar">
-    <input type="search" id="search" placeholder="Search name, email, course, year…">
-    <button id="export-btn" class="green">Export CSV</button>
-    <button id="refresh-btn" class="gray">Refresh</button>
-  </div>
-
   <div id="msg" class="msg"></div>
-
-  <div class="table-wrap" id="alumni-table-wrap">
+  <div class="table-wrap">
     <table>
-      <thead>
-        <tr>
-          <th id="bulk-header" style="display:none; width:30px;"><input type="checkbox" id="select-all"></th>
-          <th>Name</th><th>Email</th><th>Courses</th><th>Year / Stream</th>
-          <th>Submitted</th><th>Status</th><th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="rows">
-        <tr><td colspan="8" class="empty">Loading…</td></tr>
-      </tbody>
+      <thead><tr><th>Name</th><th>Email</th><th>Status</th></tr></thead>
+      <tbody id="rows"><tr><td colspan="3" style="text-align:center;">Loading...</td></tr></tbody>
     </table>
-    
-    <div id="bulk-actions" style="display:none; margin-top:1rem; padding:1rem; background:#f8fafc; border-radius:8px; border:1px solid var(--line);">
-      <span style="font-weight:600; font-size:.9rem;" id="bulk-count">0 selected</span>
-      <button class="green small" id="bulk-approve" style="margin-left:1rem;">Approve Selected</button>
-      <button class="red small" id="bulk-reject">Reject Selected</button>
-    </div>
-  </div>
-
-  <div class="table-wrap" id="roles-table-wrap" style="display:none;">
-    <table>
-      <thead>
-        <tr><th>UID</th><th>Email</th><th>Role</th><th>Added</th><th>Actions</th></tr>
-      </thead>
-      <tbody id="role-rows">
-        <tr><td colspan="5" class="empty">Loading…</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div id="broadcast-view" style="display:none;">
-    <h3 style="margin-top:0; color:var(--brand);">Send Broadcast Email</h3>
-    <p class="sub">This will open your email app with all approved alumni in the BCC field.</p>
-    <label for="broadcast-subject">Subject</label>
-    <input id="broadcast-subject" placeholder="e.g., Upcoming Alumni Reunion">
-    <label for="broadcast-body" style="margin-top:.75rem;">Message</label>
-    <textarea id="broadcast-body" rows="6" placeholder="Type your message here..."></textarea>
-    <button class="green" id="broadcast-btn" style="margin-top:1rem;">Open Email Draft (BCC)</button>
-  </div>
-
-  <div id="map-view" style="display:none;">
-    <div id="map-container"></div>
   </div>
 </div>
 
-<!-- MODAL -->
-<div class="modal-bg" id="modal-bg">
-  <div class="modal" id="modal"></div>
-</div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+<!-- FIREBASE SCRIPT -->
 <script type="module">
-import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore, collection, doc, getDoc, getDocs, updateDoc,
-  deleteDoc, setDoc, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import {
-  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
-  createUserWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+// ─── Catch ALL errors and print them to the screen ───
+window.addEventListener("error", (e) => {
+  document.body.innerHTML += `<div style="background:red; color:white; padding:1rem; margin:1rem; border-radius:8px;">
+    <b>Fatal Error:</b> ${e.message}<br><small>Check the browser console for details.</small>
+  </div>`;
+});
 
 const firebaseConfig = {
   apiKey:            "AIzaSyCVJT7FQcfX9OWf-HgD2Xd_M_hBp0v1Pf0",
@@ -209,159 +88,81 @@ const firebaseConfig = {
   appId:             "1:952137152614:web:d9c5aea4643fcc585915a7"
 };
 
-const app  = initializeApp(firebaseConfig);
-const db   = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 const auth = getAuth(app);
 
-const loginPanel   = document.getElementById("login-panel");
-const loginForm    = document.getElementById("login-form");
-const loginMsg     = document.getElementById("login-msg");
-const loginBtn     = document.getElementById("login-btn");
-const adminPanel   = document.getElementById("admin-panel");
+const loginPanel = document.getElementById("login-panel");
+const loginForm = document.getElementById("login-form");
+const loginMsg = document.getElementById("login-msg");
+const loginBtn = document.getElementById("login-btn");
+const adminPanel = document.getElementById("admin-panel");
 const adminEmailEl = document.getElementById("admin-email");
-const adminRoleEl  = document.getElementById("admin-role");
-const logoutBtn    = document.getElementById("logout-btn");
-const rows         = document.getElementById("rows");
-const roleRows     = document.getElementById("role-rows");
-const searchIn     = document.getElementById("search");
-const refreshBtn   = document.getElementById("refresh-btn");
-const exportBtn    = document.getElementById("export-btn");
-const msg          = document.getElementById("msg");
-const modalBg      = document.getElementById("modal-bg");
-const modal        = document.getElementById("modal");
-const tabs         = document.querySelectorAll(".tab");
-const alumniTableWrap = document.getElementById("alumni-table-wrap");
-const rolesTableWrap  = document.getElementById("roles-table-wrap");
-const searchToolbar   = document.getElementById("search-toolbar");
-const broadcastView   = document.getElementById("broadcast-view");
-const mapView         = document.getElementById("map-view");
+const logoutBtn = document.getElementById("logout-btn");
+const rows = document.getElementById("rows");
+const msg = document.getElementById("msg");
 
-const bulkHeader = document.getElementById("bulk-header");
-const bulkActions = document.getElementById("bulk-actions");
-const bulkCount = document.getElementById("bulk-count");
-const selectAll = document.getElementById("select-all");
-const bulkApprove = document.getElementById("bulk-approve");
-const bulkReject = document.getElementById("bulk-reject");
-
-let currentTab = "pending";
-let allDocs    = [];
-let allRoles   = [];
-let currentRole = null;
-let authCheckInFlight = false;
-let lastVerifiedUid = null;
-let selectedIds = new Set();
-let mapInstance = null;
-
-function show(text, type) { msg.textContent = text; msg.className = "msg " + type; }
 function loginShow(text, type) { loginMsg.textContent = text; loginMsg.className = "msg " + type; }
-function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
-function escapeHtml(s) { return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
-function escapeAttr(s) { return escapeHtml(s); }
+function show(text, type) { msg.textContent = text; msg.className = "msg " + type; }
 
 // ═══════════════════════════════════════════════════════
-//  ROLE CHECK (With 3-Second Timeout to prevent hanging)
-// ═══════════════════════════════════════════════════════
-async function checkAdminRole(user) {
-  try {
-    const rolePromise = getDoc(doc(db, "roles", user.uid));
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error("TIMEOUT")), 3000)
-    );
-
-    const snap = await Promise.race([rolePromise, timeoutPromise]);
-
-    if (!snap.exists()) {
-      return { role: null, reason: "no-doc" };
-    }
-    const data = snap.data();
-    return { role: data.role || null, reason: data.role ? null : "no-role-field" };
-
-  } catch (err) {
-    console.error("Role lookup failed:", err);
-    return { role: null, reason: err.message === "TIMEOUT" ? "timeout" : (err.code || "error") };
-  }
-}
-
-function showAccessDenied(user, reason) {
-  const msgByReason = {
-    "no-doc": `Your account exists but has no role assigned.\n\nIn Firebase Console → Firestore → create a document:\n  Collection: roles\n  Document ID: ${user.uid}\n  Field: role = "admin" (type: string)\n\nThen click Retry below.`,
-    "no-role-field": `Your roles document exists but the "role" field is missing or empty.`,
-    "permission-denied": `Firestore rules are blocking the role lookup.\n\nPublish the corrected rules to allow reading your own role.`,
-    "timeout": `Firestore timed out after 3 seconds.\n\nCheck your internet connection and Firestore rules.`,
-    "error": `Could not verify your role. Check the browser console.`
-  };
-
-  const safeReason = (reason || "unknown").replace(/[<>]/g, "");
-  loginMsg.innerHTML =
-    `<div>${escapeHtml(msgByReason[reason] || "Access denied.").replace(/\n/g, "<br>")}</div>` +
-    `<div style="margin-top:.75rem;">` +
-      `<button id="retry-role" class="small">Retry</button> ` +
-      `<button id="force-logout" class="small gray">Log out</button>` +
-    `</div>` +
-    `<div style="margin-top:.5rem; font-size:.75rem; color:#64748b;">Reason code: ${safeReason}</div>`;
-  loginMsg.className = "msg err";
-
-  document.getElementById("retry-role").onclick = () => {
-    lastVerifiedUid = null; currentRole = null; verifyRoleNow();
-  };
-  document.getElementById("force-logout").onclick = () => signOut(auth);
-}
-
-function revealAdminPanel(user, role) {
-  lastVerifiedUid = user.uid;
-  currentRole = role;
-  loginPanel.style.display = "none";
-  adminPanel.style.display = "block";
-  adminEmailEl.textContent = user.email || "(no email)";
-  adminRoleEl.textContent = role;
-  adminRoleEl.className = "pill " + role;
-  loginShow("", "ok");
-  loginBtn.disabled = false;
-  switchTab("pending");
-}
-
-async function verifyRoleNow() {
-  const user = auth.currentUser;
-  if (!user) return loginShow("Not signed in.", "err");
-  if (authCheckInFlight) return;
-  authCheckInFlight = true;
-  loginShow("Verifying access…", "info");
-  const { role, reason } = await checkAdminRole(user);
-  authCheckInFlight = false;
-  if (role === "admin") revealAdminPanel(user, role);
-  else showAccessDenied(user, reason);
-}
-
-// ═══════════════════════════════════════════════════════
-//  AUTH STATE
+//  AUTH STATE (With 3s timeout)
 // ═══════════════════════════════════════════════════════
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    authCheckInFlight = false; lastVerifiedUid = null; currentRole = null;
-    loginPanel.style.display = "block"; adminPanel.style.display = "none";
-    adminEmailEl.textContent = ""; allDocs = []; allRoles = [];
-    loginBtn.disabled = false; loginMsg.className = "msg"; loginMsg.textContent = "";
+    loginPanel.style.display = "block";
+    adminPanel.style.display = "none";
+    loginBtn.disabled = false;
+    loginMsg.textContent = "";
     return;
   }
-  if (user.uid === lastVerifiedUid && currentRole === "admin") return;
-  if (authCheckInFlight) return;
-  authCheckInFlight = true;
-  loginShow("Verifying access…", "info");
-  const { role, reason } = await checkAdminRole(user);
-  authCheckInFlight = false;
-  if (role === "admin") revealAdminPanel(user, role);
-  else showAccessDenied(user, reason);
+
+  loginShow("Verifying access...", "info");
+  loginBtn.disabled = true;
+
+  try {
+    // Wrap the read in a 3-second timeout so it doesn't hang forever
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error("Firestore Timeout")), 3000));
+    const rolePromise = getDoc(doc(db, "roles", user.uid));
+    
+    const snap = await Promise.race([rolePromise, timeout]);
+
+    if (!snap.exists() || snap.data().role !== "admin") {
+      loginShow("You are logged in, but you are not an admin. Check the 'roles' collection in Firestore.", "err");
+      await signOut(auth);
+      return;
+    }
+
+    // Success!
+    loginPanel.style.display = "none";
+    adminPanel.style.display = "block";
+    adminEmailEl.textContent = user.email;
+    loadData();
+
+  } catch (err) {
+    console.error(err);
+    loginShow("Error: " + err.message, "err");
+    await signOut(auth);
+  }
 });
 
+// ═══════════════════════════════════════════════════════
+//  LOGIN SUBMIT
+// ═══════════════════════════════════════════════════════
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   loginBtn.disabled = true;
-  loginShow("Signing in…", "info");
+  loginShow("Signing in...", "info");
+  
+  const email = document.getElementById("login_email").value.trim();
+  const pass = document.getElementById("login_password").value;
+
   try {
-    await signInWithEmailAndPassword(auth, document.getElementById("login_email").value.trim(), document.getElementById("login_password").value);
-    loginShow("Verifying access…", "info");
+    await signInWithEmailAndPassword(auth, email, pass);
+    // Note: The onAuthStateChanged block above will handle the rest.
   } catch (err) {
-    loginShow(err.code === "auth/invalid-credential" || err.code === "auth/wrong-password" ? "Incorrect email or password." : err.message, "err");
+    console.error(err);
+    loginShow("Error: " + err.message, "err");
     loginBtn.disabled = false;
   }
 });
@@ -369,495 +170,32 @@ loginForm.addEventListener("submit", async (e) => {
 logoutBtn.addEventListener("click", () => signOut(auth));
 
 // ═══════════════════════════════════════════════════════
-//  TABS
+//  LOAD DATA
 // ═══════════════════════════════════════════════════════
-function switchTab(name) {
-  currentTab = name;
-  tabs.forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
-  
-  const isRoles = name === "roles";
-  const isBroadcast = name === "broadcast";
-  const isMap = name === "map";
-  const isAlumni = !isRoles && !isBroadcast && !isMap;
-
-  alumniTableWrap.style.display = isAlumni ? "block" : "none";
-  searchToolbar.style.display = isAlumni ? "flex" : "none";
-  rolesTableWrap.style.display = isRoles ? "block" : "none";
-  broadcastView.style.display = isBroadcast ? "block" : "none";
-  mapView.style.display = isMap ? "block" : "none";
-
-  const showBulk = isAlumni && name === "pending";
-  bulkHeader.style.display = showBulk ? "table-cell" : "none";
-  bulkActions.style.display = (showBulk && selectedIds.size > 0) ? "flex" : "none";
-
-  if (isRoles) loadRoles();
-  else if (isAlumni) loadAlumni();
-  else if (isMap) loadMap();
-  else if (isBroadcast) {
-    document.getElementById("broadcast-subject").value = "Alumni Update — Bishop Angelo Tarantino Memorial SS";
-  }
-}
-tabs.forEach((t) => t.addEventListener("click", () => switchTab(t.dataset.tab)));
-
-// ═══════════════════════════════════════════════════════
-//  DATA LOADING
-// ═══════════════════════════════════════════════════════
-async function loadAlumni() {
-  clearMsg();
-  rows.innerHTML = '<tr><td colspan="8" class="empty">Loading…</td></tr>';
+async function loadData() {
+  rows.innerHTML = '<tr><td colspan="3" style="text-align:center;">Loading...</td></tr>';
   try {
     const snap = await getDocs(collection(db, "alumni"));
-    allDocs = [];
-    snap.forEach((d) => allDocs.push({ id: d.id, ...d.data() }));
-    allDocs.sort((a, b) => {
-      const pa = a.approved ? 1 : 0, pb = b.approved ? 1 : 0;
-      if (pa !== pb) return pa - pb;
-      const ta = a.created_at?.toMillis?.() || 0;
-      const tb = b.created_at?.toMillis?.() || 0;
-      return tb - ta;
-    });
-
-    document.getElementById("stat-total").textContent = allDocs.length;
-    document.getElementById("stat-pending").textContent = allDocs.filter(d => !d.approved).length;
-    document.getElementById("stat-approved").textContent = allDocs.filter(d => d.approved).length;
-    document.getElementById("stat-location").textContent = allDocs.filter(d => d.share_location === true).length;
-
-    renderRows();
-  } catch (err) {
-    rows.innerHTML = "";
-    show(err.code === "permission-denied" ? "You don't have permission to view registrations." : "Error: " + err.message, "err");
-  }
-}
-
-function renderRows() {
-  selectedIds.clear();
-  selectAll.checked = false;
-  bulkCount.textContent = "0 selected";
-  bulkActions.style.display = "none";
-
-  const term = searchIn.value.trim().toLowerCase();
-  const filtered = allDocs.filter((d) => {
-    const matchesTab = currentTab === "pending" ? !d.approved : d.approved;
-    if (!matchesTab) return false;
-    if (!term) return true;
-    return [d.full_name, d.email, d.courses, d.occupation, d.employer, d.graduation_year, d.location]
-      .filter(Boolean).some((v) => String(v).toLowerCase().includes(term));
-  });
-
-  if (filtered.length === 0) {
-    rows.innerHTML = `<tr><td colspan="8" class="empty">No ${currentTab} registrations.</td></tr>`;
-    return;
-  }
-
-  rows.innerHTML = filtered.map((d) => {
-    const yearStr = [d.graduation_year, d.class_stream].filter(Boolean).join(" · ") || "—";
-    const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
-    const status = d.approved ? `<span class="pill approved">Approved</span>` : `<span class="pill pending">Pending</span>`;
+    if (snap.empty) {
+      rows.innerHTML = '<tr><td colspan="3" style="text-align:center;">No alumni found.</td></tr>';
+      return;
+    }
     
-    const checkbox = (currentTab === "pending") 
-      ? `<td><input type="checkbox" class="bulk-cb" data-id="${escapeAttr(d.id)}"></td>` 
-      : "";
-
-    const actions = d.approved
-      ? `<button class="small gray" data-view="${escapeAttr(d.id)}">View</button>
-         <button class="small" data-send="${escapeAttr(d.id)}">Send credentials</button>
-         <button class="small red" data-reject="${escapeAttr(d.id)}">Revoke</button>`
-      : `<button class="small green" data-approve="${escapeAttr(d.id)}">Approve</button>
-         <button class="small red" data-reject="${escapeAttr(d.id)}">Reject</button>`;
-
-    return `<tr>
-      ${checkbox}
-      <td>${escapeHtml(d.full_name || "")}</td>
-      <td>${escapeHtml(d.email || "")}</td>
-      <td style="max-width:220px;">${escapeHtml(d.courses || "—")}</td>
-      <td>${escapeHtml(yearStr)}</td>
-      <td style="white-space:nowrap; font-size:.78rem;">${escapeHtml(created)}</td>
-      <td>${status}</td>
-      <td style="white-space:nowrap;">${actions}</td>
-    </tr>`;
-  }).join("");
-
-  rows.querySelectorAll("[data-approve]").forEach((b) => b.addEventListener("click", () => openApproval(b.dataset.approve)));
-  rows.querySelectorAll("[data-view]").forEach((b) => b.addEventListener("click", () => openApproval(b.dataset.view, true)));
-  rows.querySelectorAll("[data-send]").forEach((b) => b.addEventListener("click", () => openSendCredentials(b.dataset.send)));
-  rows.querySelectorAll("[data-reject]").forEach((b) => b.addEventListener("click", () => rejectDoc(b.dataset.reject)));
-
-  rows.querySelectorAll(".bulk-cb").forEach((cb) => {
-    cb.addEventListener("change", (e) => {
-      if (e.target.checked) selectedIds.add(e.target.dataset.id);
-      else selectedIds.delete(e.target.dataset.id);
-      
-      bulkCount.textContent = `${selectedIds.size} selected`;
-      bulkActions.style.display = selectedIds.size > 0 ? "flex" : "none";
-      if (selectedIds.size === 0) selectAll.checked = false;
+    let html = "";
+    snap.forEach(d => {
+      const data = d.data();
+      html += `<tr>
+        <td>${data.full_name || "Unknown"}</td>
+        <td>${data.email || "No email"}</td>
+        <td>${data.approved ? "Approved" : "Pending"}</td>
+      </tr>`;
     });
-  });
-}
-
-// ═══════════════════════════════════════════════════════
-//  BULK ACTIONS
-// ═══════════════════════════════════════════════════════
-selectAll.addEventListener("change", (e) => {
-  const checked = e.target.checked;
-  rows.querySelectorAll(".bulk-cb").forEach((cb) => {
-    cb.checked = checked;
-    if (checked) selectedIds.add(cb.dataset.id);
-    else selectedIds.delete(cb.dataset.id);
-  });
-  bulkCount.textContent = `${selectedIds.size} selected`;
-  bulkActions.style.display = selectedIds.size > 0 ? "flex" : "none";
-});
-
-bulkApprove.addEventListener("click", async () => {
-  if (!confirm(`Approve ${selectedIds.size} selected alumni?`)) return;
-  const promises = Array.from(selectedIds).map(id => 
-    updateDoc(doc(db, "alumni", id), { approved: true, approved_at: serverTimestamp(), approved_by: auth.currentUser.email })
-  );
-  await Promise.all(promises);
-  show(`${selectedIds.size} approved.`, "ok");
-  loadAlumni();
-});
-
-bulkReject.addEventListener("click", async () => {
-  if (!confirm(`Reject ${selectedIds.size} selected alumni? This deletes them permanently.`)) return;
-  const promises = Array.from(selectedIds).map(id => deleteDoc(doc(db, "alumni", id)));
-  await Promise.all(promises);
-  show(`${selectedIds.size} rejected.`, "ok");
-  loadAlumni();
-});
-
-// ═══════════════════════════════════════════════════════
-//  CSV EXPORT
-// ═══════════════════════════════════════════════════════
-exportBtn.addEventListener("click", () => {
-  if (allDocs.length === 0) return alert("No data to export.");
-  const headers = ["Name", "Email", "Phone", "Courses", "Graduation Year", "Stream", "Occupation", "Employer", "Location", "Status"];
-  const csvRows = [headers.join(",")];
-  allDocs.forEach(d => {
-    const row = [
-      `"${(d.full_name || "").replace(/"/g, '""')}"`,
-      `"${(d.email || "").replace(/"/g, '""')}"`,
-      `"${(d.phone || "").replace(/"/g, '""')}"`,
-      `"${(d.courses || "").replace(/"/g, '""')}"`,
-      `"${d.graduation_year || ""}"`,
-      `"${(d.class_stream || "").replace(/"/g, '""')}"`,
-      `"${(d.occupation || "").replace(/"/g, '""')}"`,
-      `"${(d.employer || "").replace(/"/g, '""')}"`,
-      `"${(d.location || "").replace(/"/g, '""')}"`,
-      `"${d.approved ? "Approved" : "Pending"}"`
-    ];
-    csvRows.push(row.join(","));
-  });
-  const blob = new Blob([csvRows.join("\n")], { type: "text/csv" });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.setAttribute("href", url);
-  a.setAttribute("download", `alumni_export_${new Date().toISOString().split("T")[0]}.csv`);
-  a.click();
-  window.URL.revokeObjectURL(url);
-});
-
-// ═══════════════════════════════════════════════════════
-//  BROADCAST
-// ═══════════════════════════════════════════════════════
-document.getElementById("broadcast-btn").addEventListener("click", () => {
-  const approved = allDocs.filter(d => d.approved && d.email);
-  if (approved.length === 0) return alert("No approved alumni to email.");
-  
-  const bccList = approved.map(d => d.email).join(",");
-  const subject = document.getElementById("broadcast-subject").value;
-  const body = document.getElementById("broadcast-body").value;
-
-  const mailtoLink = `mailto:?bcc=${encodeURIComponent(bccList)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  window.open(mailtoLink, "_blank");
-});
-
-// ═══════════════════════════════════════════════════════
-//  MAP
-// ═══════════════════════════════════════════════════════
-function loadMap() {
-  const mapContainer = document.getElementById("map-container");
-  mapContainer.style.display = "block";
-  
-  if (!mapInstance) {
-    mapInstance = L.map('map-container').setView([20, 0], 2);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap'
-    }).addTo(mapInstance);
-  }
-
-  mapInstance.eachLayer((layer) => {
-    if (layer instanceof L.Marker) mapInstance.removeLayer(layer);
-  });
-
-  const located = allDocs.filter(d => d.share_location && d.live_location && d.live_location.latitude);
-  
-  if (located.length === 0) {
-    mapContainer.innerHTML = `<div style="display:flex; height:100%; align-items:center; justify-content:center; background:#f8fafc; color:#64748b; font-size:1.1rem; border-radius:10px;">No GPS coordinates found. Users must allow browser location access.</div>`;
-  } else {
-    mapContainer.innerHTML = ""; 
-    if (!mapInstance) {
-        mapInstance = L.map('map-container').setView([20, 0], 2);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(mapInstance);
-    }
-    const bounds = L.latLngBounds();
-    located.forEach(d => {
-      const lat = d.live_location.latitude;
-      const lon = d.live_location.longitude;
-      L.marker([lat, lon]).addTo(mapInstance).bindPopup(`<b>${escapeHtml(d.full_name)}</b><br>${escapeHtml(d.location || "")}`);
-      bounds.extend([lat, lon]);
-    });
-    mapInstance.fitBounds(bounds);
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-//  ROLES
-// ═══════════════════════════════════════════════════════
-async function loadRoles() {
-  clearMsg();
-  roleRows.innerHTML = '<tr><td colspan="5" class="empty">Loading…</td></tr>';
-  try {
-    const snap = await getDocs(collection(db, "roles"));
-    allRoles = [];
-    snap.forEach((d) => allRoles.push({ uid: d.id, ...d.data() }));
-    allRoles.sort((a, b) => (a.email || "").localeCompare(b.email || ""));
-    renderRoles();
+    rows.innerHTML = html;
   } catch (err) {
-    roleRows.innerHTML = "";
-    show(err.code === "permission-denied" ? "Permission denied." : "Error: " + err.message, "err");
+    console.error(err);
+    show("Failed to load data: " + err.message, "err");
   }
 }
-
-function renderRoles() {
-  if (allRoles.length === 0) {
-    roleRows.innerHTML = '<tr><td colspan="5" class="empty">No roles defined yet.</td></tr>';
-    return;
-  }
-  roleRows.innerHTML = allRoles.map((r) => {
-    const added = r.added_at?.toDate?.()?.toLocaleString() || "—";
-    const safeRole = ["admin", "member"].includes(r.role) ? r.role : "";
-    const badge = `<span class="pill ${safeRole}">${escapeHtml(r.role || "?")}</span>`;
-    return `<tr>
-      <td style="font-family:monospace; font-size:.78rem;">${escapeHtml(r.uid)}</td>
-      <td>${escapeHtml(r.email || "—")}</td>
-      <td>${badge}</td>
-      <td style="font-size:.78rem;">${escapeHtml(added)}</td>
-      <td>
-        <button class="small gray" data-edit-role="${escapeAttr(r.uid)}">Change role</button>
-        <button class="small red" data-del-role="${escapeAttr(r.uid)}">Remove</button>
-      </td>
-    </tr>`;
-  }).join("");
-
-  roleRows.querySelectorAll("[data-edit-role]").forEach((b) => b.addEventListener("click", () => editRole(b.dataset.editRole)));
-  roleRows.querySelectorAll("[data-del-role]").forEach((b) => b.addEventListener("click", () => deleteRole(b.dataset.delRole)));
-}
-
-async function editRole(uid) {
-  const r = allRoles.find((x) => x.uid === uid);
-  if (!r) return;
-  const newRole = prompt(`Set role for ${r.email || uid}\n\nType: admin, member, or leave blank to remove`, r.role || "member");
-  if (newRole === null) return;
-  try {
-    if (newRole.trim() === "") { await deleteDoc(doc(db, "roles", uid)); show("Role removed.", "ok"); }
-    else if (newRole === "admin" || newRole === "member") {
-      await setDoc(doc(db, "roles", uid), { role: newRole, email: r.email || "", added_at: serverTimestamp() }, { merge: true });
-      show(`Role updated to ${newRole}.`, "ok");
-    } else { show("Invalid role.", "err"); return; }
-    loadRoles();
-  } catch (err) { show("Error: " + err.message, "err"); }
-}
-
-async function deleteRole(uid) {
-  const r = allRoles.find((x) => x.uid === uid);
-  if (!r) return;
-  if (!confirm(`Remove all access from ${r.email || uid}?`)) return;
-  try { await deleteDoc(doc(db, "roles", uid)); show("Role removed.", "ok"); loadRoles(); }
-  catch (err) { show("Error: " + err.message, "err"); }
-}
-
-// ═══════════════════════════════════════════════════════
-//  MODALS
-// ═══════════════════════════════════════════════════════
-function openApproval(id, viewOnly = false) {
-  const d = allDocs.find((x) => x.id === id);
-  if (!d) return;
-
-  if (viewOnly) {
-    modal.innerHTML = `<h3>Alumnus details</h3>${detailsHtml(d)}<div class="modal-actions"><button class="gray" id="modal-close">Close</button></div>`;
-    modalBg.classList.add("active");
-    document.getElementById("modal-close").onclick = closeModal;
-    return;
-  }
-
-  const proposedEmail = d.email || "";
-  const proposedPassword = generatePassword(14);
-
-  modal.innerHTML = `
-    <h3>Approve registration</h3>
-    ${detailsHtml(d)}
-    <div class="warn">
-      <b>Important:</b> Clicking approve will <b>automatically create</b> their Firebase Authentication account and open your email app with the credentials.
-    </div>
-    <div style="margin-top:1rem;">
-      <label>Login email (used to sign in)</label>
-      <div class="cred-row"><input id="cred-email" value="${escapeAttr(proposedEmail)}" readonly><button class="small gray" id="copy-email">Copy</button></div>
-      <label style="margin-top:.75rem;">Generated password</label>
-      <div class="cred-row"><input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly><button class="small gray" id="copy-pass">Copy</button><button class="small" id="regen-pass">Regenerate</button></div>
-    </div>
-    <div class="modal-actions"><button class="gray" id="modal-close">Cancel</button><button class="green" id="modal-confirm">Approve &amp; create user</button></div>
-    <div class="msg" id="modal-msg" style="margin-top:1rem;"></div>
-  `;
-  modalBg.classList.add("active");
-
-  const emailIn = document.getElementById("cred-email");
-  const passIn  = document.getElementById("cred-pass");
-  const mmsg    = document.getElementById("modal-msg");
-
-  document.getElementById("copy-email").onclick = () => copyToClipboard(emailIn.value, mmsg, "Email copied.");
-  document.getElementById("copy-pass").onclick  = () => copyToClipboard(passIn.value, mmsg, "Password copied.");
-  document.getElementById("regen-pass").onclick = () => { passIn.value = generatePassword(14); mmsg.className = "msg info"; mmsg.textContent = "New password generated."; };
-  document.getElementById("modal-close").onclick = closeModal;
-
-  document.getElementById("modal-confirm").onclick = async () => {
-    const confirmBtn = document.getElementById("modal-confirm");
-    confirmBtn.disabled = true;
-    confirmBtn.textContent = "Creating user…";
-    mmsg.className = "msg info";
-    mmsg.textContent = "Creating Auth account…";
-
-    try {
-      const secondaryApp = initializeApp(firebaseConfig, "Secondary-" + Date.now());
-      const secondaryAuth = getAuth(secondaryApp);
-      
-      await createUserWithEmailAndPassword(secondaryAuth, emailIn.value.trim().toLowerCase(), passIn.value);
-      await deleteApp(secondaryApp);
-
-      mmsg.textContent = "Saving to database…";
-
-      await updateDoc(doc(db, "alumni", id), {
-        approved: true, 
-        approved_at: serverTimestamp(), 
-        approved_by: auth.currentUser.email, 
-        login_email: emailIn.value.trim().toLowerCase()
-      });
-
-      openEmailDraft(d, emailIn.value.trim(), passIn.value);
-      
-      mmsg.className = "msg ok";
-      mmsg.innerHTML = `✅ Account created and email draft opened!`;
-      setTimeout(() => { closeModal(); loadAlumni(); }, 1500);
-    } catch (err) {
-      console.error(err);
-      mmsg.className = "msg err";
-      if (err.code === "auth/email-already-in-use") {
-        mmsg.textContent = "This email is already registered in Firebase Authentication.";
-      } else {
-        mmsg.textContent = err.message;
-      }
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = "Approve & create user";
-    }
-  };
-}
-
-function openSendCredentials(id) {
-  const d = allDocs.find((x) => x.id === id);
-  if (!d) return;
-  const email = d.login_email || d.email || "";
-  const proposedPassword = generatePassword(14);
-
-  modal.innerHTML = `
-    <h3>Send credentials</h3>
-    ${detailsHtml(d)}
-    <div class="warn">This will open your email app to send these credentials to <b>${escapeHtml(d.email || "")}</b>.</div>
-    <div style="margin-top:1rem;">
-      <label>Login email</label>
-      <div class="cred-row"><input id="cred-email" value="${escapeAttr(email)}" readonly><button class="small gray" id="copy-email">Copy</button></div>
-      <label style="margin-top:.75rem;">Password</label>
-      <div class="cred-row"><input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly><button class="small gray" id="copy-pass">Copy</button><button class="small" id="regen-pass">Regenerate</button></div>
-    </div>
-    <div class="modal-actions"><button class="gray" id="modal-close">Cancel</button><button class="green" id="modal-confirm">Open email draft</button></div>
-    <div class="msg" id="modal-msg" style="margin-top:1rem;"></div>
-  `;
-  modalBg.classList.add("active");
-
-  const passIn = document.getElementById("cred-pass");
-  const mmsg   = document.getElementById("modal-msg");
-
-  document.getElementById("copy-email").onclick = () => copyToClipboard(email, mmsg, "Email copied.");
-  document.getElementById("copy-pass").onclick  = () => copyToClipboard(passIn.value, mmsg, "Password copied.");
-  document.getElementById("regen-pass").onclick = () => { passIn.value = generatePassword(14); mmsg.className = "msg info"; mmsg.textContent = "New password generated."; };
-  document.getElementById("modal-close").onclick = closeModal;
-
-  document.getElementById("modal-confirm").onclick = () => {
-    openEmailDraft(d, email, passIn.value);
-    mmsg.className = "msg ok";
-    mmsg.innerHTML = `✅ Email draft opened.`;
-    setTimeout(closeModal, 1500);
-  };
-}
-
-function openEmailDraft(alumni, email, password) {
-  const subject = encodeURIComponent("Your alumni directory access — Bishop Angelo Tarantino Memorial SS");
-  const bodyText = 
-`Hello ${alumni.full_name || ""},
-
-Your alumni registration has been approved. You can now log in to the alumni directory.
-
-Email:    ${email}
-Password: ${password}
-
-Log in here: ${location.origin}${location.pathname.replace(/admin\.html?$/i, "")}
-
-Please change your password after your first login.
-
-— Bishop Angelo Tarantino Memorial SS`;
-  const mailtoLink = `mailto:${encodeURIComponent(alumni.email || "")}?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
-  window.open(mailtoLink, "_blank");
-}
-
-function detailsHtml(d) {
-  const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
-  const rowsData = [
-    ["Name", d.full_name], ["Email", d.email], ["Phone", d.phone], ["Courses", d.courses], ["Graduation", d.graduation_year],
-    ["Stream", d.class_stream], ["Occupation", d.occupation], ["Employer", d.employer], ["Location", d.location],
-    ["LinkedIn", d.linkedin], ["Bio", d.bio], ["Directory consent", d.consent_public ? "Yes" : "No"],
-    ["Location sharing", d.share_location ? "Yes" : "No"], ["Submitted", created],
-  ];
-  return `<dl class="kv">` + rowsData.filter(([_, v]) => v !== undefined && v !== null && v !== "").map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(String(v))}</dd>`).join("") + `</dl>`;
-}
-
-function closeModal() { modalBg.classList.remove("active"); modal.innerHTML = ""; }
-modalBg.addEventListener("click", (e) => { if (e.target === modalBg) closeModal(); });
-
-async function rejectDoc(id) {
-  const d = allDocs.find((x) => x.id === id);
-  if (!confirm(`Are you sure you want to remove ${d?.full_name || d?.email}?`)) return;
-  try { await deleteDoc(doc(db, "alumni", id)); show("Removed.", "ok"); loadAlumni(); }
-  catch (err) { show("Error: " + err.message, "err"); }
-}
-
-// ═══════════════════════════════════════════════════════
-//  UTILITIES
-// ═══════════════════════════════════════════════════════
-function generatePassword(length = 14) {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*";
-  let out = "";
-  const buf = new Uint32Array(length);
-  window.crypto.getRandomValues(buf);
-  for (let i = 0; i < length; i++) out += chars[buf[i] % chars.length];
-  return out;
-}
-
-async function copyToClipboard(text, msgEl, okText) {
-  try { await navigator.clipboard.writeText(text); msgEl.className = "msg ok"; msgEl.textContent = okText; } 
-  catch { msgEl.className = "msg err"; msgEl.textContent = "Copy failed."; }
-}
-
-searchIn.addEventListener("input", renderRows);
-refreshBtn.addEventListener("click", () => currentTab === "roles" ? loadRoles() : loadAlumni());
 </script>
 </body>
 </html>
