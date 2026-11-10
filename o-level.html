@@ -23,6 +23,79 @@
 
 
   <style>
+
+/* ===== FIX HERO BANNER LAYOUT ===== */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hero-btn {
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.hero-btn.primary {
+  background: #0077cc;
+  color: white;
+  border: 2px solid #0077cc;
+  box-shadow: 0 4px 15px rgba(0, 119, 204, 0.4);
+}
+
+.hero-btn.primary:hover {
+  background: #005fa3;
+  border-color: #005fa3;
+  transform: translateY(-2px);
+}
+
+.hero-btn.secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.hero-btn.secondary:hover {
+  background: white;
+  color: #004080;
+  transform: translateY(-2px);
+}
+
+/* Adjust mobile styles for the buttons */
+@media(max-width: 768px) {
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+    max-width: 280px;
+    margin: 25px auto 0;
+  }
+  
+  .hero-btn {
+    width: 100%;
+  }
+}
+    
 /* ===== HERO SECTION ===== */
 
 .page-hero{
