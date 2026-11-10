@@ -883,74 +883,77 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     font-size: 0 !important;
   }
 
-  /* 2. Stack everything vertically in the Top Bar */
+  /* 2. Setup the Top Bar as a vertical column */
   header .top-bar {
     display: flex !important;
-    flex-direction: column !important; /* 👈 Stacks top to bottom */
-    justify-content: center !important;
+    flex-direction: column !important;
     align-items: center !important;
     padding: 15px !important;
-    gap: 15px !important; /* Space between name and buttons */
+    gap: 15px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
-  /* 3. SHOW the school name and put it on top */
+  /* 3. Show the school name on top */
   header .school-brand {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
+    order: 1 !important;
     width: 100% !important;
-    order: 1 !important; /* 👈 Forces it to the top */
   }
 
   header .school-brand .logo {
-    display: block !important; /* Force it to show */
+    display: block !important;
     font-size: 16px !important;
     text-align: center !important;
     line-height: 1.4 !important;
   }
 
-  /* Hide the big logo badge to save space */
+  /* Hide the big badge */
   header .school-brand .school-badge {
     display: none !important;
   }
 
-  /* 4. Put Call Now on the left (below the name) */
-  header .header-contact {
-    display: flex !important;
-    order: 2 !important;
-    flex: 1 !important;
-    justify-content: flex-start !important; /* Align Left */
-    align-items: center !important;
-  }
-
-  /* 5. Put Socials + Portal on the right (below the name) */
-  header .right-section {
-    display: flex !important;
-    order: 3 !important;
-    flex: 1 !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    margin-left: 15px !important;
-  }
-
-  /* 6. Center the social icons */
+  /* 4. MAGIC TRICK: Break the inner containers so their children flow in a row */
+  header .header-contact,
+  header .right-section,
   header .socials-icons {
-    display: flex !important;
-    gap: 12px !important;
-    margin: 0 auto !important;
+    display: contents !important; 
   }
 
-  header .socials-icons a {
-    font-size: 20px !important;
-    color: white !important;
+  /* 5. Force all buttons/icons into one horizontal row below the name */
+  header .top-bar {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important; 
   }
 
-  /* 7. Button styles */
+  /* 6. Re-apply styles since "display: contents" removed their boxes */
   .header-contact .cta-btn,
+  header .socials-icons a,
   #portalBtn {
+    order: 2 !important; /* Puts them below the school name */
+  }
+
+  /* 7. Ensure the "Call Now" button pushes to the left */
+  .header-contact .cta-btn {
+    margin-right: auto !important;
     font-size: 14px !important;
-    margin: 0 !important;
-    padding: 8px 12px !important;
-    white-space: nowrap !important;
+    padding: 8px 16px !important;
+  }
+
+  /* 8. Ensure the "Portal" button pushes to the right */
+  #portalBtn {
+    margin-left: auto !important;
+    font-size: 14px !important;
+    padding: 8px 16px !important;
+  }
+
+  /* 9. Center the social icons exactly in the middle */
+  header .socials-icons a {
+    font-size: 22px !important;
+    color: white !important;
+    margin: 0 6px !important; /* Space between icons */
   }
 }
