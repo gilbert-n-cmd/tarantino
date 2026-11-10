@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — Alumni Registration</title>
+<style>
+  :root { --brand: #004080; --brand-2: #166534; --line: #e2e8f0; --bg: #f8fafc; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+         background: var(--bg); color: #0f172a; padding: 2rem 1rem; }
+  .wrap { max-width: 1000px; margin: 0 auto 1.5rem; background: #fff; border: 1px solid var(--line);
+          border-radius: 14px; padding: 2rem; box-shadow: 0 6px 24px rgba(15,23,42,.06); }
+  h1 { margin: 0 0 .25rem; font-size: 1.5rem; color: var(--brand); }
+  h2 { margin: 0 0 1rem; font-size: 1.15rem; color: var(--brand); }
+  .sub { margin: 0 0 1.5rem; color: #64748b; font-size: .9rem; }
+  label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .35rem; }
+  input, select {
+    width: 100%; padding: .6rem .7rem; border: 1px solid var(--line);
+    border-radius: 8px; font: inherit; background: #fff;
+  }
+  input:focus, select:focus { outline: 2px solid var(--brand-2); border-color: var(--brand-2); }
+  button {
+    padding: .65rem 1.1rem; border: 0; border-radius: 8px; font: inherit; font-weight: 600;
+    cursor: pointer; background: var(--brand); color: #fff;
+  }
+  button:hover:not(:disabled) { background: #00325f; }
+  button:disabled { opacity: .55; cursor: not-allowed; }
+  button.green  { background: var(--brand-2); } button.green:hover:not(:disabled) { background: #14532d; }
+  button.red    { background: #b91c1c; }        button.red:hover:not(:disabled)    { background: #991b1b; }
+  button.gray   { background: #64748b; }        button.gray:hover:not(:disabled)   { background: #475569; }
+  button.small  { padding: .4rem .7rem; font-size: .8rem; }
+  .msg { margin-top: 1rem; padding: .8rem 1rem; border-radius: 8px; font-size: .9rem; display: none; }
+  .msg.ok  { display: block; background: #dcfce7; color: #166534; }
+  .msg.err { display: block; background: #fee2e2; color: #991b1b; }
+  .msg.info{ display: block; background: #dbeafe; color: #1e40af; }
+  .msg pre { background: rgba(0,0,0,.05); padding: .5rem; border-radius: 4px; font-size: .8rem;
+             overflow-x: auto; white-space: pre-wrap; word-break: break-all; margin: .5rem 0; }
+
+  #login-panel { max-width: 460px; margin: 4rem auto; }
+  #admin-panel { display: none; }
+
+  .tabs { display: flex; gap: .5rem; border-bottom: 2px solid var(--line); margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .tab { padding: .6rem 1rem; border: 0; background: none; border-radius: 0; color: #64748b;
+         font-weight: 600; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer; }
+  .tab:hover { background: #f1f5f9; }
+  .tab.active { color: var(--brand); border-bottom-color: var(--brand); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  th, td { text-align: left; padding: .55rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #f1f5f9; font-weight: 600; position: sticky; top: 0; }
+  tr:hover { background: #fafcff; }
+  .pill { display: inline-block; padding: .15rem .5rem; border-radius: 999px; font-size: .72rem; font-weight: 600; }
+  .pill.pending  { background: #fef3c7; color: #92400e; }
+  .pill.approved { background: #dcfce7; color: #166534; }
+  .pill.admin    { background: #dbeafe; color: #1e40af; }
+  .pill.member   { background: #e0e7ff; color: #3730a3; }
+
+  .toolbar { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
+  .toolbar input[type=search] { flex: 1; min-width: 200px; }
+
+  .modal-bg {
+    display: none; position: fixed; inset: 0; background: rgba(15,23,42,.55);
+    align-items: center; justify-content: center; padding: 1rem; z-index: 50;
+  }
+  .modal-bg.active { display: flex; }
+  .modal { background: #fff; border-radius: 14px; padding: 1.75rem; max-width: 560px; width: 100%;
+           box-shadow: 0 20px 50px rgba(15,23,42,.3); max-height: 90vh; overflow-y: auto; }
+  .modal h3 { margin: 0 0 1rem; font-size: 1.15rem; color: var(--brand); }
+  .modal .kv { display: grid; grid-template-columns: 130px 1fr; gap: .35rem 1rem; font-size: .88rem; margin-bottom: 1rem; }
+  .modal .kv dt { font-weight: 600; color: #475569; }
+  .modal .kv dd { margin: 0; word-break: break-word; }
+  .cred-row { display: flex; gap: .5rem; align-items: center; margin-bottom: .4rem; }
+  .cred-row input { font-family: ui-monospace, monospace; font-size: .85rem; }
+  .modal-actions { display: flex; gap: .75rem; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap; }
+  .warn { background: #fef3c7; color: #92400e; padding: .6rem .8rem; border-radius: 8px;
+          font-size: .82rem; margin-top: .5rem; }
+
+  .empty { color: #64748b; font-size: .9rem; padding: 1.5rem 0; text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-panel" class="wrap">
+  <h1>Admin Login</h1>
+  <p class="sub">Sign in with your administrator account.</p>
+  <form id="login-form">
+    <label for="login_email">Email</label>
+    <input id="login_email" type="email" required autocomplete="username">
+    <label for="login_password" style="margin-top:.75rem;">Password</label>
+    <input id="login_password" type="password" required autocomplete="current-password">
+    <button type="submit" id="login-btn" style="margin-top:1rem; width:100%;">Sign in</button>
+    <div class="msg" id="login-msg"></div>
+  </form>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel" class="wrap">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:.5rem;">
+    <div>
+      <h1 style="margin:0;">Admin Panel</h1>
+      <p class="sub" style="margin:0;">Signed in as <b id="admin-email"></b> · <span id="admin-role" class="pill admin">admin</span></p>
+    </div>
+    <button id="logout-btn" class="gray small">Log out</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="pending">Pending approvals</button>
+    <button class="tab" data-tab="approved">Approved alumni</button>
+    <button class="tab" data-tab="roles">Roles</button>
+  </div>
+
+  <div class="toolbar" id="search-toolbar">
+    <input type="search" id="search" placeholder="Search name, email, course, year…">
+    <button id="refresh-btn" class="gray">Refresh</button>
+  </div>
+
+  <div id="msg" class="msg"></div>
+
+  <div class="table-wrap" id="alumni-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th><th>Email</th><th>Courses</th><th>Year / Stream</th>
+          <th>Submitted</th><th>Status</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="rows">
+        <tr><td colspan="7" class="empty">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-wrap" id="roles-table-wrap" style="display:none;">
+    <table>
+      <thead>
+        <tr><th>UID</th><th>Email</th><th>Role</th><th>Added</th><th>Actions</th></tr>
+      </thead>
+      <tbody id="role-rows">
+        <tr><td colspan="5" class="empty">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, doc, getDoc, getDocs, updateDoc,
+  deleteDoc, setDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+// ─── Firebase config ───
+const firebaseConfig = {
+  apiKey:            "AIzaSyCVJT7FQcfX9OWf-HgD2Xd_M_hBp0v1Pf0",
+  authDomain:        "alumni-74176.firebaseapp.com",
+  projectId:         "alumni-74176",
+  storageBucket:     "alumni-74176.firebasestorage.app",
+  messagingSenderId: "952137152614",
+  appId:             "1:952137152614:web:d9c5aea4643fcc585915a7"
+};
+
+const app  = initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+const auth = getAuth(app);
+
+// ─── UI ───
+const loginPanel   = document.getElementById("login-panel");
+const loginForm    = document.getElementById("login-form");
+const loginMsg     = document.getElementById("login-msg");
+const loginBtn     = document.getElementById("login-btn");
+const adminPanel   = document.getElementById("admin-panel");
+const adminEmailEl = document.getElementById("admin-email");
+const adminRoleEl  = document.getElementById("admin-role");
+const logoutBtn    = document.getElementById("logout-btn");
+const rows         = document.getElementById("rows");
+const roleRows     = document.getElementById("role-rows");
+const searchIn     = document.getElementById("search");
+const refreshBtn   = document.getElementById("refresh-btn");
+const msg          = document.getElementById("msg");
+const modalBg      = document.getElementById("modal-bg");
+const modal        = document.getElementById("modal");
+const tabs         = document.querySelectorAll(".tab");
+const alumniTableWrap = document.getElementById("alumni-table-wrap");
+const rolesTableWrap  = document.getElementById("roles-table-wrap");
+const searchToolbar   = document.getElementById("search-toolbar");
+
+// ─── State ───
+let currentTab = "pending";
+let allDocs    = [];
+let allRoles   = [];
+let currentRole = null;
+let authCheckInFlight = false;
+let lastVerifiedUid = null;
+
+// ─── Helpers ───
+function show(text, type) { msg.textContent = text; msg.className = "msg " + type; }
+function loginShow(text, type) { loginMsg.textContent = text; loginMsg.className = "msg " + type; }
+function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
+
+// ═══════════════════════════════════════════════════════
+//  ROLE LOOKUP — retries once on transient failures
+// ═══════════════════════════════════════════════════════
+async function fetchRole(uid, attempt = 1) {
+  try {
+    const snap = await getDoc(doc(db, "roles", uid));
+    if (!snap.exists()) {
+      console.warn("[admin] No roles doc for UID:", uid);
+      return { role: null, reason: "no-doc" };
+    }
+    const data = snap.data();
+    console.log("[admin] roles doc:", uid, "→", data);
+    return { role: data.role || null, reason: data.role ? null : "no-role-field" };
+  } catch (err) {
+    console.error("[admin] Role lookup failed (attempt " + attempt + "):", err);
+    // Retry once on transient errors (rules propagation, network)
+    if (attempt < 2 && (err.code === "permission-denied" || err.code === "unavailable")) {
+      await new Promise((r) => setTimeout(r, 800));
+      return fetchRole(uid, attempt + 1);
+    }
+    return { role: null, reason: err.code || "error" };
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  RENDER "ACCESS DENIED" — stays signed in, offers retry
+// ═══════════════════════════════════════════════════════
+function showAccessDenied(user, reason) {
+  const msgByReason = {
+    "no-doc":
+      `Your account exists but has no role assigned.\n\n` +
+      `In Firebase Console → Firestore → create a document:\n` +
+      `  Collection: roles\n` +
+      `  Document ID: ${user.uid}\n` +
+      `  Field: role = "admin" (type: string)\n\n` +
+      `Then click Retry below.`,
+    "no-role-field":
+      `Your roles document exists but the "role" field is missing or empty.\n\n` +
+      `In Firestore → roles/${user.uid}, set:\n` +
+      `  role = "admin" (lowercase, type: string)`,
+    "permission-denied":
+      `Firestore rules are blocking the role lookup.\n\n` +
+      `Make sure you've PUBLISHED the corrected rules:\n` +
+      `  allow read: if request.auth != null && request.auth.uid == uid;\n` +
+      `  (inside match /roles/{uid})`,
+    "error":
+      `Could not verify your role. Check the browser console for the exact error.`,
+  };
+
+  const safeReason = (reason || "unknown").replace(/[<>]/g, "");
+  loginMsg.innerHTML =
+    `<div>${escapeHtml(msgByReason[reason] || "This account does not have administrator access.").replace(/\n/g, "<br>")}</div>` +
+    `<div style="margin-top:.75rem;">` +
+      `<button id="retry-role" class="small">Retry verification</button> ` +
+      `<button id="force-logout" class="small gray">Log out</button>` +
+    `</div>` +
+    `<div style="margin-top:.5rem; font-size:.75rem; color:#64748b;">Reason code: ${safeReason}</div>`;
+  loginMsg.className = "msg err";
+
+  document.getElementById("retry-role").onclick = () => {
+    lastVerifiedUid = null;
+    currentRole = null;
+    verifyRoleNow();
+  };
+  document.getElementById("force-logout").onclick = () => signOut(auth);
+}
+
+// ═══════════════════════════════════════════════════════
+//  REVEAL ADMIN PANEL
+// ═══════════════════════════════════════════════════════
+function revealAdminPanel(user, role) {
+  lastVerifiedUid = user.uid;
+  currentRole = role;
+  loginPanel.style.display = "none";
+  adminPanel.style.display = "block";
+  adminEmailEl.textContent = user.email || "(no email)";
+  adminRoleEl.textContent = role;
+  adminRoleEl.className = "pill " + role;
+  loginShow("", "ok");
+  loginBtn.disabled = false;
+  switchTab("pending");
+}
+
+// ═══════════════════════════════════════════════════════
+//  VERIFY ROLE NOW — used by Retry button
+// ═══════════════════════════════════════════════════════
+async function verifyRoleNow() {
+  const user = auth.currentUser;
+  if (!user) {
+    loginShow("Not signed in.", "err");
+    return;
+  }
+  if (authCheckInFlight) return;
+  authCheckInFlight = true;
+  loginShow("Verifying access…", "info");
+  const { role, reason } = await fetchRole(user.uid);
+  authCheckInFlight = false;
+
+  if (role === "admin") {
+    revealAdminPanel(user, role);
+  } else {
+    showAccessDenied(user, reason);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  LOGIN — only signs in; onAuthStateChanged handles the rest
+// ═══════════════════════════════════════════════════════
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  loginBtn.disabled = true;
+  loginShow("Signing in…", "info");
+  try {
+    await signInWithEmailAndPassword(auth,
+      document.getElementById("login_email").value.trim(),
+      document.getElementById("login_password").value);
+    loginShow("Verifying access…", "info");
+    // onAuthStateChanged will fire and verify
+  } catch (err) {
+    console.error(err);
+    loginShow(
+      err.code === "auth/invalid-credential" || err.code === "auth/wrong-password"
+        ? "Incorrect email or password."
+        : err.message || "Login failed.",
+      "err"
+    );
+    loginBtn.disabled = false;
+  }
+});
+
+logoutBtn.addEventListener("click", () => signOut(auth));
+
+// ═══════════════════════════════════════════════════════
+//  AUTH STATE — race-safe, does NOT auto-logout on errors
+// ═══════════════════════════════════════════════════════
+onAuthStateChanged(auth, async (user) => {
+  // Logout: clear everything
+  if (!user) {
+    authCheckInFlight = false;
+    lastVerifiedUid = null;
+    currentRole = null;
+    loginPanel.style.display = "block";
+    adminPanel.style.display = "none";
+    adminEmailEl.textContent = "";
+    allDocs = []; allRoles = [];
+    loginBtn.disabled = false;
+    loginMsg.className = "msg";
+    loginMsg.textContent = "";
+    return;
+  }
+
+  // Dedupe: already verified this UID → don't re-check
+  if (user.uid === lastVerifiedUid && currentRole === "admin") return;
+
+  // Prevent concurrent checks (the race that bounced you)
+  if (authCheckInFlight) return;
+  authCheckInFlight = true;
+
+  loginShow("Verifying access…", "info");
+  const { role, reason } = await fetchRole(user.uid);
+  authCheckInFlight = false;
+
+  if (role === "admin") {
+    revealAdminPanel(user, role);
+    return;
+  }
+
+  // ⚠️ Do NOT sign out — show what's wrong and let them retry.
+  showAccessDenied(user, reason);
+});
+
+// ═══════════════════════════════════════════════════════
+//  TAB SWITCHING
+// ═══════════════════════════════════════════════════════
+function switchTab(name) {
+  currentTab = name;
+  tabs.forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
+  const isRoles = name === "roles";
+  alumniTableWrap.style.display = isRoles ? "none" : "block";
+  rolesTableWrap.style.display  = isRoles ? "block" : "none";
+  searchToolbar.style.display   = isRoles ? "none" : "flex";
+  if (isRoles) loadRoles(); else loadAlumni();
+}
+
+tabs.forEach((t) => t.addEventListener("click", () => switchTab(t.dataset.tab)));
+
+// ═══════════════════════════════════════════════════════
+//  LOAD ALUMNI
+// ═══════════════════════════════════════════════════════
+async function loadAlumni() {
+  clearMsg();
+  rows.innerHTML = '<tr><td colspan="7" class="empty">Loading…</td></tr>';
+  try {
+    const snap = await getDocs(collection(db, "alumni"));
+    allDocs = [];
+    snap.forEach((d) => allDocs.push({ id: d.id, ...d.data() }));
+    allDocs.sort((a, b) => {
+      const pa = a.approved ? 1 : 0, pb = b.approved ? 1 : 0;
+      if (pa !== pb) return pa - pb;
+      const ta = a.created_at?.toMillis?.() || 0;
+      const tb = b.created_at?.toMillis?.() || 0;
+      return tb - ta;
+    });
+    renderRows();
+  } catch (err) {
+    console.error(err);
+    rows.innerHTML = "";
+    show(err.code === "permission-denied"
+      ? "You don't have permission to view registrations. Check Firestore rules."
+      : "Could not load registrations: " + err.message, "err");
+  }
+}
+
+function renderRows() {
+  const term = searchIn.value.trim().toLowerCase();
+  const filtered = allDocs.filter((d) => {
+    const matchesTab = currentTab === "pending" ? !d.approved : d.approved;
+    if (!matchesTab) return false;
+    if (!term) return true;
+    return [d.full_name, d.email, d.courses, d.occupation, d.employer,
+            d.graduation_year, d.location]
+      .filter(Boolean)
+      .some((v) => String(v).toLowerCase().includes(term));
+  });
+
+  if (filtered.length === 0) {
+    rows.innerHTML = `<tr><td colspan="7" class="empty">No ${currentTab} registrations.</td></tr>`;
+    return;
+  }
+
+  rows.innerHTML = filtered.map((d) => {
+    const yearStr = [d.graduation_year, d.class_stream].filter(Boolean).join(" · ") || "—";
+    const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
+    const status = d.approved
+      ? `<span class="pill approved">Approved</span>`
+      : `<span class="pill pending">Pending</span>`;
+    const actions = d.approved
+      ? `<button class="small gray" data-view="${escapeAttr(d.id)}">View</button>
+         <button class="small red" data-reject="${escapeAttr(d.id)}">Revoke</button>`
+      : `<button class="small green" data-approve="${escapeAttr(d.id)}">Approve</button>
+         <button class="small red" data-reject="${escapeAttr(d.id)}">Reject</button>`;
+    return `<tr>
+      <td>${escapeHtml(d.full_name || "")}</td>
+      <td>${escapeHtml(d.email || "")}</td>
+      <td style="max-width:220px;">${escapeHtml(d.courses || "—")}</td>
+      <td>${escapeHtml(yearStr)}</td>
+      <td style="white-space:nowrap; font-size:.78rem;">${escapeHtml(created)}</td>
+      <td>${status}</td>
+      <td style="white-space:nowrap;">${actions}</td>
+    </tr>`;
+  }).join("");
+
+  rows.querySelectorAll("[data-approve]").forEach((b) =>
+    b.addEventListener("click", () => openApproval(b.dataset.approve)));
+  rows.querySelectorAll("[data-view]").forEach((b) =>
+    b.addEventListener("click", () => openApproval(b.dataset.view, true)));
+  rows.querySelectorAll("[data-reject]").forEach((b) =>
+    b.addEventListener("click", () => rejectDoc(b.dataset.reject)));
+}
+
+// ═══════════════════════════════════════════════════════
+//  LOAD ROLES
+// ═══════════════════════════════════════════════════════
+async function loadRoles() {
+  clearMsg();
+  roleRows.innerHTML = '<tr><td colspan="5" class="empty">Loading…</td></tr>';
+  try {
+    const snap = await getDocs(collection(db, "roles"));
+    allRoles = [];
+    snap.forEach((d) => allRoles.push({ uid: d.id, ...d.data() }));
+    allRoles.sort((a, b) => (a.email || "").localeCompare(b.email || ""));
+    renderRoles();
+  } catch (err) {
+    console.error(err);
+    roleRows.innerHTML = "";
+    show(err.code === "permission-denied"
+      ? "You don't have permission to view roles. Check Firestore rules."
+      : "Could not load roles: " + err.message, "err");
+  }
+}
+
+function renderRoles() {
+  if (allRoles.length === 0) {
+    roleRows.innerHTML = '<tr><td colspan="5" class="empty">No roles defined yet.</td></tr>';
+    return;
+  }
+  roleRows.innerHTML = allRoles.map((r) => {
+    const added = r.added_at?.toDate?.()?.toLocaleString() || "—";
+    const safeRole = ["admin", "member"].includes(r.role) ? r.role : "";
+    const badge = `<span class="pill ${safeRole}">${escapeHtml(r.role || "?")}</span>`;
+    return `<tr>
+      <td style="font-family:monospace; font-size:.78rem;">${escapeHtml(r.uid)}</td>
+      <td>${escapeHtml(r.email || "—")}</td>
+      <td>${badge}</td>
+      <td style="font-size:.78rem;">${escapeHtml(added)}</td>
+      <td>
+        <button class="small gray" data-edit-role="${escapeAttr(r.uid)}">Change role</button>
+        <button class="small red" data-del-role="${escapeAttr(r.uid)}">Remove</button>
+      </td>
+    </tr>`;
+  }).join("");
+
+  roleRows.querySelectorAll("[data-edit-role]").forEach((b) =>
+    b.addEventListener("click", () => editRole(b.dataset.editRole)));
+  roleRows.querySelectorAll("[data-del-role]").forEach((b) =>
+    b.addEventListener("click", () => deleteRole(b.dataset.delRole)));
+}
+
+async function editRole(uid) {
+  const r = allRoles.find((x) => x.uid === uid);
+  if (!r) return;
+  const newRole = prompt(
+    `Set role for ${r.email || uid}\n\nType: admin, member, or leave blank to remove`,
+    r.role || "member"
+  );
+  if (newRole === null) return;
+  try {
+    if (newRole.trim() === "") {
+      await deleteDoc(doc(db, "roles", uid));
+      show("Role removed.", "ok");
+    } else if (newRole === "admin" || newRole === "member") {
+      await setDoc(doc(db, "roles", uid), {
+        role: newRole,
+        email: r.email || "",
+        added_at: serverTimestamp(),
+      }, { merge: true });
+      show(`Role updated to ${newRole}.`, "ok");
+    } else {
+      show("Invalid role. Use 'admin' or 'member'.", "err");
+      return;
+    }
+    loadRoles();
+  } catch (err) {
+    console.error(err);
+    show("Error: " + err.message, "err");
+  }
+}
+
+async function deleteRole(uid) {
+  const r = allRoles.find((x) => x.uid === uid);
+  if (!r) return;
+  if (!confirm(`Remove all access from ${r.email || uid}? They will keep their Auth account but lose panel + directory access.`)) return;
+  try {
+    await deleteDoc(doc(db, "roles", uid));
+    show("Role removed.", "ok");
+    loadRoles();
+  } catch (err) {
+    show("Error: " + err.message, "err");
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  APPROVAL MODAL
+// ═══════════════════════════════════════════════════════
+function openApproval(id, viewOnly = false) {
+  const d = allDocs.find((x) => x.id === id);
+  if (!d) return;
+
+  if (viewOnly) {
+    modal.innerHTML = `
+      <h3>Alumnus details</h3>
+      ${detailsHtml(d)}
+      <div class="modal-actions">
+        <button class="gray" id="modal-close">Close</button>
+      </div>`;
+    modalBg.classList.add("active");
+    document.getElementById("modal-close").onclick = closeModal;
+    return;
+  }
+
+  const proposedEmail = d.email || "";
+  const proposedPassword = generatePassword(14);
+
+  modal.innerHTML = `
+    <h3>Approve registration</h3>
+    ${detailsHtml(d)}
+
+    <div class="warn">
+      <b>Important:</b> The Firebase Client SDK cannot create user accounts.
+      Copy the credentials below into
+      <b>Firebase Console → Authentication → Users → Add user</b>,
+      then send them to the alumnus by email.
+    </div>
+
+    <div style="margin-top:1rem;">
+      <label>Login email (used to sign in)</label>
+      <div class="cred-row">
+        <input id="cred-email" value="${escapeAttr(proposedEmail)}" readonly>
+        <button class="small gray" id="copy-email">Copy</button>
+      </div>
+      <label style="margin-top:.75rem;">Generated password</label>
+      <div class="cred-row">
+        <input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly>
+        <button class="small gray" id="copy-pass">Copy</button>
+        <button class="small" id="regen-pass">Regenerate</button>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="gray" id="modal-close">Cancel</button>
+      <button class="green" id="modal-confirm">Mark approved</button>
+    </div>
+
+    <div class="msg" id="modal-msg" style="margin-top:1rem;"></div>
+  `;
+  modalBg.classList.add("active");
+
+  const emailIn = document.getElementById("cred-email");
+  const passIn  = document.getElementById("cred-pass");
+  const mmsg    = document.getElementById("modal-msg");
+
+  document.getElementById("copy-email").onclick = () => copyToClipboard(emailIn.value, mmsg, "Email copied.");
+  document.getElementById("copy-pass").onclick  = () => copyToClipboard(passIn.value, mmsg, "Password copied.");
+  document.getElementById("regen-pass").onclick = () => {
+    passIn.value = generatePassword(14);
+    mmsg.className = "msg info";
+    mmsg.textContent = "New password generated.";
+  };
+  document.getElementById("modal-close").onclick = closeModal;
+
+  document.getElementById("modal-confirm").onclick = async () => {
+    const confirmBtn = document.getElementById("modal-confirm");
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = "Saving…";
+    try {
+      await updateDoc(doc(db, "alumni", id), {
+        approved: true,
+        approved_at: serverTimestamp(),
+        approved_by: auth.currentUser.email,
+        login_email: emailIn.value.trim().toLowerCase(),
+      });
+
+      const subject = encodeURIComponent("Your alumni directory access — Bishop Angelo Tarantino Memorial SS");
+      const body = encodeURIComponent(
+        `Hello ${d.full_name || ""},\n\n` +
+        `Your alumni registration has been approved. You can now log in to the alumni directory.\n\n` +
+        `Email:    ${emailIn.value.trim()}\n` +
+        `Password: ${passIn.value}\n\n` +
+        `Log in here: ${location.origin}${location.pathname.replace(/admin\.html?$/i, "")}\n\n` +
+        `Please change your password after your first login.\n\n` +
+        `— Bishop Angelo Tarantino Memorial SS`
+      );
+      const mailto = `mailto:${encodeURIComponent(d.email || "")}?subject=${subject}&body=${body}`;
+
+      mmsg.className = "msg ok";
+      mmsg.innerHTML = `Approved! ` +
+        `<a href="${escapeAttr(mailto)}" target="_blank" rel="noopener">Open email draft</a> ` +
+        `(or copy the credentials above).`;
+
+      setTimeout(() => { closeModal(); loadAlumni(); }, 1200);
+    } catch (err) {
+      console.error(err);
+      mmsg.className = "msg err";
+      mmsg.textContent = err.code === "permission-denied"
+        ? "Permission denied. Your role may have been revoked."
+        : "Error: " + err.message;
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = "Mark approved";
+    }
+  };
+}
+
+function detailsHtml(d) {
+  const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
+  const rowsData = [
+    ["Name", d.full_name], ["Email", d.email], ["Phone", d.phone],
+    ["Courses", d.courses], ["Graduation", d.graduation_year],
+    ["Stream", d.class_stream], ["Occupation", d.occupation],
+    ["Employer", d.employer], ["Location", d.location],
+    ["LinkedIn", d.linkedin], ["Bio", d.bio],
+    ["Directory consent", d.consent_public ? "Yes" : "No"],
+    ["Location sharing", d.share_location ? "Yes" : "No"],
+    ["Submitted", created],
+  ];
+  return `<dl class="kv">` + rowsData
+    .filter(([_, v]) => v !== undefined && v !== null && v !== "")
+    .map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(String(v))}</dd>`)
+    .join("") + `</dl>`;
+}
+
+function closeModal() { modalBg.classList.remove("active"); modal.innerHTML = ""; }
+modalBg.addEventListener("click", (e) => { if (e.target === modalBg) closeModal(); });
+
+// ═══════════════════════════════════════════════════════
+//  REJECT / REVOKE
+// ═══════════════════════════════════════════════════════
+async function rejectDoc(id) {
+  const d = allDocs.find((x) => x.id === id);
+  const verb = d?.approved ? "revoke approval for" : "reject registration from";
+  if (!confirm(`Are you sure you want to ${verb} ${d?.full_name || d?.email}?`)) return;
+  try {
+    await deleteDoc(doc(db, "alumni", id));
+    show("Removed.", "ok");
+    loadAlumni();
+  } catch (err) {
+    show(err.code === "permission-denied"
+      ? "Permission denied." : "Error: " + err.message, "err");
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  UTILITIES
+// ═══════════════════════════════════════════════════════
+function generatePassword(length = 14) {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*";
+  let out = "";
+  const cryptoObj = window.crypto || window.msCrypto;
+  const buf = new Uint32Array(length);
+  cryptoObj.getRandomValues(buf);
+  for (let i = 0; i < length; i++) out += chars[buf[i] % chars.length];
+  return out;
+}
+
+async function copyToClipboard(text, msgEl, okText) {
+  try {
+    await navigator.clipboard.writeText(text);
+    msgEl.className = "msg ok";
+    msgEl.textContent = okText;
+  } catch {
+    msgEl.className = "msg err";
+    msgEl.textContent = "Copy failed — select the field manually.";
+  }
+}
+
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+searchIn.addEventListener("input", renderRows);
+refreshBtn.addEventListener("click", () => currentTab === "roles" ? loadRoles() : loadAlumni());
+</script>
+</body>
+</html>
