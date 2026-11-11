@@ -65,76 +65,49 @@
   .toolbar { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
   .toolbar input[type=search] { flex: 1; min-width: 200px; }
 
-  /* ═══════════════════════════════════════════════════════
-     MODAL FIX (Works on Desktop & Mobile)
-     ═══════════════════════════════════════════════════════ */
-  .modal-bg {
-    display: none; position: fixed; inset: 0; background: rgba(15,23,42,.6);
-    align-items: center; justify-content: center; padding: 1rem; z-index: 50;
-    backdrop-filter: blur(2px);
+  .empty { color: #64748b; font-size: .9rem; padding: 1.5rem 0; text-align: center; }
+  #map-container { height: 400px; width: 100%; border-radius: 10px; border: 1px solid var(--line); }
+
+  /* MODAL */
+  dialog#my-modal {
+    border: none; border-radius: 16px; padding: 0; 
+    max-width: 560px; width: calc(100% - 2rem); 
+    box-shadow: 0 20px 50px rgba(15,23,42,.4);
   }
-  .modal-bg.active { display: flex; }
-  
-  .modal { 
-    background: #fff; border-radius: 14px; padding: 1.75rem; max-width: 560px; width: 100%;
-    box-shadow: 0 20px 50px rgba(15,23,42,.3); max-height: 90vh; overflow-y: auto;
-    display: flex; flex-direction: column;
-  }
-  .modal h3 { margin: 0 0 1rem; font-size: 1.15rem; color: var(--brand); }
-  .modal .kv { display: grid; grid-template-columns: 130px 1fr; gap: .35rem 1rem; font-size: .88rem; margin-bottom: 1rem; }
+  dialog#my-modal::backdrop { background: rgba(15,23,42,.6); }
+  .modal-inner { padding: 1.5rem; max-height: 85vh; overflow-y: auto; }
+  .modal-inner h3 { margin: 0 0 1rem; font-size: 1.15rem; color: var(--brand); }
+  .modal-actions { display: flex; gap: .5rem; margin-top: 1rem; }
+  .modal-actions button { flex: 1; }
+  .modal .kv { display: grid; grid-template-columns: 110px 1fr; gap: .35rem 1rem; font-size: .88rem; margin-bottom: 1rem; }
   .modal .kv dt { font-weight: 600; color: #475569; }
   .modal .kv dd { margin: 0; word-break: break-word; }
   .cred-row { display: flex; gap: .5rem; align-items: center; margin-bottom: .4rem; }
   .cred-row input { font-family: ui-monospace, monospace; font-size: .85rem; }
-  .modal-actions { 
-    display: flex; gap: .75rem; justify-content: flex-end; margin-top: 1rem; 
-    flex-wrap: wrap; position: sticky; bottom: 0; background: #fff; padding-top: 1rem;
-  }
   .warn { background: #fef3c7; color: #92400e; padding: .6rem .8rem; border-radius: 8px;
           font-size: .82rem; margin-top: .5rem; }
 
-  .empty { color: #64748b; font-size: .9rem; padding: 1.5rem 0; text-align: center; }
-  #map-container { height: 400px; width: 100%; border-radius: 10px; border: 1px solid var(--line); }
-
-  /* ═══════════════════════════════════════════════════════
-     MOBILE RESPONSIVENESS
-     ═══════════════════════════════════════════════════════ */
   @media (max-width: 768px) {
     body { padding: 1rem 0.5rem; }
     .wrap { padding: 1.25rem; border-radius: 10px; }
-    
     .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
     .stat-card { padding: 0.75rem; }
     .stat-card .num { font-size: 1.4rem; }
-
     .tabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
     .tab { white-space: nowrap; padding: .5rem .75rem; font-size: .85rem; }
-
-    /* ⭐ MOBILE MODAL: Slide up from bottom, pin buttons */
-    .modal-bg { 
-      align-items: flex-end; /* Push to bottom */
-      padding: 0; 
+    dialog#my-modal { 
+      width: 100%; max-width: 100%; 
+      border-radius: 20px 20px 0 0;
+      margin-bottom: 0;
     }
-    .modal { 
-      border-radius: 20px 20px 0 0; /* Rounded top only */
-      padding: 1.5rem 1.25rem; 
-      max-height: 85vh; /* Leave room at top */
-    }
-    .modal-actions { 
-      flex-direction: column; /* Stack buttons */
-      padding-bottom: env(safe-area-inset-bottom); /* iPhone notch support */
-    }
-    .modal-actions button { 
-      width: 100%; 
-      padding: 0.85rem; /* Bigger touch target */
-    }
-
+    .modal-inner { padding: 1.25rem; max-height: 82vh; }
     .toolbar { flex-direction: column; align-items: stretch; }
     .toolbar input[type=search] { width: 100%; }
     .toolbar button { width: 100%; }
-    
-    #bulk-actions { flex-direction: column; gap: 0.5rem; }
-    #bulk-actions button { width: 100%; margin-left: 0 !important; margin-top: 0.5rem; }
+    .modal-actions { flex-direction: column; }
+    .cred-row { flex-wrap: wrap; }
+    .cred-row input { width: 100%; margin-bottom: .25rem; }
+    .cred-row button { flex: 1; }
   }
 </style>
 </head>
@@ -234,21 +207,29 @@
   </div>
 </div>
 
-<!-- MODAL -->
-<div class="modal-bg" id="modal-bg">
-  <div class="modal" id="modal"></div>
-</div>
+<!-- NATIVE DIALOG MODAL -->
+<dialog id="my-modal">
+  <div class="modal-inner">
+    <h3 id="modal-title">Details</h3>
+    <div id="modal-body" class="modal"></div>
+    <div class="modal-actions">
+      <button id="modal-cancel" class="gray">Cancel</button>
+      <button id="modal-confirm" class="green">Confirm</button>
+    </div>
+  </div>
+</dialog>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getFirestore, collection, doc, getDoc, getDocs, updateDoc,
   deleteDoc, setDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
-  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
+  createUserWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -264,6 +245,7 @@ const app  = initializeApp(firebaseConfig);
 const db   = getFirestore(app);
 const auth = getAuth(app);
 
+// ─── UI Elements ───
 const loginPanel   = document.getElementById("login-panel");
 const loginForm    = document.getElementById("login-form");
 const loginMsg     = document.getElementById("login-msg");
@@ -278,8 +260,6 @@ const searchIn     = document.getElementById("search");
 const refreshBtn   = document.getElementById("refresh-btn");
 const exportBtn    = document.getElementById("export-btn");
 const msg          = document.getElementById("msg");
-const modalBg      = document.getElementById("modal-bg");
-const modal        = document.getElementById("modal");
 const tabs         = document.querySelectorAll(".tab");
 const alumniTableWrap = document.getElementById("alumni-table-wrap");
 const rolesTableWrap  = document.getElementById("roles-table-wrap");
@@ -294,6 +274,13 @@ const selectAll = document.getElementById("select-all");
 const bulkApprove = document.getElementById("bulk-approve");
 const bulkReject = document.getElementById("bulk-reject");
 
+// Modal elements
+const dialog = document.getElementById("my-modal");
+const modalTitle = document.getElementById("modal-title");
+const modalBody = document.getElementById("modal-body");
+const modalCancel = document.getElementById("modal-cancel");
+const modalConfirm = document.getElementById("modal-confirm");
+
 let currentTab = "pending";
 let allDocs    = [];
 let allRoles   = [];
@@ -302,6 +289,7 @@ let authCheckInFlight = false;
 let lastVerifiedUid = null;
 let selectedIds = new Set();
 let mapInstance = null;
+let pendingAction = null;
 
 function show(text, type) { msg.textContent = text; msg.className = "msg " + type; }
 function loginShow(text, type) { loginMsg.textContent = text; loginMsg.className = "msg " + type; }
@@ -309,6 +297,9 @@ function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
 function escapeHtml(s) { return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 function escapeAttr(s) { return escapeHtml(s); }
 
+// ═══════════════════════════════════════════════════════
+//  ROLE CHECK
+// ═══════════════════════════════════════════════════════
 async function fetchRole(uid, attempt = 1) {
   try {
     const snap = await getDoc(doc(db, "roles", uid));
@@ -326,15 +317,18 @@ async function fetchRole(uid, attempt = 1) {
 
 function showAccessDenied(user, reason) {
   const msgByReason = {
-    "no-doc": `Your account exists but has no role assigned.\n\nIn Firestore create a document:\n  Collection: roles\n  ID: ${user.uid}\n  Field: role = "admin"`,
-    "no-role-field": `Your roles document exists but the "role" field is missing.`,
-    "permission-denied": `Firestore rules are blocking the role lookup.`,
-    "error": `Could not verify your role. Check the console.`
+    "no-doc": `Your account exists but has no role assigned.\n\nIn Firebase Console → Firestore → create a document:\n  Collection: roles\n  Document ID: ${user.uid}\n  Field: role = "admin" (type: string)\n\nThen click Retry below.`,
+    "no-role-field": `Your roles document exists but the "role" field is missing or empty.`,
+    "permission-denied": `Firestore rules are blocking the role lookup.\n\nPublish the corrected rules that allow a user to read their own role doc.`,
+    "error": `Could not verify your role. Check the browser console.`
   };
   const safeReason = (reason || "unknown").replace(/[<>]/g, "");
   loginMsg.innerHTML =
     `<div>${escapeHtml(msgByReason[reason] || "Access denied.").replace(/\n/g, "<br>")}</div>` +
-    `<div style="margin-top:.75rem;"><button id="retry-role" class="small">Retry verification</button> <button id="force-logout" class="small gray">Log out</button></div>` +
+    `<div style="margin-top:.75rem;">` +
+      `<button id="retry-role" class="small">Retry verification</button> ` +
+      `<button id="force-logout" class="small gray">Log out</button>` +
+    `</div>` +
     `<div style="margin-top:.5rem; font-size:.75rem; color:#64748b;">Reason code: ${safeReason}</div>`;
   loginMsg.className = "msg err";
   document.getElementById("retry-role").onclick = () => { lastVerifiedUid = null; currentRole = null; verifyRoleNow(); };
@@ -366,6 +360,9 @@ async function verifyRoleNow() {
   else showAccessDenied(user, reason);
 }
 
+// ═══════════════════════════════════════════════════════
+//  LOGIN
+// ═══════════════════════════════════════════════════════
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   loginBtn.disabled = true;
@@ -381,6 +378,9 @@ loginForm.addEventListener("submit", async (e) => {
 
 logoutBtn.addEventListener("click", () => signOut(auth));
 
+// ═══════════════════════════════════════════════════════
+//  AUTH STATE
+// ═══════════════════════════════════════════════════════
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     authCheckInFlight = false; lastVerifiedUid = null; currentRole = null;
@@ -399,6 +399,9 @@ onAuthStateChanged(auth, async (user) => {
   else showAccessDenied(user, reason);
 });
 
+// ═══════════════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════════════
 function switchTab(name) {
   currentTab = name;
   tabs.forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
@@ -420,15 +423,16 @@ function switchTab(name) {
 
   if (isRoles) loadRoles();
   else if (isAlumni) loadAlumni();
-  else if (isMap) {
-    setTimeout(loadMap, 100); // Wait for div to render
-  }
+  else if (isMap) setTimeout(loadMap, 100);
   else if (isBroadcast) {
     document.getElementById("broadcast-subject").value = "Alumni Update — Bishop Angelo Tarantino Memorial SS";
   }
 }
 tabs.forEach((t) => t.addEventListener("click", () => switchTab(t.dataset.tab)));
 
+// ═══════════════════════════════════════════════════════
+//  LOAD ALUMNI
+// ═══════════════════════════════════════════════════════
 async function loadAlumni() {
   clearMsg();
   rows.innerHTML = '<tr><td colspan="8" class="empty">Loading…</td></tr>';
@@ -486,11 +490,11 @@ function renderRows() {
       : "";
 
     const actions = d.approved
-      ? `<button class="small gray" data-view="${escapeAttr(d.id)}">View</button>
-         <button class="small" data-send="${escapeAttr(d.id)}">Send credentials</button>
-         <button class="small red" data-reject="${escapeAttr(d.id)}">Revoke</button>`
-      : `<button class="small green" data-approve="${escapeAttr(d.id)}">Approve</button>
-         <button class="small red" data-reject="${escapeAttr(d.id)}">Reject</button>`;
+      ? `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>
+         <button class="small" data-action="send" data-id="${escapeAttr(d.id)}">Send credentials</button>
+         <button class="small red" data-action="reject" data-id="${escapeAttr(d.id)}">Revoke</button>`
+      : `<button class="small green" data-action="approve" data-id="${escapeAttr(d.id)}">Approve</button>
+         <button class="small red" data-action="reject" data-id="${escapeAttr(d.id)}">Reject</button>`;
 
     return `<tr>
       ${checkbox}
@@ -504,11 +508,6 @@ function renderRows() {
     </tr>`;
   }).join("");
 
-  rows.querySelectorAll("[data-approve]").forEach((b) => b.addEventListener("click", () => openApproval(b.dataset.approve)));
-  rows.querySelectorAll("[data-view]").forEach((b) => b.addEventListener("click", () => openApproval(b.dataset.view, true)));
-  rows.querySelectorAll("[data-send]").forEach((b) => b.addEventListener("click", () => openSendCredentials(b.dataset.send)));
-  rows.querySelectorAll("[data-reject]").forEach((b) => b.addEventListener("click", () => rejectDoc(b.dataset.reject)));
-
   rows.querySelectorAll(".bulk-cb").forEach((cb) => {
     cb.addEventListener("change", (e) => {
       if (e.target.checked) selectedIds.add(e.target.dataset.id);
@@ -521,6 +520,207 @@ function renderRows() {
   });
 }
 
+// ═══════════════════════════════════════════════════════
+//  EVENT DELEGATION (Mobile-friendly)
+// ═══════════════════════════════════════════════════════
+rows.addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-action]");
+  if (!btn) return;
+  const id = btn.dataset.id;
+  const action = btn.dataset.action;
+  const d = allDocs.find((x) => x.id === id);
+  if (!d) return;
+
+  if (action === "view") openViewModal(d);
+  else if (action === "approve") openApproveModal(d);
+  else if (action === "send") openSendModal(d);
+  else if (action === "reject") rejectDoc(id);
+});
+
+// ═══════════════════════════════════════════════════════
+//  MODALS
+// ═══════════════════════════════════════════════════════
+function closeDialog() {
+  dialog.close();
+  pendingAction = null;
+}
+
+modalCancel.addEventListener("click", closeDialog);
+dialog.addEventListener("click", (e) => {
+  const rect = dialog.getBoundingClientRect();
+  const isInDialog = (
+    e.clientX >= rect.left && e.clientX <= rect.right &&
+    e.clientY >= rect.top && e.clientY <= rect.bottom
+  );
+  if (!isInDialog) closeDialog();
+});
+
+modalConfirm.addEventListener("click", async () => {
+  if (!pendingAction) return;
+  modalConfirm.disabled = true;
+  const originalText = modalConfirm.textContent;
+  modalConfirm.textContent = "Processing…";
+  try {
+    await pendingAction();
+    closeDialog();
+  } catch (err) {
+    alert("Error: " + err.message);
+    modalConfirm.disabled = false;
+    modalConfirm.textContent = originalText;
+  }
+});
+
+function openViewModal(d) {
+  modalTitle.textContent = "Alumnus Details";
+  modalBody.innerHTML = detailsHtml(d);
+  modalConfirm.style.display = "none";
+  modalCancel.textContent = "Close";
+  pendingAction = null;
+  dialog.showModal();
+}
+
+function openApproveModal(d) {
+  const proposedEmail = d.email || "";
+  const proposedPassword = generatePassword(14);
+
+  modalTitle.textContent = "Approve & Create Account";
+  modalBody.innerHTML = `
+    ${detailsHtml(d)}
+    <div class="warn">
+      <b>Important:</b> Clicking Approve will create a Firebase Auth account and open your email app with the credentials.
+    </div>
+    <label style="margin-top:1rem;">Login Email</label>
+    <div class="cred-row"><input id="cred-email" value="${escapeAttr(proposedEmail)}" readonly><button class="small gray" id="copy-email" type="button">Copy</button></div>
+    <label style="margin-top:.75rem;">Generated Password</label>
+    <div class="cred-row"><input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly><button class="small gray" id="copy-pass" type="button">Copy</button></div>
+  `;
+  modalConfirm.style.display = "block";
+  modalConfirm.disabled = false;
+  modalConfirm.textContent = "Approve & Create User";
+  modalConfirm.className = "green";
+  modalCancel.textContent = "Cancel";
+
+  document.getElementById("copy-email").onclick = () => copyToClipboard(proposedEmail);
+  document.getElementById("copy-pass").onclick = () => copyToClipboard(proposedPassword);
+
+  pendingAction = async () => {
+    const secondaryApp = initializeApp(firebaseConfig, "Secondary-" + Date.now());
+    const secondaryAuth = getAuth(secondaryApp);
+    try {
+      await createUserWithEmailAndPassword(secondaryAuth, proposedEmail.toLowerCase(), proposedPassword);
+      await deleteApp(secondaryApp);
+    } catch (err) {
+      if (err.code === "auth/email-already-in-use") {
+        // User exists, continue anyway
+        await deleteApp(secondaryApp);
+      } else {
+        await deleteApp(secondaryApp);
+        throw err;
+      }
+    }
+
+    await updateDoc(doc(db, "alumni", d.id), {
+      approved: true,
+      approved_at: serverTimestamp(),
+      approved_by: auth.currentUser.email,
+      login_email: proposedEmail.toLowerCase()
+    });
+
+    openEmailDraft(d, proposedEmail, proposedPassword);
+    show("Approved! Email draft opened.", "ok");
+    loadAlumni();
+  };
+
+  dialog.showModal();
+}
+
+function openSendModal(d) {
+  const email = d.login_email || d.email || "";
+  const proposedPassword = generatePassword(14);
+
+  modalTitle.textContent = "Send Credentials";
+  modalBody.innerHTML = `
+    ${detailsHtml(d)}
+    <div class="warn">This will open your email app to send these credentials to <b>${escapeHtml(d.email || "")}</b>.</div>
+    <label style="margin-top:1rem;">Login Email</label>
+    <div class="cred-row"><input id="cred-email" value="${escapeAttr(email)}" readonly><button class="small gray" id="copy-email" type="button">Copy</button></div>
+    <label style="margin-top:.75rem;">Password</label>
+    <div class="cred-row"><input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly><button class="small gray" id="copy-pass" type="button">Copy</button></div>
+  `;
+  modalConfirm.style.display = "block";
+  modalConfirm.disabled = false;
+  modalConfirm.textContent = "Open Email Draft";
+  modalConfirm.className = "green";
+  modalCancel.textContent = "Cancel";
+
+  document.getElementById("copy-email").onclick = () => copyToClipboard(email);
+  document.getElementById("copy-pass").onclick = () => copyToClipboard(proposedPassword);
+
+  pendingAction = async () => {
+    openEmailDraft(d, email, proposedPassword);
+    show("Email draft opened.", "ok");
+  };
+
+  dialog.showModal();
+}
+
+// ═══════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════
+function detailsHtml(d) {
+  const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
+  const rowsData = [
+    ["Name", d.full_name], ["Email", d.email], ["Phone", d.phone], ["Courses", d.courses], ["Graduation", d.graduation_year],
+    ["Stream", d.class_stream], ["Occupation", d.occupation], ["Employer", d.employer], ["Location", d.location],
+    ["LinkedIn", d.linkedin], ["Bio", d.bio], ["Directory consent", d.consent_public ? "Yes" : "No"],
+    ["Location sharing", d.share_location ? "Yes" : "No"], ["Submitted", created],
+  ];
+  return `<dl class="kv">` + rowsData.filter(([_, v]) => v !== undefined && v !== null && v !== "").map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(String(v))}</dd>`).join("") + `</dl>`;
+}
+
+function openEmailDraft(alumni, email, password) {
+  const subject = encodeURIComponent("Your alumni directory access — Bishop Angelo Tarantino Memorial SS");
+  const bodyText = 
+`Hello ${alumni.full_name || ""},
+
+Your alumni registration has been approved. You can now log in to the alumni directory.
+
+Email:    ${email}
+Password: ${password}
+
+Log in here: ${location.origin}${location.pathname.replace(/admin\.html?$/i, "")}
+
+Please change your password after your first login.
+
+— Bishop Angelo Tarantino Memorial SS`;
+  const mailtoLink = `mailto:${encodeURIComponent(alumni.email || "")}?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
+  window.open(mailtoLink, "_blank");
+}
+
+async function rejectDoc(id) {
+  const d = allDocs.find((x) => x.id === id);
+  if (!confirm(`Remove ${d?.full_name || d?.email} permanently?`)) return;
+  try { await deleteDoc(doc(db, "alumni", id)); show("Removed.", "ok"); loadAlumni(); }
+  catch (err) { show("Error: " + err.message, "err"); }
+}
+
+function generatePassword(length = 14) {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*";
+  let out = "";
+  const buf = new Uint32Array(length);
+  window.crypto.getRandomValues(buf);
+  for (let i = 0; i < length; i++) out += chars[buf[i] % chars.length];
+  return out;
+}
+
+async function copyToClipboard(text) {
+  try { await navigator.clipboard.writeText(text); show("Copied!", "ok"); } 
+  catch { show("Copy failed.", "err"); }
+}
+
+// ═══════════════════════════════════════════════════════
+//  BULK ACTIONS
+// ═══════════════════════════════════════════════════════
 selectAll.addEventListener("change", (e) => {
   const checked = e.target.checked;
   rows.querySelectorAll(".bulk-cb").forEach((cb) => {
@@ -550,6 +750,9 @@ bulkReject.addEventListener("click", async () => {
   loadAlumni();
 });
 
+// ═══════════════════════════════════════════════════════
+//  CSV EXPORT
+// ═══════════════════════════════════════════════════════
 exportBtn.addEventListener("click", () => {
   if (allDocs.length === 0) return alert("No data to export.");
   const headers = ["Name", "Email", "Phone", "Courses", "Graduation Year", "Stream", "Occupation", "Employer", "Location", "Status"];
@@ -578,6 +781,9 @@ exportBtn.addEventListener("click", () => {
   window.URL.revokeObjectURL(url);
 });
 
+// ═══════════════════════════════════════════════════════
+//  BROADCAST
+// ═══════════════════════════════════════════════════════
 document.getElementById("broadcast-btn").addEventListener("click", () => {
   const approved = allDocs.filter(d => d.approved && d.email);
   if (approved.length === 0) return alert("No approved alumni to email.");
@@ -590,6 +796,9 @@ document.getElementById("broadcast-btn").addEventListener("click", () => {
   window.open(mailtoLink, "_blank");
 });
 
+// ═══════════════════════════════════════════════════════
+//  MAP
+// ═══════════════════════════════════════════════════════
 function loadMap() {
   const mapContainer = document.getElementById("map-container");
   
@@ -609,13 +818,18 @@ function loadMap() {
   const located = allDocs.filter(d => d.share_location && d.live_location && d.live_location.latitude);
   
   if (located.length === 0) {
-    mapContainer.innerHTML = `<div style="display:flex; height:100%; align-items:center; justify-content:center; background:#f8fafc; color:#64748b; font-size:1.1rem; border-radius:10px;">No GPS coordinates found. Users must allow browser location access.</div>`;
-  } else {
-    mapContainer.innerHTML = ""; 
-    if (!mapInstance) {
-        mapInstance = L.map('map-container').setView([20, 0], 2);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(mapInstance);
+    if (!mapInstance._container.querySelector('.no-gps')) {
+      const overlay = document.createElement('div');
+      overlay.className = 'no-gps';
+      overlay.style = 'position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#f8fafc; color:#64748b; font-size:1rem; border-radius:10px; z-index:400;';
+      overlay.textContent = 'No GPS coordinates found. Users must allow browser location access.';
+      mapContainer.style.position = 'relative';
+      mapContainer.appendChild(overlay);
     }
+  } else {
+    const overlay = mapContainer.querySelector('.no-gps');
+    if (overlay) overlay.remove();
+    
     const bounds = L.latLngBounds();
     located.forEach(d => {
       const lat = d.live_location.latitude;
@@ -627,6 +841,9 @@ function loadMap() {
   }
 }
 
+// ═══════════════════════════════════════════════════════
+//  ROLES
+// ═══════════════════════════════════════════════════════
 async function loadRoles() {
   clearMsg();
   roleRows.innerHTML = '<tr><td colspan="5" class="empty">Loading…</td></tr>';
@@ -657,15 +874,20 @@ function renderRoles() {
       <td>${badge}</td>
       <td style="font-size:.78rem;">${escapeHtml(added)}</td>
       <td>
-        <button class="small gray" data-edit-role="${escapeAttr(r.uid)}">Change role</button>
-        <button class="small red" data-del-role="${escapeAttr(r.uid)}">Remove</button>
+        <button class="small gray" data-action="edit-role" data-id="${escapeAttr(r.uid)}">Change role</button>
+        <button class="small red" data-action="del-role" data-id="${escapeAttr(r.uid)}">Remove</button>
       </td>
     </tr>`;
   }).join("");
-
-  roleRows.querySelectorAll("[data-edit-role]").forEach((b) => b.addEventListener("click", () => editRole(b.dataset.editRole)));
-  roleRows.querySelectorAll("[data-del-role]").forEach((b) => b.addEventListener("click", () => deleteRole(b.dataset.delRole)));
 }
+
+roleRows.addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-action]");
+  if (!btn) return;
+  const uid = btn.dataset.id;
+  if (btn.dataset.action === "edit-role") editRole(uid);
+  else if (btn.dataset.action === "del-role") deleteRole(uid);
+});
 
 async function editRole(uid) {
   const r = allRoles.find((x) => x.uid === uid);
@@ -688,158 +910,6 @@ async function deleteRole(uid) {
   if (!confirm(`Remove all access from ${r.email || uid}?`)) return;
   try { await deleteDoc(doc(db, "roles", uid)); show("Role removed.", "ok"); loadRoles(); }
   catch (err) { show("Error: " + err.message, "err"); }
-}
-
-function openApproval(id, viewOnly = false) {
-  const d = allDocs.find((x) => x.id === id);
-  if (!d) return;
-
-  if (viewOnly) {
-    modal.innerHTML = `<h3>Alumnus details</h3>${detailsHtml(d)}<div class="modal-actions"><button class="gray" id="modal-close">Close</button></div>`;
-    modalBg.classList.add("active");
-    document.getElementById("modal-close").onclick = closeModal;
-    return;
-  }
-
-  const proposedEmail = d.email || "";
-  const proposedPassword = generatePassword(14);
-
-  modal.innerHTML = `
-    <h3>Approve registration</h3>
-    ${detailsHtml(d)}
-    <div class="warn">
-      <b>Important:</b> Clicking approve will mark them as approved in the database and open your email app with the credentials. <b>You must manually create their account in the Firebase Console.</b>
-    </div>
-    <div style="margin-top:1rem;">
-      <label>Login email (used to sign in)</label>
-      <div class="cred-row"><input id="cred-email" value="${escapeAttr(proposedEmail)}" readonly><button class="small gray" id="copy-email">Copy</button></div>
-      <label style="margin-top:.75rem;">Generated password</label>
-      <div class="cred-row"><input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly><button class="small gray" id="copy-pass">Copy</button><button class="small" id="regen-pass">Regenerate</button></div>
-    </div>
-    <div class="modal-actions"><button class="gray" id="modal-close">Cancel</button><button class="green" id="modal-confirm">Approve &amp; open email</button></div>
-    <div class="msg" id="modal-msg" style="margin-top:1rem;"></div>
-  `;
-  modalBg.classList.add("active");
-
-  const emailIn = document.getElementById("cred-email");
-  const passIn  = document.getElementById("cred-pass");
-  const mmsg    = document.getElementById("modal-msg");
-
-  document.getElementById("copy-email").onclick = () => copyToClipboard(emailIn.value, mmsg, "Email copied.");
-  document.getElementById("copy-pass").onclick  = () => copyToClipboard(passIn.value, mmsg, "Password copied.");
-  document.getElementById("regen-pass").onclick = () => { passIn.value = generatePassword(14); mmsg.className = "msg info"; mmsg.textContent = "New password generated."; };
-  document.getElementById("modal-close").onclick = closeModal;
-
-  document.getElementById("modal-confirm").onclick = async () => {
-    const confirmBtn = document.getElementById("modal-confirm");
-    confirmBtn.disabled = true;
-    confirmBtn.textContent = "Saving…";
-    try {
-      await updateDoc(doc(db, "alumni", id), {
-        approved: true, approved_at: serverTimestamp(), approved_by: auth.currentUser.email, login_email: emailIn.value.trim().toLowerCase()
-      });
-      openEmailDraft(d, emailIn.value.trim(), passIn.value);
-      mmsg.className = "msg ok";
-      mmsg.innerHTML = `Approved! Email draft opened.`;
-      setTimeout(() => { closeModal(); loadAlumni(); }, 1500);
-    } catch (err) {
-      mmsg.className = "msg err";
-      mmsg.textContent = err.message;
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = "Approve & open email";
-    }
-  };
-}
-
-function openSendCredentials(id) {
-  const d = allDocs.find((x) => x.id === id);
-  if (!d) return;
-  const email = d.login_email || d.email || "";
-  const proposedPassword = generatePassword(14);
-
-  modal.innerHTML = `
-    <h3>Send credentials</h3>
-    ${detailsHtml(d)}
-    <div class="warn">This will open your email app to send these credentials to <b>${escapeHtml(d.email || "")}</b>.</div>
-    <div style="margin-top:1rem;">
-      <label>Login email</label>
-      <div class="cred-row"><input id="cred-email" value="${escapeAttr(email)}" readonly><button class="small gray" id="copy-email">Copy</button></div>
-      <label style="margin-top:.75rem;">Password</label>
-      <div class="cred-row"><input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly><button class="small gray" id="copy-pass">Copy</button><button class="small" id="regen-pass">Regenerate</button></div>
-    </div>
-    <div class="modal-actions"><button class="gray" id="modal-close">Cancel</button><button class="green" id="modal-confirm">Open email draft</button></div>
-    <div class="msg" id="modal-msg" style="margin-top:1rem;"></div>
-  `;
-  modalBg.classList.add("active");
-
-  const passIn = document.getElementById("cred-pass");
-  const mmsg   = document.getElementById("modal-msg");
-
-  document.getElementById("copy-email").onclick = () => copyToClipboard(email, mmsg, "Email copied.");
-  document.getElementById("copy-pass").onclick  = () => copyToClipboard(passIn.value, mmsg, "Password copied.");
-  document.getElementById("regen-pass").onclick = () => { passIn.value = generatePassword(14); mmsg.className = "msg info"; mmsg.textContent = "New password generated."; };
-  document.getElementById("modal-close").onclick = closeModal;
-
-  document.getElementById("modal-confirm").onclick = () => {
-    openEmailDraft(d, email, passIn.value);
-    mmsg.className = "msg ok";
-    mmsg.innerHTML = `✅ Email draft opened.`;
-    setTimeout(closeModal, 1500);
-  };
-}
-
-function openEmailDraft(alumni, email, password) {
-  const subject = encodeURIComponent("Your alumni directory access — Bishop Angelo Tarantino Memorial SS");
-  const bodyText = 
-`Hello ${alumni.full_name || ""},
-
-Your alumni registration has been approved. You can now log in to the alumni directory.
-
-Email:    ${email}
-Password: ${password}
-
-Log in here: ${location.origin}${location.pathname.replace(/admin\.html?$/i, "")}
-
-Please change your password after your first login.
-
-— Bishop Angelo Tarantino Memorial SS`;
-  const mailtoLink = `mailto:${encodeURIComponent(alumni.email || "")}?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
-  window.open(mailtoLink, "_blank");
-}
-
-function detailsHtml(d) {
-  const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
-  const rowsData = [
-    ["Name", d.full_name], ["Email", d.email], ["Phone", d.phone], ["Courses", d.courses], ["Graduation", d.graduation_year],
-    ["Stream", d.class_stream], ["Occupation", d.occupation], ["Employer", d.employer], ["Location", d.location],
-    ["LinkedIn", d.linkedin], ["Bio", d.bio], ["Directory consent", d.consent_public ? "Yes" : "No"],
-    ["Location sharing", d.share_location ? "Yes" : "No"], ["Submitted", created],
-  ];
-  return `<dl class="kv">` + rowsData.filter(([_, v]) => v !== undefined && v !== null && v !== "").map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(String(v))}</dd>`).join("") + `</dl>`;
-}
-
-function closeModal() { modalBg.classList.remove("active"); modal.innerHTML = ""; }
-modalBg.addEventListener("click", (e) => { if (e.target === modalBg) closeModal(); });
-
-async function rejectDoc(id) {
-  const d = allDocs.find((x) => x.id === id);
-  if (!confirm(`Are you sure you want to remove ${d?.full_name || d?.email}?`)) return;
-  try { await deleteDoc(doc(db, "alumni", id)); show("Removed.", "ok"); loadAlumni(); }
-  catch (err) { show("Error: " + err.message, "err"); }
-}
-
-function generatePassword(length = 14) {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*";
-  let out = "";
-  const buf = new Uint32Array(length);
-  window.crypto.getRandomValues(buf);
-  for (let i = 0; i < length; i++) out += chars[buf[i] % chars.length];
-  return out;
-}
-
-async function copyToClipboard(text, msgEl, okText) {
-  try { await navigator.clipboard.writeText(text); msgEl.className = "msg ok"; msgEl.textContent = okText; } 
-  catch { msgEl.className = "msg err"; msgEl.textContent = "Copy failed."; }
 }
 
 searchIn.addEventListener("input", renderRows);
