@@ -18,9 +18,12 @@
   /* Global Nav */
   .nav-tabs { display: flex; gap: .5rem; border-bottom: 2px solid var(--line); margin-bottom: 1.5rem; flex-wrap: wrap; }
   .nav-tab { padding: .75rem 1.25rem; border: 0; background: none; border-radius: 0; color: #64748b;
-             font-weight: 600; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer; }
+             font-weight: 600; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer; position: relative; }
   .nav-tab:hover { background: #f1f5f9; }
   .nav-tab.active { color: var(--brand); border-bottom-color: var(--brand); }
+  
+  /* Notification Badge */
+  .badge { display: inline-block; background: #dc2626; color: white; font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.4rem; border-radius: 999px; margin-left: 0.25rem; vertical-align: middle; }
 
   /* Forms & Inputs */
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -124,11 +127,11 @@
   <div class="nav-tabs">
     <button class="nav-tab active" data-view="home">🏠 Home</button>
     <button class="nav-tab" data-view="register">✍️ Register</button>
-    <button class="nav-tab" data-view="directory">📖 Directory</button>
-    <button class="nav-tab" data-view="events">📅 Events</button>
-    <button class="nav-tab" data-view="jobs">💼 Job Board</button>
-    <button class="nav-tab" data-view="stories">📚 Stories</button>
-    <button class="nav-tab" data-view="admin">⚙️ Admin</button>
+    <button class="nav-tab locked" data-view="directory">📖 Directory</button>
+    <button class="nav-tab locked" data-view="events">📅 Events <span id="badge-events" class="badge" style="display:none;">New</span></button>
+    <button class="nav-tab locked" data-view="jobs">💼 Job Board <span id="badge-jobs" class="badge" style="display:none;">New</span></button>
+    <button class="nav-tab locked" data-view="stories">📚 Stories <span id="badge-stories" class="badge" style="display:none;">New</span></button>
+    <button class="nav-tab locked" data-view="admin">⚙️ Admin</button>
   </div>
 
   <!-- ══════════ HOME VIEW ══════════ -->
@@ -272,7 +275,7 @@
     <div id="stories-list"></div>
   </div>
 
-  <!-- ══════════ ADMIN VIEW (Small Link) ══════════ -->
+  <!-- ══════════ ADMIN VIEW ══════════ -->
   <div id="view-admin" style="display:none;">
     <h2>Admin Panel</h2>
     <p class="sub">Manage registrations, approve alumni, and view reports.</p>
@@ -323,6 +326,7 @@ const auth = getAuth(app);
 let allMembers = [];
 let currentUserDoc = null;
 let dialogAction = null;
+let isLoggedIn = false;
 
 // ─── UI Elements ───
 const modal = document.getElementById("my-modal");
@@ -332,36 +336,87 @@ const modalCancel = document.getElementById("modal-cancel");
 const modalConfirm = document.getElementById("modal-confirm");
 
 // ═══════════════════════════════════════════════════════
-//  NAVIGATION
+//  NAVIGATION & GATES
 // ═══════════════════════════════════════════════════════
 document.querySelectorAll(".nav-tab").forEach(btn => {
   btn.addEventListener("click", () => {
+    const view = btn.dataset.view;
+    
+    // If locked and not logged in, force login view
+    if (btn.classList.contains("locked") && !isLoggedIn) {
+      // Show Directory tab (which has the login box)
+      document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
+      document.querySelector(".nav-tab[data-view='directory']").classList.add("active");
+      
+      document.querySelectorAll("[id^='view-']").forEach(v => v.style.display = "none");
+      document.getElementById("view-directory").style.display = "block";
+      
+      document.getElementById("login-msg").textContent = "Please log in to access this section.";
+      document.getElementById("login-msg").className = "msg info";
+      return;
+    }
+
+    // Normal navigation
     document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     
     document.querySelectorAll("[id^='view-']").forEach(v => v.style.display = "none");
-    document.getElementById("view-" + btn.dataset.view).style.display = "block";
+    document.getElementById("view-" + view).style.display = "block";
     
-    // Load data for the specific tab
-    if (btn.dataset.view === "events") loadEvents();
-    if (btn.dataset.view === "jobs") loadJobs();
-    if (btn.dataset.view === "stories") loadStories();
-    if (btn.dataset.view === "home") loadAlumniOfMonth();
-    if (btn.dataset.view === "directory" && auth.currentUser) loadDirectory();
+    if (view === "events") { loadEvents(); markAsRead("events"); }
+    if (view === "jobs") { loadJobs(); markAsRead("jobs"); }
+    if (view === "stories") { loadStories(); markAsRead("stories"); }
+    if (view === "home") loadAlumniOfMonth();
+    if (view === "directory" && isLoggedIn) loadDirectory();
   });
 });
 
-// Load announcement on start
-async function loadAnnouncement() {
+// ═══════════════════════════════════════════════════════
+//  NOTIFICATION BADGES
+// ═══════════════════════════════════════════════════════
+async function checkBadges() {
+  // Helper to get last seen time
+  const getLastSeen = (key) => Number(localStorage.getItem("last_seen_" + key) || 0);
+  const now = Date.now();
+
+  // Events
   try {
-    const snap = await getDoc(doc(db, "settings", "announcement"));
-    if (snap.exists() && snap.data().active) {
-      document.getElementById("announcement-text").textContent = snap.data().text;
-      document.getElementById("announcement-banner").style.display = "flex";
-    }
-  } catch (err) { /* Silent fail */ }
+    const snap = await getDocs(collection(db, "events"));
+    let latest = 0;
+    snap.forEach(d => {
+      const t = d.data().created_at?.toMillis?.() || 0;
+      if (t > latest) latest = t;
+    });
+    if (latest > getLastSeen("events")) document.getElementById("badge-events").style.display = "inline-block";
+  } catch(e) {}
+
+  // Jobs
+  try {
+    const snap = await getDocs(collection(db, "jobs"));
+    let latest = 0;
+    snap.forEach(d => {
+      const t = d.data().created_at?.toMillis?.() || 0;
+      if (t > latest) latest = t;
+    });
+    if (latest > getLastSeen("jobs")) document.getElementById("badge-jobs").style.display = "inline-block";
+  } catch(e) {}
+
+  // Stories
+  try {
+    const snap = await getDocs(collection(db, "stories"));
+    let latest = 0;
+    snap.forEach(d => {
+      const t = d.data().created_at?.toMillis?.() || 0;
+      if (t > latest) latest = t;
+    });
+    if (latest > getLastSeen("stories")) document.getElementById("badge-stories").style.display = "inline-block";
+  } catch(e) {}
 }
-loadAnnouncement();
+
+function markAsRead(key) {
+  localStorage.setItem("last_seen_" + key, Date.now());
+  document.getElementById("badge-" + key).style.display = "none";
+}
 
 // ═══════════════════════════════════════════════════════
 //  MODAL CONTROLS
@@ -484,14 +539,28 @@ onAuthStateChanged(auth, async (user) => {
   const logoutBtn = document.getElementById("logout-btn");
 
   if (!user) {
+    isLoggedIn = false;
     loginBox.style.display = "block";
     dirContent.style.display = "none";
     logoutBtn.style.display = "none";
+    
+    // Lock tabs again
+    document.querySelectorAll(".nav-tab.locked").forEach(t => t.style.color = "#94a3b8");
+    
+    // If user was on a locked tab, go home
+    const activeView = document.querySelector(".nav-tab.active")?.dataset.view;
+    if (activeView && activeView !== "home" && activeView !== "register") {
+      document.querySelector(".nav-tab[data-view=home]").click();
+    }
     return;
   }
 
+  isLoggedIn = true;
   loginBox.style.display = "none";
   logoutBtn.style.display = "block";
+
+  // Unlock tabs visually
+  document.querySelectorAll(".nav-tab.locked").forEach(t => t.style.color = "#64748b");
 
   try {
     const q = query(collection(db, "alumni"), where("email", "==", user.email.toLowerCase()), where("approved", "==", true));
@@ -499,6 +568,7 @@ onAuthStateChanged(auth, async (user) => {
 
     if (snap.empty) {
       await signOut(auth);
+      isLoggedIn = false;
       loginBox.style.display = "block";
       document.getElementById("login-msg").textContent = "This account is not approved. Contact the admin.";
       document.getElementById("login-msg").className = "msg err";
@@ -513,6 +583,7 @@ onAuthStateChanged(auth, async (user) => {
     dirContent.style.display = "block";
 
     await loadDirectory();
+    checkBadges(); // Check for new notifications
   } catch (err) {
     alert("Verification error: " + err.message);
     await signOut(auth);
@@ -582,7 +653,6 @@ function renderDirectory() {
   `).join("");
 }
 
-// Global function for card click
 window.openProfileModal = (id) => {
   const m = allMembers.find(x => x.id === id);
   if (!m) return;
@@ -683,6 +753,21 @@ async function loadAlumniOfMonth() {
   } catch (err) { /* silent */ }
 }
 loadAlumniOfMonth();
+loadAnnouncement();
+checkBadges();
+
+// ═══════════════════════════════════════════════════════
+//  ANNOUNCEMENT
+// ═══════════════════════════════════════════════════════
+async function loadAnnouncement() {
+  try {
+    const snap = await getDoc(doc(db, "settings", "announcement"));
+    if (snap.exists() && snap.data().active) {
+      document.getElementById("announcement-text").textContent = snap.data().text;
+      document.getElementById("announcement-banner").style.display = "flex";
+    }
+  } catch (err) { /* silent */ }
+}
 
 // ═══════════════════════════════════════════════════════
 //  EVENTS
@@ -697,13 +782,12 @@ async function loadEvents() {
     let html = "";
     snap.forEach(d => {
       const ev = d.data();
-      const date = ev.date?.toDate?.()?.toLocaleDateString() || "Date TBD";
       html += `
         <div class="card">
           <h4>${escapeHtml(ev.name)}</h4>
-          <div class="meta">📅 ${date} • 📍 ${escapeHtml(ev.location || "TBD")}</div>
+          <div class="meta">📅 ${escapeHtml(ev.date || "TBD")} • 📍 ${escapeHtml(ev.location || "TBD")}</div>
           <p style="font-size:.9rem;">${escapeHtml(ev.description || "")}</p>
-          <button class="small" data-event-id="${d.id}" onclick="rsvpEvent('${d.id}')" style="margin-top:.5rem;">🙋 I'll Attend</button>
+          <button class="small" onclick="rsvpEvent('${d.id}')" style="margin-top:.5rem;">🙋 I'll Attend</button>
         </div>
       `;
     });
