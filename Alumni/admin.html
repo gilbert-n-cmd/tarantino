@@ -45,7 +45,6 @@
   .stat-card h4 { margin: 0 0 .5rem; font-size: .85rem; color: #64748b; text-transform: uppercase; letter-spacing: .5px; }
   .stat-card .num { font-size: 1.8rem; font-weight: 700; color: var(--brand); }
 
-  /* Tabs */
   .tabs { display: flex; gap: .5rem; border-bottom: 2px solid var(--line); margin-bottom: 1.25rem; flex-wrap: wrap; }
   .tab { padding: .6rem 1rem; border: 0; background: none; border-radius: 0; color: #64748b;
          font-weight: 600; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer; }
@@ -66,7 +65,6 @@
   .toolbar { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
   .toolbar input[type=search] { flex: 1; min-width: 200px; }
 
-  /* Modal */
   .modal-bg {
     display: none; position: fixed; inset: 0; background: rgba(15,23,42,.55);
     align-items: center; justify-content: center; padding: 1rem; z-index: 50;
@@ -85,43 +83,28 @@
           font-size: .82rem; margin-top: .5rem; }
 
   .empty { color: #64748b; font-size: .9rem; padding: 1.5rem 0; text-align: center; }
-  #map-container { height: 400px; width: 100%; border-radius: 10px; border: 1px solid var(--line); display: none; }
+  
+  /* MAP FIX: Removed display:none from here so Leaflet can calculate size */
+  #map-container { height: 400px; width: 100%; border-radius: 10px; border: 1px solid var(--line); }
 
-  /* ═══════════════════════════════════════════════════════
-     MOBILE RESPONSIVENESS FIXES
-     ═══════════════════════════════════════════════════════ */
   @media (max-width: 768px) {
     body { padding: 1rem 0.5rem; }
     .wrap { padding: 1.25rem; border-radius: 10px; }
-    
-    /* Stack stats into 2 columns */
     .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
     .stat-card { padding: 0.75rem; }
     .stat-card .num { font-size: 1.4rem; }
-
-    /* Make tabs scrollable instead of wrapping */
     .tabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
     .tab { white-space: nowrap; padding: .5rem .75rem; font-size: .85rem; }
-
-    /* Adjust modal padding */
     .modal { padding: 1.25rem; }
     .modal .kv { grid-template-columns: 100px 1fr; font-size: .8rem; }
-    
-    /* Stack credential rows */
     .cred-row { flex-wrap: wrap; }
     .cred-row input { width: 100%; margin-bottom: .25rem; }
     .cred-row button { flex: 1; }
-    
-    /* Fix toolbar buttons */
     .toolbar { flex-direction: column; align-items: stretch; }
     .toolbar input[type=search] { width: 100%; }
     .toolbar button { width: 100%; }
-    
-    /* Fix bulk actions layout */
     #bulk-actions { flex-direction: column; gap: 0.5rem; }
     #bulk-actions button { width: 100%; margin-left: 0 !important; margin-top: 0.5rem; }
-    
-    /* Stack modal action buttons */
     .modal-actions { flex-direction: column; }
     .modal-actions button { width: 100%; }
   }
@@ -388,6 +371,9 @@ onAuthStateChanged(auth, async (user) => {
   else showAccessDenied(user, reason);
 });
 
+// ═══════════════════════════════════════════════════════
+//  TAB SWITCHING (Fixed Map Loading)
+// ═══════════════════════════════════════════════════════
 function switchTab(name) {
   currentTab = name;
   tabs.forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
@@ -409,7 +395,10 @@ function switchTab(name) {
 
   if (isRoles) loadRoles();
   else if (isAlumni) loadAlumni();
-  else if (isMap) loadMap();
+  else if (isMap) {
+    // ⭐ FIX: Wait 100ms for the div to become visible, then load the map
+    setTimeout(loadMap, 100);
+  }
   else if (isBroadcast) {
     document.getElementById("broadcast-subject").value = "Alumni Update — Bishop Angelo Tarantino Memorial SS";
   }
@@ -577,17 +566,24 @@ document.getElementById("broadcast-btn").addEventListener("click", () => {
   window.open(mailtoLink, "_blank");
 });
 
+// ═══════════════════════════════════════════════════════
+//  MAP (Fixed Initialization)
+// ═══════════════════════════════════════════════════════
 function loadMap() {
   const mapContainer = document.getElementById("map-container");
-  mapContainer.style.display = "block";
   
-  if (!mapInstance) {
+  // If map already exists, just resize it to fix Leaflet rendering glitches
+  if (mapInstance) {
+    mapInstance.invalidateSize();
+  } else {
+    // Create the map for the first time
     mapInstance = L.map('map-container').setView([20, 0], 2);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap'
     }).addTo(mapInstance);
   }
 
+  // Clear existing markers
   mapInstance.eachLayer((layer) => {
     if (layer instanceof L.Marker) mapInstance.removeLayer(layer);
   });
