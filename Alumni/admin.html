@@ -536,10 +536,14 @@ function renderRows() {
     let status, actions;
     if (currentTab === "rejected") {
       status = `<span class="pill" style="background:#fee2e2; color:#991b1b;">Rejected</span>`;
-      actions = `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>`;
+      // ⭐ NEW: Restore button
+      actions = `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>
+                 <button class="small green" data-action="restore" data-id="${escapeAttr(d.id)}">Restore</button>`;
     } else if (currentTab === "revoked") {
       status = `<span class="pill" style="background:#ffedd5; color:#9a3412;">Revoked</span>`;
-      actions = `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>`;
+      // ⭐ NEW: Restore button
+      actions = `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>
+                 <button class="small green" data-action="restore" data-id="${escapeAttr(d.id)}">Restore</button>`;
     } else {
       status = d.approved ? `<span class="pill approved">Approved</span>` : `<span class="pill pending">Pending</span>`;
       actions = d.approved
@@ -599,6 +603,7 @@ rows.addEventListener("click", (e) => {
   else if (action === "send") openSendModal(d);
   else if (action === "reject") openRejectModal(d);
   else if (action === "revoke") openRevokeModal(d);
+  else if (action === "restore") openRestoreModal(d);
 });
 
 // ═══════════════════════════════════════════════════════
@@ -780,7 +785,6 @@ function openRejectModal(d) {
   dialog.showModal();
 }
 
-// ⭐ NEW: Revoke Modal (Feature: Revoked Alumni)
 function openRevokeModal(d) {
   modalTitle.textContent = "Revoke Access";
   modalBody.innerHTML = `
@@ -815,6 +819,49 @@ function openRevokeModal(d) {
   dialog.showModal();
 }
 
+// ⭐ NEW: Restore Modal
+function openRestoreModal(d) {
+  modalTitle.textContent = "Restore Alumnus";
+  modalBody.innerHTML = `
+    ${detailsHtml(d)}
+    <div class="warn">
+      This will move this alumnus back to the <b>Pending</b> list in the main directory. 
+      You can then approve them again.
+    </div>
+  `;
+  modalConfirm.style.display = "block";
+  modalConfirm.disabled = false;
+  modalConfirm.textContent = "Restore to Pending";
+  modalConfirm.className = "green";
+  modalCancel.textContent = "Cancel";
+
+  pendingAction = async () => {
+    const sourceCollection = currentTab === "rejected" ? "rejected_alumni" : "revoked_alumni";
+    
+    // Remove archive fields, set approved back to false
+    const { id, rejected_at, rejected_by, rejection_reason, revoked_at, revoked_by, revoked_reason, ...rest } = d;
+    const restoredData = {
+      ...rest,
+      approved: false,
+      restored_at: serverTimestamp(),
+      restored_by: auth.currentUser.email
+    };
+
+    // Add back to alumni collection
+    await addDoc(collection(db, "alumni"), restoredData);
+    
+    // Delete from archive
+    await deleteDoc(doc(db, sourceCollection, d.id));
+    
+    show("Restored to Pending.", "ok");
+    
+    if (currentTab === "rejected") loadRejected();
+    else loadRevoked();
+  };
+
+  dialog.showModal();
+}
+
 // ═══════════════════════════════════════════════════════
 //  HELPERS
 // ═══════════════════════════════════════════════════════
@@ -827,6 +874,9 @@ function detailsHtml(d) {
   }
   if (d.revoked_reason) {
     archiveInfo += `<dt style="color:#9a3412;">Revoke Reason</dt><dd style="color:#9a3412;">${escapeHtml(d.revoked_reason)}</dd>`;
+  }
+  if (d.restored_at) {
+    archiveInfo += `<dt style="color:#166534;">Restored</dt><dd style="color:#166534;">Yes</dd>`;
   }
 
   const rowsData = [
