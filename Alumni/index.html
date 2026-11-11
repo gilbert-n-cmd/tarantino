@@ -3,17 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Alumni Registration — Bishop Angelo Tarantino Memorial SS</title>
+<title>Alumni Portal — Bishop Angelo Tarantino Memorial SS</title>
 <style>
-  :root { --brand: #14532d; --brand-2: #166534; --bg: #f8fafc; --line: #e2e8f0; }
+  :root { --brand: #004080; --brand-2: #166534; --bg: #f8fafc; --line: #e2e8f0; }
   * { box-sizing: border-box; }
   body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
          background: var(--bg); color: #0f172a; padding: 2rem 1rem; }
-  .wrap { max-width: 720px; margin: 0 auto 1.5rem; background: #fff; border: 1px solid var(--line);
+  .wrap { max-width: 900px; margin: 0 auto 1.5rem; background: #fff; border: 1px solid var(--line);
           border-radius: 14px; padding: 2rem; box-shadow: 0 6px 24px rgba(15,23,42,.06); }
-  h1 { margin: 0 0 .25rem; font-size: 1.6rem; color: #004080; }
-  h2 { margin: 0 0 1rem; font-size: 1.25rem; color: #004080; }
+  h1 { margin: 0 0 .25rem; font-size: 1.6rem; color: var(--brand); }
+  h2 { margin: 0 0 1rem; font-size: 1.25rem; color: var(--brand); }
   .sub { margin: 0 0 1.75rem; color: #64748b; font-size: .95rem; }
+  
+  /* Global Nav */
+  .nav-tabs { display: flex; gap: .5rem; border-bottom: 2px solid var(--line); margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .nav-tab { padding: .75rem 1.25rem; border: 0; background: none; border-radius: 0; color: #64748b;
+             font-weight: 600; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer; }
+  .nav-tab:hover { background: #f1f5f9; }
+  .nav-tab.active { color: var(--brand); border-bottom-color: var(--brand); }
+
+  /* Forms & Inputs */
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .full { grid-column: 1 / -1; }
   label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .35rem; }
@@ -28,188 +37,273 @@
   .req { color: #dc2626; }
   .check { display: flex; gap: .6rem; align-items: flex-start; font-weight: 400; font-size: .9rem; }
   .check input { width: auto; margin-top: .2rem; }
-  .hp { position: absolute; left: -9999px; }
   button {
-    margin-top: 1.5rem; width: 100%; padding: .85rem; border: 0; border-radius: 8px;
-    background: #004080; color: #fff; font: inherit; font-weight: 600; cursor: pointer;
+    padding: .75rem 1.25rem; border: 0; border-radius: 8px;
+    background: var(--brand); color: #fff; font: inherit; font-weight: 600; cursor: pointer;
   }
   button:hover:not(:disabled) { background: var(--brand-2); }
   button:disabled { opacity: .6; cursor: not-allowed; }
+  button.small { padding: .4rem .75rem; font-size: .8rem; }
+
+  /* Messages */
   .msg { margin-top: 1rem; padding: .8rem 1rem; border-radius: 8px; font-size: .9rem; display: none; }
   .msg.ok  { display: block; background: #dcfce7; color: #166534; }
   .msg.err { display: block; background: #fee2e2; color: #991b1b; }
   .msg.info{ display: block; background: #dbeafe; color: #1e40af; }
 
-  /* Directory styles */
-  .directory { margin-top: 1.5rem; }
+  /* Directory */
   .directory-toolbar { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; }
-  .directory-toolbar input { flex: 1; min-width: 180px; }
+  .directory-toolbar input { flex: 1; min-width: 200px; }
+  .filters { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .filters select { flex: 1; min-width: 140px; }
+  
   .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
   .member-card {
     border: 1px solid var(--line); border-radius: 10px; padding: 1rem; background: #fbfdff;
-    display: flex; flex-direction: column; gap: .35rem;
+    display: flex; flex-direction: column; gap: .35rem; cursor: pointer; transition: 0.2s;
   }
+  .member-card:hover { box-shadow: 0 4px 12px rgba(15,23,42,.08); transform: translateY(-2px); }
   .member-card h3 { margin: 0; font-size: 1.05rem; color: #0f172a; }
   .member-card .meta { font-size: .82rem; color: #475569; }
   .member-card .courses { font-size: .85rem; color: #0f172a; }
   .member-card .courses span.label { font-weight: 600; color: #166534; }
-  .member-card .bio { font-size: .82rem; color: #64748b; margin-top: .35rem; }
-  .member-card .contact { font-size: .8rem; color: #0f172a; margin-top: .25rem; word-break: break-word; }
-  .empty { color: #64748b; font-size: .9rem; padding: 1rem 0; }
-  .count { font-size: .85rem; color: #64748b; margin-bottom: .5rem; }
 
-  /* Login form */
-  .login-box { display: none; }
-  .login-box.active { display: block; }
-  .login-row { display: flex; gap: .75rem; flex-wrap: wrap; }
-  .login-row > div { flex: 1; min-width: 180px; }
+  /* Announcements */
+  .announcement-banner {
+    background: #fef3c7; color: #92400e; padding: 1rem; border-radius: 8px;
+    border-left: 4px solid #f59e0b; margin-bottom: 1.5rem;
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  }
+
+  /* Cards & Sections */
+  .card { border: 1px solid var(--line); border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem; background: #fff; }
+  .card h4 { margin: 0 0 .5rem; font-size: 1.1rem; color: var(--brand); }
+  .card .meta { font-size: .82rem; color: #64748b; margin-bottom: .5rem; }
+  
+  /* Modal */
+  dialog#my-modal {
+    border: none; border-radius: 16px; padding: 0; 
+    max-width: 560px; width: calc(100% - 2rem); 
+    box-shadow: 0 20px 50px rgba(15,23,42,.4);
+  }
+  dialog#my-modal::backdrop { background: rgba(15,23,42,.6); }
+  .modal-inner { padding: 1.5rem; max-height: 85vh; overflow-y: auto; }
+  .modal-inner h3 { margin: 0 0 1rem; font-size: 1.15rem; color: var(--brand); }
+  .modal-actions { display: flex; gap: .5rem; margin-top: 1rem; }
+  .modal-actions button { flex: 1; }
+
+  /* Misc */
+  .empty { color: #64748b; font-size: .9rem; padding: 1rem 0; text-align: center; }
+  .count { font-size: .85rem; color: #64748b; margin-bottom: .5rem; }
   .whoami { font-size: .85rem; color: #166534; margin-bottom: .75rem; display: none; }
   .whoami.active { display: block; }
-  .btn-secondary { background: #64748b; }
-  .btn-secondary:hover:not(:disabled) { background: #475569; }
-  .btn-row { display: flex; gap: .75rem; flex-wrap: wrap; }
-  .btn-row button { flex: 1; min-width: 140px; }
+  .link { color: var(--brand); cursor: pointer; text-decoration: underline; font-size: .85rem; }
 
-  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } .wrap { padding: 1.25rem; } }
+  @media (max-width: 600px) { 
+    .grid { grid-template-columns: 1fr; } 
+    .wrap { padding: 1.25rem; } 
+    .nav-tab { padding: .5rem .75rem; font-size: .85rem; }
+    .filters { flex-direction: column; }
+  }
 </style>
 </head>
 <body>
 
-<!-- ══════════ REGISTRATION FORM ══════════ -->
+<!-- GLOBAL HEADER -->
 <div class="wrap">
-  <h1>Alumni Registration</h1>
+  <h1>Alumni Portal</h1>
   <p class="sub">Bishop Angelo Tarantino Memorial Secondary School — Primus Inter Pares</p>
 
-  <form id="alumni-form" novalidate>
-    <div class="grid">
-      <div class="full">
-        <label for="full_name">Full name <span class="req">*</span></label>
-        <input id="full_name" name="full_name" required maxlength="120" autocomplete="name">
-      </div>
+  <!-- Announcement Banner -->
+  <div id="announcement-banner" class="announcement-banner" style="display:none;">
+    <span id="announcement-text"></span>
+    <button class="small gray" onclick="document.getElementById('announcement-banner').style.display='none'" style="background:#92400e;">Dismiss</button>
+  </div>
 
-      <div>
-        <label for="graduation_year">Year of graduation</label>
-        <input id="graduation_year" name="graduation_year" type="number" min="1950" max="2100" placeholder="e.g. 2015">
-      </div>
+  <!-- Navigation -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-view="home">🏠 Home</button>
+    <button class="nav-tab" data-view="register">✍️ Register</button>
+    <button class="nav-tab" data-view="directory">📖 Directory</button>
+    <button class="nav-tab" data-view="events">📅 Events</button>
+    <button class="nav-tab" data-view="jobs">💼 Job Board</button>
+    <button class="nav-tab" data-view="stories">📚 Stories</button>
+    <button class="nav-tab" data-view="admin">⚙️ Admin</button>
+  </div>
 
-      <div>
-        <label for="class_stream">Class / Stream</label>
-        <input id="class_stream" name="class_stream" maxlength="60" placeholder="e.g. S6 Sciences">
-      </div>
-
-      <div class="full">
-        <label for="courses">Course(s) pursued <span class="req">*</span></label>
-        <input id="courses" name="courses" required maxlength="200" placeholder="e.g. BSc Computer Science, MBA">
-        <small style="color:#64748b; font-size:.78rem;">Separate multiple courses with commas.</small>
-      </div>
-
-      <div>
-        <label for="email">Email <span class="req">*</span></label>
-        <input id="email" name="email" type="email" required autocomplete="email">
-        <small style="color:#64748b; font-size:.78rem;">Approval credentials will be sent here.</small>
-      </div>
-
-      <div>
-        <label for="phone">Phone <span class="req">*</span></label>
-        <input id="phone" name="phone" required type="tel" maxlength="20" autocomplete="tel">
-      </div>
-
-      <div>
-        <label for="occupation">Occupation</label>
-        <input id="occupation" name="occupation" maxlength="80">
-      </div>
-
-      <div>
-        <label for="employer">Employer / Organisation</label>
-        <input id="employer" name="employer" maxlength="80">
-      </div>
-
-      <div>
-        <label for="location">Location</label>
-        <input id="location" name="location" maxlength="80" placeholder="City, Country">
-      </div>
-
-      <div>
-        <label for="linkedin">LinkedIn / Website</label>
-        <input id="linkedin" name="linkedin" type="url" maxlength="200" placeholder="https://">
-      </div>
-
-      <div class="full">
-        <label for="bio">Short bio</label>
-        <textarea id="bio" name="bio" maxlength="500" placeholder="Tell us what you've been up to since school."></textarea>
-      </div>
-
-      <div class="full check">
-        <input id="consent_public" name="consent_public" type="checkbox" checked>
-        <label for="consent_public">
-          I agree to have my name, graduation year, courses and occupation shown in the public alumni directory.
-        </label>
-      </div>
-
-      <div class="full check">
-        <input id="share_location" name="share_location" type="checkbox">
-        <label for="share_location">
-          Share my live location with the school administration (e.g., for alumni events).
-        </label>
-      </div>
-
-      <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off">
+  <!-- ══════════ HOME VIEW ══════════ -->
+  <div id="view-home">
+    <h2>Welcome to the Alumni Network</h2>
+    <p>Stay connected with your fellow graduates, discover new opportunities, and celebrate what our community has achieved.</p>
+    
+    <div id="alumni-of-month" style="background:#f0fdf4; border-radius:10px; padding:1.5rem; margin-top:1.5rem; display:none;">
+      <h3 style="margin:0 0 .5rem; color:var(--brand-2);">🌟 Alumni of the Month</h3>
+      <div id="aotm-content"></div>
     </div>
+  </div>
 
-    <button type="submit" id="submit-btn">Submit registration</button>
-    <div class="msg" id="msg" role="status" aria-live="polite"></div>
-  </form>
-</div>
-
-<!-- ══════════ ALUMNI DIRECTORY (login-gated) ══════════ -->
-<div class="wrap directory">
-  <h2>Alumni Directory</h2>
-  <p class="sub">Restricted to approved alumni. Use the credentials sent to you by email.</p>
-
-  <!-- Login form -->
-  <div id="login-box" class="login-box active">
-    <form id="login-form" novalidate>
-      <div class="login-row">
-        <div>
-          <label for="login_email">Email</label>
-          <input id="login_email" type="email" required autocomplete="username">
+  <!-- ══════════ REGISTER VIEW ══════════ -->
+  <div id="view-register" style="display:none;">
+    <h2>Alumni Registration</h2>
+    <p class="sub">Fill in your details to join the alumni network.</p>
+    <form id="alumni-form" novalidate>
+      <div class="grid">
+        <div class="full">
+          <label for="full_name">Full name <span class="req">*</span></label>
+          <input id="full_name" name="full_name" required maxlength="120" autocomplete="name">
         </div>
         <div>
-          <label for="login_password">Password</label>
-          <input id="login_password" type="password" required autocomplete="current-password">
+          <label for="graduation_year">Year of graduation</label>
+          <input id="graduation_year" name="graduation_year" type="number" min="1950" max="2100" placeholder="e.g. 2015">
         </div>
+        <div>
+          <label for="class_stream">Class / Stream</label>
+          <input id="class_stream" name="class_stream" maxlength="60" placeholder="e.g. S6 Sciences">
+        </div>
+        <div class="full">
+          <label for="courses">Course(s) pursued <span class="req">*</span></label>
+          <input id="courses" name="courses" required maxlength="200" placeholder="e.g. BSc Computer Science, MBA">
+        </div>
+        <div>
+          <label for="email">Email <span class="req">*</span></label>
+          <input id="email" name="email" type="email" required autocomplete="email">
+        </div>
+        <div>
+          <label for="phone">Phone <span class="req">*</span></label>
+          <input id="phone" name="phone" required type="tel" maxlength="20" autocomplete="tel">
+        </div>
+        <div>
+          <label for="occupation">Occupation</label>
+          <input id="occupation" name="occupation" maxlength="80">
+        </div>
+        <div>
+          <label for="employer">Employer / Organisation</label>
+          <input id="employer" name="employer" maxlength="80">
+        </div>
+        <div>
+          <label for="location">Location</label>
+          <input id="location" name="location" maxlength="80" placeholder="City, Country">
+        </div>
+        <div>
+          <label for="linkedin">LinkedIn / Website</label>
+          <input id="linkedin" name="linkedin" type="url" maxlength="200" placeholder="https://">
+        </div>
+        <div class="full">
+          <label for="bio">Short bio</label>
+          <textarea id="bio" name="bio" maxlength="500" placeholder="Tell us what you've been up to since school."></textarea>
+        </div>
+        <div class="full check">
+          <input id="consent_public" name="consent_public" type="checkbox" checked>
+          <label for="consent_public">I agree to have my name and profile shown in the public directory.</label>
+        </div>
+        <div class="full check">
+          <input id="share_location" name="share_location" type="checkbox">
+          <label for="share_location">Share my live location with the school administration.</label>
+        </div>
+        <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute; left:-9999px;">
       </div>
-      <div class="btn-row">
-        <button type="submit" id="login-btn">Log in</button>
-        <button type="button" id="logout-btn" class="btn-secondary" style="display:none;">Log out</button>
-      </div>
-      <div class="msg" id="login-msg" role="status" aria-live="polite"></div>
+      <button type="submit" id="submit-btn" style="width:100%; margin-top:1rem;">Submit registration</button>
+      <div class="msg" id="msg"></div>
     </form>
   </div>
 
-  <!-- Directory content (shown after login) -->
-  <div id="directory-content" style="display:none;">
-    <div id="whoami" class="whoami"></div>
-
-    <div class="directory-toolbar">
-      <input id="search" placeholder="Search by name, course, occupation, year…">
-      <button type="button" id="refresh-btn" style="width:auto; margin-top:0; padding:.65rem 1rem;">Refresh</button>
+  <!-- ══════════ DIRECTORY VIEW ══════════ -->
+  <div id="view-directory" style="display:none;">
+    <h2>Alumni Directory</h2>
+    
+    <!-- Login gate -->
+    <div id="login-box" class="active">
+      <p class="sub">Restricted to approved alumni. Use your credentials to log in.</p>
+      <form id="login-form" novalidate>
+        <div class="grid">
+          <div><label>Email</label><input id="login_email" type="email" required autocomplete="username"></div>
+          <div><label>Password</label><input id="login_password" type="password" required autocomplete="current-password"></div>
+        </div>
+        <div style="display:flex; gap:.75rem; margin-top:1rem;">
+          <button type="submit" id="login-btn" style="flex:1;">Log in</button>
+          <button type="button" id="logout-btn" class="gray" style="display:none; flex:1; background:#64748b;">Log out</button>
+        </div>
+        <div style="margin-top:.75rem; text-align:center;">
+          <a id="forgot-password-btn" class="link">Forgot password?</a>
+        </div>
+        <div class="msg" id="login-msg"></div>
+      </form>
     </div>
 
-    <div class="count" id="dir-count"></div>
-    <div id="member-grid" class="member-grid"></div>
-    <div class="msg" id="dir-msg" role="status" aria-live="polite"></div>
+    <!-- Directory content -->
+    <div id="directory-content" style="display:none;">
+      <div id="whoami" class="whoami"></div>
+      
+      <div style="margin-bottom:1rem; display:flex; gap:.5rem; flex-wrap:wrap;">
+        <button id="edit-profile-btn" class="small gray" style="background:#64748b;">✏️ Edit My Profile</button>
+        <button id="toggle-location-btn" class="small gray" style="background:#64748b;">📍 Toggle Location Sharing</button>
+      </div>
+
+      <div class="directory-toolbar">
+        <input id="search" placeholder="Search by name, course, occupation, year…">
+      </div>
+      <div class="filters">
+        <select id="filter-year"><option value="">All Years</option></select>
+        <select id="filter-course"><option value="">All Courses</option></select>
+      </div>
+
+      <div class="count" id="dir-count"></div>
+      <div id="member-grid" class="member-grid"></div>
+    </div>
   </div>
+
+  <!-- ══════════ EVENTS VIEW ══════════ -->
+  <div id="view-events" style="display:none;">
+    <h2>Upcoming Events</h2>
+    <div id="events-list"></div>
+  </div>
+
+  <!-- ══════════ JOBS VIEW ══════════ -->
+  <div id="view-jobs" style="display:none;">
+    <h2>Alumni Job Board</h2>
+    <p class="sub">Discover career opportunities shared by your fellow alumni.</p>
+    <div id="jobs-list"></div>
+  </div>
+
+  <!-- ══════════ STORIES VIEW ══════════ -->
+  <div id="view-stories" style="display:none;">
+    <h2>Alumni Stories</h2>
+    <p class="sub">Read inspiring stories from our graduates.</p>
+    <div id="stories-list"></div>
+  </div>
+
+  <!-- ══════════ ADMIN VIEW (Small Link) ══════════ -->
+  <div id="view-admin" style="display:none;">
+    <h2>Admin Panel</h2>
+    <p class="sub">Manage registrations, approve alumni, and view reports.</p>
+    <a href="admin.html" style="display:inline-block; padding:1rem 2rem; background:var(--brand); color:white; text-decoration:none; border-radius:8px; font-weight:600;">Go to Admin Panel →</a>
+  </div>
+
 </div>
+
+<!-- CONTACT ADMIN FLOATING BUTTON -->
+<button id="contact-admin-btn" style="position:fixed; bottom:1.5rem; right:1.5rem; padding:1rem; border-radius:50%; width:60px; height:60px; box-shadow:0 4px 12px rgba(0,0,0,0.2); z-index:40; font-size:1.5rem;">✉️</button>
+
+<!-- NATIVE MODAL -->
+<dialog id="my-modal">
+  <div class="modal-inner">
+    <h3 id="modal-title">Details</h3>
+    <div id="modal-body"></div>
+    <div class="modal-actions">
+      <button id="modal-cancel" style="background:#64748b;">Cancel</button>
+      <button id="modal-confirm" style="background:var(--brand-2);">Confirm</button>
+    </div>
+  </div>
+</dialog>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getFirestore, collection, addDoc, doc, getDoc, query, where, getDocs,
-  serverTimestamp, GeoPoint, updateDoc
+  serverTimestamp, GeoPoint, updateDoc, orderBy, limit
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
-  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -225,272 +319,507 @@ const app  = initializeApp(firebaseConfig);
 const db   = getFirestore(app);
 const auth = getAuth(app);
 
-// ─── UI elements ───
-const form      = document.getElementById("alumni-form");
-const btn       = document.getElementById("submit-btn");
-const msg       = document.getElementById("msg");
-const gotcha    = form.querySelector('input[name="_gotcha"]');
-
-const loginBox     = document.getElementById("login-box");
-const loginForm    = document.getElementById("login-form");
-const loginEmail   = document.getElementById("login_email");
-const loginPassword= document.getElementById("login_password");
-const loginBtn     = document.getElementById("login-btn");
-const logoutBtn    = document.getElementById("logout-btn");
-const loginMsg     = document.getElementById("login-msg");
-
-const directoryContent = document.getElementById("directory-content");
-const whoami       = document.getElementById("whoami");
-const memberGrid   = document.getElementById("member-grid");
-const dirCount     = document.getElementById("dir-count");
-const dirMsg       = document.getElementById("dir-msg");
-const searchInput  = document.getElementById("search");
-const refreshBtn   = document.getElementById("refresh-btn");
-
+// ─── Global State ───
 let allMembers = [];
+let currentUserDoc = null;
+let dialogAction = null;
 
-function show(text, type) { msg.textContent = text; msg.className = "msg " + type; }
-function loginShow(text, type) { loginMsg.textContent = text; loginMsg.className = "msg " + type; }
-function dirShow(text, type) { dirMsg.textContent = text; dirMsg.className = "msg " + type; }
+// ─── UI Elements ───
+const modal = document.getElementById("my-modal");
+const modalTitle = document.getElementById("modal-title");
+const modalBody = document.getElementById("modal-body");
+const modalCancel = document.getElementById("modal-cancel");
+const modalConfirm = document.getElementById("modal-confirm");
 
-// ════════════════════════════════════════════════════════════════
-//  REGISTRATION — Fetches GPS if checkbox is ticked
-// ════════════════════════════════════════════════════════════════
-form.addEventListener("submit", async (e) => {
+// ═══════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════
+document.querySelectorAll(".nav-tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    
+    document.querySelectorAll("[id^='view-']").forEach(v => v.style.display = "none");
+    document.getElementById("view-" + btn.dataset.view).style.display = "block";
+    
+    // Load data for the specific tab
+    if (btn.dataset.view === "events") loadEvents();
+    if (btn.dataset.view === "jobs") loadJobs();
+    if (btn.dataset.view === "stories") loadStories();
+    if (btn.dataset.view === "home") loadAlumniOfMonth();
+    if (btn.dataset.view === "directory" && auth.currentUser) loadDirectory();
+  });
+});
+
+// Load announcement on start
+async function loadAnnouncement() {
+  try {
+    const snap = await getDoc(doc(db, "settings", "announcement"));
+    if (snap.exists() && snap.data().active) {
+      document.getElementById("announcement-text").textContent = snap.data().text;
+      document.getElementById("announcement-banner").style.display = "flex";
+    }
+  } catch (err) { /* Silent fail */ }
+}
+loadAnnouncement();
+
+// ═══════════════════════════════════════════════════════
+//  MODAL CONTROLS
+// ═══════════════════════════════════════════════════════
+modalCancel.addEventListener("click", () => modal.close());
+modal.addEventListener("click", (e) => {
+  const rect = modal.getBoundingClientRect();
+  if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) modal.close();
+});
+modalConfirm.addEventListener("click", async () => {
+  if (dialogAction) {
+    modalConfirm.disabled = true;
+    const original = modalConfirm.textContent;
+    modalConfirm.textContent = "Processing...";
+    try { await dialogAction(); modal.close(); } 
+    catch (err) { alert("Error: " + err.message); }
+    modalConfirm.disabled = false;
+    modalConfirm.textContent = original;
+  }
+});
+
+// ═══════════════════════════════════════════════════════
+//  REGISTRATION
+// ═══════════════════════════════════════════════════════
+document.getElementById("alumni-form").addEventListener("submit", async (e) => {
   e.preventDefault();
+  const form = e.target;
+  const gotcha = form.querySelector('input[name="_gotcha"]');
   if (gotcha.value) return;
 
-  if (!form.full_name.value.trim()) return show("Please enter your full name.", "err");
-  if (!form.courses.value.trim())   return show("Please enter your course(s).", "err");
-  if (!form.email.checkValidity())  return show("Please enter a valid email.", "err");
-  if (!form.phone.value.trim())     return show("Please enter your phone number.", "err");
-  if (!form.consent_public.checked) return show("Please tick the directory consent box.", "err");
-
-  const year = form.graduation_year.value ? Number(form.graduation_year.value) : null;
-  const shareLocation = form.share_location.checked;
+  const msgEl = document.getElementById("msg");
+  const submitBtn = document.getElementById("submit-btn");
 
   const data = {
-    full_name:       form.full_name.value.trim(),
-    graduation_year: year,
-    class_stream:    form.class_stream.value.trim(),
-    courses:         form.courses.value.trim(),
-    email:           form.email.value.trim().toLowerCase(),
-    phone:           form.phone.value.trim(),
-    occupation:      form.occupation.value.trim(),
-    employer:        form.employer.value.trim(),
-    location:        form.location.value.trim(),
-    linkedin:        form.linkedin.value.trim(),
-    bio:             form.bio.value.trim(),
-    consent_public:  form.consent_public.checked,
-    share_location:  shareLocation,
-    approved:        false,
-    created_at:      serverTimestamp(),
-    live_location:   null, // Will be set if they share
+    full_name: form.full_name.value.trim(),
+    graduation_year: form.graduation_year.value ? Number(form.graduation_year.value) : null,
+    class_stream: form.class_stream.value.trim(),
+    courses: form.courses.value.trim(),
+    email: form.email.value.trim().toLowerCase(),
+    phone: form.phone.value.trim(),
+    occupation: form.occupation.value.trim(),
+    employer: form.employer.value.trim(),
+    location: form.location.value.trim(),
+    linkedin: form.linkedin.value.trim(),
+    bio: form.bio.value.trim(),
+    consent_public: form.consent_public.checked,
+    share_location: form.share_location.checked,
+    approved: false,
+    created_at: serverTimestamp(),
+    live_location: null,
   };
 
-  btn.disabled = true;
-  btn.textContent = "Submitting…";
-  show("Submitting registration…", "info");
+  submitBtn.disabled = true;
+  msgEl.textContent = "Submitting...";
+  msgEl.className = "msg info";
 
-  // ⭐ NEW: Fetch GPS coordinates if they checked the box
-  if (shareLocation && navigator.geolocation) {
+  if (form.share_location.checked && navigator.geolocation) {
     try {
-      const pos = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000 });
-      });
+      const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 8000 }));
       data.live_location = new GeoPoint(pos.coords.latitude, pos.coords.longitude);
-    } catch (err) {
-      console.warn("Geolocation failed or denied:", err);
-      // We don't block registration, just proceed without coords
-    }
+    } catch (e) { /* skip */ }
   }
 
   try {
     await addDoc(collection(db, "alumni"), data);
-    show("Registration submitted! You'll receive login credentials by email once approved.", "ok");
+    msgEl.className = "msg ok";
+    msgEl.innerHTML = `✅ <b>Registration submitted!</b><br>You will receive login credentials via email once approved by the school admin.<br><br><a href="#" class="link" onclick="document.querySelector('.nav-tab[data-view=home]').click(); return false;">Return to Home</a>`;
     form.reset();
   } catch (err) {
-    console.error(err);
-    show("Error saving: " + err.message, "err");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Submit registration";
+    msgEl.className = "msg err";
+    msgEl.textContent = "Error: " + err.message;
   }
+  submitBtn.disabled = false;
 });
 
-// ════════════════════════════════════════════════════════════════
-//  LOGIN — credentials issued by admin after approval
-// ════════════════════════════════════════════════════════════════
-loginForm.addEventListener("submit", async (e) => {
+// ═══════════════════════════════════════════════════════
+//  LOGIN / AUTH
+// ═══════════════════════════════════════════════════════
+document.getElementById("login-form").addEventListener("submit", async (e) => {
   e.preventDefault();
-  if (!loginEmail.value.trim() || !loginPassword.value) {
-    return loginShow("Enter your email and password.", "err");
-  }
-  loginBtn.disabled = true;
-  loginBtn.textContent = "Signing in…";
-  loginShow("Signing in…", "info");
+  const btn = document.getElementById("login-btn");
+  const msgEl = document.getElementById("login-msg");
+  btn.disabled = true;
+  msgEl.textContent = "Signing in...";
+  msgEl.className = "msg info";
+
   try {
-    await signInWithEmailAndPassword(auth, loginEmail.value.trim(), loginPassword.value);
-    loginShow("Logged in.", "ok");
-    loginPassword.value = "";
+    await signInWithEmailAndPassword(auth,
+      document.getElementById("login_email").value.trim(),
+      document.getElementById("login_password").value
+    );
   } catch (err) {
-    console.error(err);
-    let m = "Login failed.";
-    if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
-      m = "Incorrect email or password.";
-    } else if (err.code === "auth/too-many-requests") {
-      m = "Too many attempts. Try again later.";
-    }
-    loginShow(m, "err");
-  } finally {
-    loginBtn.disabled = false;
-    loginBtn.textContent = "Log in";
+    msgEl.textContent = err.message;
+    msgEl.className = "msg err";
+  }
+  btn.disabled = false;
+});
+
+document.getElementById("logout-btn").addEventListener("click", () => signOut(auth));
+
+document.getElementById("forgot-password-btn").addEventListener("click", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("login_email").value.trim();
+  if (!email) return alert("Please type your email in the box first, then click Forgot Password.");
+  
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert("Password reset email sent! Check your inbox.");
+  } catch (err) {
+    alert("Error: " + err.message);
   }
 });
 
-logoutBtn.addEventListener("click", async () => {
-  await signOut(auth);
-  loginShow("Logged out.", "info");
-});
-
+// ═══════════════════════════════════════════════════════
+//  AUTH STATE
+// ═══════════════════════════════════════════════════════
 onAuthStateChanged(auth, async (user) => {
+  const loginBox = document.getElementById("login-box");
+  const dirContent = document.getElementById("directory-content");
+  const logoutBtn = document.getElementById("logout-btn");
+
   if (!user) {
-    loginBox.classList.add("active");
-    directoryContent.style.display = "none";
+    loginBox.style.display = "block";
+    dirContent.style.display = "none";
     logoutBtn.style.display = "none";
-    allMembers = [];
-    memberGrid.innerHTML = "";
-    dirCount.textContent = "";
-    whoami.textContent = "";
-    whoami.classList.remove("active");
     return;
   }
 
-  loginBox.classList.remove("active");
-  loginMsg.className = "msg";
-  loginMsg.textContent = "";
+  loginBox.style.display = "none";
+  logoutBtn.style.display = "block";
 
   try {
-    const q = query(collection(db, "alumni"),
-      where("email", "==", user.email.toLowerCase()),
-      where("approved", "==", true));
+    const q = query(collection(db, "alumni"), where("email", "==", user.email.toLowerCase()), where("approved", "==", true));
     const snap = await getDocs(q);
 
     if (snap.empty) {
       await signOut(auth);
-      loginBox.classList.add("active");
-      loginShow("This account is not approved yet. Please contact the school admin.", "err");
+      loginBox.style.display = "block";
+      document.getElementById("login-msg").textContent = "This account is not approved. Contact the admin.";
+      document.getElementById("login-msg").className = "msg err";
       return;
     }
 
-    const myDoc = snap.docs[0].data();
-    whoami.textContent = `Logged in as ${myDoc.full_name || user.email}`;
-    whoami.classList.add("active");
-
-    directoryContent.style.display = "block";
-    logoutBtn.style.display = "inline-block";
+    const myData = snap.docs[0].data();
+    currentUserDoc = { id: snap.docs[0].id, ...myData };
+    
+    document.getElementById("whoami").textContent = `Logged in as ${myData.full_name || user.email}`;
+    document.getElementById("whoami").classList.add("active");
+    dirContent.style.display = "block";
 
     await loadDirectory();
   } catch (err) {
-    console.error(err);
-    loginShow("Could not verify approval: " + err.message, "err");
+    alert("Verification error: " + err.message);
     await signOut(auth);
   }
 });
 
-// ════════════════════════════════════════════════════════════════
-//  DIRECTORY — visible only to approved, logged-in alumni
-// ════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+//  DIRECTORY
+// ═══════════════════════════════════════════════════════
 async function loadDirectory() {
-  memberGrid.innerHTML = '<div class="empty">Loading alumni…</div>';
-  dirShow("", "");
+  const grid = document.getElementById("member-grid");
+  grid.innerHTML = '<div class="empty">Loading alumni...</div>';
+
   try {
-    const q = query(collection(db, "alumni"),
-      where("approved", "==", true),
-      where("consent_public", "==", true));
+    const q = query(collection(db, "alumni"), where("approved", "==", true), where("consent_public", "==", true));
     const snap = await getDocs(q);
     allMembers = [];
-    snap.forEach((d) => {
-      const data = d.data();
-      if (data.full_name) allMembers.push({ id: d.id, ...data });
-    });
+    snap.forEach(d => allMembers.push({ id: d.id, ...d.data() }));
+    allMembers.sort((a, b) => (b.graduation_year || 0) - (a.graduation_year || 0));
 
-    allMembers.sort((a, b) => {
-      const ya = a.graduation_year || 0, yb = b.graduation_year || 0;
-      if (yb !== ya) return yb - ya;
-      return (a.full_name || "").localeCompare(b.full_name || "");
-    });
-
+    populateFilters();
     renderDirectory();
   } catch (err) {
-    console.error("Directory load failed:", err);
-    memberGrid.innerHTML = "";
-    dirShow("Could not load directory: " + err.message, "err");
+    grid.innerHTML = `<div class="empty" style="color:red;">Error: ${err.message}</div>`;
   }
+}
+
+function populateFilters() {
+  const years = [...new Set(allMembers.map(m => m.graduation_year).filter(Boolean))].sort((a,b) => b - a);
+  const courses = [...new Set(allMembers.map(m => m.courses).filter(Boolean))].sort();
+
+  const yearSelect = document.getElementById("filter-year");
+  const courseSelect = document.getElementById("filter-course");
+
+  yearSelect.innerHTML = '<option value="">All Years</option>' + years.map(y => `<option value="${y}">${y}</option>`).join("");
+  courseSelect.innerHTML = '<option value="">All Courses</option>' + courses.map(c => `<option value="${c}">${c}</option>`).join("");
 }
 
 function renderDirectory() {
-  const term = searchInput.value.trim().toLowerCase();
-  const filtered = allMembers.filter((m) => {
-    if (!term) return true;
-    return [m.full_name, m.courses, m.occupation, m.employer, m.location, m.graduation_year]
-      .filter(Boolean)
-      .some((v) => String(v).toLowerCase().includes(term));
+  const search = document.getElementById("search").value.toLowerCase();
+  const filterYear = document.getElementById("filter-year").value;
+  const filterCourse = document.getElementById("filter-course").value;
+
+  const filtered = allMembers.filter(m => {
+    if (filterYear && String(m.graduation_year) !== filterYear) return false;
+    if (filterCourse && m.courses !== filterCourse) return false;
+    if (!search) return true;
+    return [m.full_name, m.courses, m.occupation, m.employer, m.location].filter(Boolean).some(v => String(v).toLowerCase().includes(search));
   });
 
-  dirCount.textContent = `${filtered.length} of ${allMembers.length} alumni shown`;
+  document.getElementById("dir-count").textContent = `${filtered.length} of ${allMembers.length} alumni shown`;
 
+  const grid = document.getElementById("member-grid");
   if (filtered.length === 0) {
-    memberGrid.innerHTML = '<div class="empty">No alumni match your search.</div>';
+    grid.innerHTML = '<div class="empty">No alumni match your search.</div>';
     return;
   }
 
-  memberGrid.innerHTML = filtered.map((m) => {
-    const year = m.graduation_year ? `Class of ${m.graduation_year}` : "Graduation year not set";
-    const stream = m.class_stream ? ` • ${escapeHtml(m.class_stream)}` : "";
-    const occ = m.occupation
-      ? `<div class="meta">${escapeHtml(m.occupation)}${m.employer ? " — " + escapeHtml(m.employer) : ""}</div>`
-      : "";
-    const loc = m.location ? `<div class="meta">📍 ${escapeHtml(m.location)}</div>` : "";
-    const courses = m.courses
-      ? `<div class="courses"><span class="label">Course(s):</span> ${escapeHtml(m.courses)}</div>`
-      : `<div class="courses" style="color:#94a3b8;">Course(s) not provided</div>`;
-    const bio = m.bio ? `<div class="bio">${escapeHtml(m.bio)}</div>` : "";
-    const contact = [
-      m.email ? `<div class="contact">✉️ ${escapeHtml(m.email)}</div>` : "",
-      m.phone ? `<div class="contact">📞 ${escapeHtml(m.phone)}</div>` : "",
-      m.linkedin ? `<div class="contact">🔗 <a href="${escapeAttr(m.linkedin)}" target="_blank" rel="noopener">${escapeHtml(m.linkedin)}</a></div>` : ""
-    ].join("");
-
-    return `
-      <div class="member-card">
-        <h3>${escapeHtml(m.full_name)}</h3>
-        <div class="meta">${year}${stream}</div>
-        ${courses}
-        ${occ}
-        ${loc}
-        ${bio}
-        ${contact}
-      </div>
-    `;
-  }).join("");
+  grid.innerHTML = filtered.map(m => `
+    <div class="member-card" onclick="openProfileModal('${m.id}')">
+      <h3>${escapeHtml(m.full_name)}</h3>
+      <div class="meta">${m.graduation_year ? `Class of ${m.graduation_year}` : "Year unknown"}</div>
+      <div class="courses"><span class="label">Courses:</span> ${escapeHtml(m.courses || "—")}</div>
+      ${m.occupation ? `<div class="meta">💼 ${escapeHtml(m.occupation)} ${m.employer ? "at " + escapeHtml(m.employer) : ""}</div>` : ""}
+      ${m.location ? `<div class="meta">📍 ${escapeHtml(m.location)}</div>` : ""}
+    </div>
+  `).join("");
 }
 
-function escapeHtml(str) {
-  return String(str ?? "").replace(/[&<>"']/g, (c) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  }[c]));
-}
-function escapeAttr(str) {
+// Global function for card click
+window.openProfileModal = (id) => {
+  const m = allMembers.find(x => x.id === id);
+  if (!m) return;
+
+  modalTitle.textContent = m.full_name;
+  modalBody.innerHTML = `
+    <div style="display:grid; gap:.5rem;">
+      <div><b>Graduation:</b> ${escapeHtml(m.graduation_year || "—")} ${escapeHtml(m.class_stream || "")}</div>
+      <div><b>Courses:</b> ${escapeHtml(m.courses || "—")}</div>
+      <div><b>Occupation:</b> ${escapeHtml(m.occupation || "—")} ${m.employer ? `at ${escapeHtml(m.employer)}` : ""}</div>
+      <div><b>Location:</b> ${escapeHtml(m.location || "—")}</div>
+      <div><b>Email:</b> ${escapeHtml(m.email)}</div>
+      <div><b>Phone:</b> ${escapeHtml(m.phone)}</div>
+      ${m.bio ? `<div style="margin-top:.5rem;"><b>Bio:</b><br>${escapeHtml(m.bio)}</div>` : ""}
+      ${m.linkedin ? `<div><a href="${escapeAttr(m.linkedin)}" target="_blank" class="link">🔗 LinkedIn</a></div>` : ""}
+    </div>
+  `;
+  modalConfirm.style.display = "none";
+  modalCancel.textContent = "Close";
+  modalCancel.style.flex = "1";
+  dialogAction = null;
+  modal.showModal();
+};
+
+document.getElementById("search").addEventListener("input", renderDirectory);
+document.getElementById("filter-year").addEventListener("change", renderDirectory);
+document.getElementById("filter-course").addEventListener("change", renderDirectory);
+
+// ═══════════════════════════════════════════════════════
+//  EDIT PROFILE
+// ═══════════════════════════════════════════════════════
+document.getElementById("edit-profile-btn").addEventListener("click", () => {
+  if (!currentUserDoc) return alert("Not logged in.");
+
+  modalTitle.textContent = "Edit My Profile";
+  modalBody.innerHTML = `
+    <div class="grid">
+      <div class="full"><label>Occupation</label><input id="edit-occ" value="${escapeAttr(currentUserDoc.occupation || "")}"></div>
+      <div class="full"><label>Employer</label><input id="edit-emp" value="${escapeAttr(currentUserDoc.employer || "")}"></div>
+      <div class="full"><label>Location</label><input id="edit-loc" value="${escapeAttr(currentUserDoc.location || "")}"></div>
+      <div class="full"><label>Bio</label><textarea id="edit-bio" rows="3">${escapeHtml(currentUserDoc.bio || "")}</textarea></div>
+    </div>
+  `;
+  modalConfirm.style.display = "block";
+  modalConfirm.textContent = "Save Changes";
+  modalCancel.textContent = "Cancel";
+
+  dialogAction = async () => {
+    await updateDoc(doc(db, "alumni", currentUserDoc.id), {
+      occupation: document.getElementById("edit-occ").value.trim(),
+      employer: document.getElementById("edit-emp").value.trim(),
+      location: document.getElementById("edit-loc").value.trim(),
+      bio: document.getElementById("edit-bio").value.trim()
+    });
+    currentUserDoc.occupation = document.getElementById("edit-occ").value.trim();
+    alert("Profile updated!");
+    await loadDirectory();
+  };
+
+  modal.showModal();
+});
+
+// ═══════════════════════════════════════════════════════
+//  TOGGLE LOCATION
+// ═══════════════════════════════════════════════════════
+document.getElementById("toggle-location-btn").addEventListener("click", async () => {
+  if (!currentUserDoc) return;
+  const newState = !currentUserDoc.share_location;
+  
   try {
-    const u = new URL(str);
-    if (u.protocol !== "http:" && u.protocol !== "https:") return "#";
-    return escapeHtml(u.href);
-  } catch { return "#"; }
+    const updates = { share_location: newState, live_location: newState ? currentUserDoc.live_location : null };
+    if (newState && navigator.geolocation) {
+      const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 8000 }));
+      updates.live_location = new GeoPoint(pos.coords.latitude, pos.coords.longitude);
+    }
+    await updateDoc(doc(db, "alumni", currentUserDoc.id), updates);
+    currentUserDoc.share_location = newState;
+    alert(newState ? "Location sharing enabled." : "Location sharing disabled.");
+  } catch (err) {
+    alert("Error: " + err.message);
+  }
+});
+
+// ═══════════════════════════════════════════════════════
+//  ALUMNI OF THE MONTH
+// ═══════════════════════════════════════════════════════
+async function loadAlumniOfMonth() {
+  try {
+    const snap = await getDoc(doc(db, "settings", "alumni_of_month"));
+    if (snap.exists()) {
+      const data = snap.data();
+      document.getElementById("alumni-of-month").style.display = "block";
+      document.getElementById("aotm-content").innerHTML = `
+        <h4 style="margin:0; font-size:1.15rem;">${escapeHtml(data.name)}</h4>
+        <p style="margin:.5rem 0; font-size:.9rem; color:#475569;">${escapeHtml(data.description || "")}</p>
+      `;
+    }
+  } catch (err) { /* silent */ }
+}
+loadAlumniOfMonth();
+
+// ═══════════════════════════════════════════════════════
+//  EVENTS
+// ═══════════════════════════════════════════════════════
+async function loadEvents() {
+  const list = document.getElementById("events-list");
+  list.innerHTML = '<div class="empty">Loading events...</div>';
+  try {
+    const snap = await getDocs(collection(db, "events"));
+    if (snap.empty) return list.innerHTML = '<div class="empty">No upcoming events.</div>';
+
+    let html = "";
+    snap.forEach(d => {
+      const ev = d.data();
+      const date = ev.date?.toDate?.()?.toLocaleDateString() || "Date TBD";
+      html += `
+        <div class="card">
+          <h4>${escapeHtml(ev.name)}</h4>
+          <div class="meta">📅 ${date} • 📍 ${escapeHtml(ev.location || "TBD")}</div>
+          <p style="font-size:.9rem;">${escapeHtml(ev.description || "")}</p>
+          <button class="small" data-event-id="${d.id}" onclick="rsvpEvent('${d.id}')" style="margin-top:.5rem;">🙋 I'll Attend</button>
+        </div>
+      `;
+    });
+    list.innerHTML = html;
+  } catch (err) {
+    list.innerHTML = `<div class="empty">Error loading events: ${err.message}</div>`;
+  }
 }
 
-searchInput.addEventListener("input", renderDirectory);
-refreshBtn.addEventListener("click", loadDirectory);
+window.rsvpEvent = async (eventId) => {
+  if (!auth.currentUser) return alert("Please log in to RSVP.");
+  try {
+    await addDoc(collection(db, "events", eventId, "rsvps"), {
+      email: auth.currentUser.email,
+      name: currentUserDoc?.full_name || "Guest",
+      rsvp_at: serverTimestamp()
+    });
+    alert("✅ RSVP recorded! See you there.");
+  } catch (err) {
+    alert("Error: " + err.message);
+  }
+};
+
+// ═══════════════════════════════════════════════════════
+//  JOBS
+// ═══════════════════════════════════════════════════════
+async function loadJobs() {
+  const list = document.getElementById("jobs-list");
+  list.innerHTML = '<div class="empty">Loading jobs...</div>';
+  try {
+    const snap = await getDocs(collection(db, "jobs"));
+    if (snap.empty) return list.innerHTML = '<div class="empty">No jobs posted yet.</div>';
+
+    list.innerHTML = "";
+    snap.forEach(d => {
+      const job = d.data();
+      list.innerHTML += `
+        <div class="card">
+          <h4>${escapeHtml(job.title)}</h4>
+          <div class="meta">🏢 ${escapeHtml(job.company || "")} • 📍 ${escapeHtml(job.location || "Remote")}</div>
+          <p style="font-size:.9rem;">${escapeHtml(job.description || "")}</p>
+          ${job.contact ? `<div class="meta">📧 Contact: ${escapeHtml(job.contact)}</div>` : ""}
+        </div>
+      `;
+    });
+  } catch (err) {
+    list.innerHTML = `<div class="empty">Error loading jobs: ${err.message}</div>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  STORIES
+// ═══════════════════════════════════════════════════════
+async function loadStories() {
+  const list = document.getElementById("stories-list");
+  list.innerHTML = '<div class="empty">Loading stories...</div>';
+  try {
+    const snap = await getDocs(collection(db, "stories"));
+    if (snap.empty) return list.innerHTML = '<div class="empty">No stories yet.</div>';
+
+    list.innerHTML = "";
+    snap.forEach(d => {
+      const s = d.data();
+      list.innerHTML += `
+        <div class="card">
+          <h4>${escapeHtml(s.title)}</h4>
+          <div class="meta">by ${escapeHtml(s.author || "Anonymous")}</div>
+          <p style="font-size:.9rem;">${escapeHtml(s.content || "")}</p>
+        </div>
+      `;
+    });
+  } catch (err) {
+    list.innerHTML = `<div class="empty">Error loading stories: ${err.message}</div>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  CONTACT ADMIN
+// ═══════════════════════════════════════════════════════
+document.getElementById("contact-admin-btn").addEventListener("click", () => {
+  modalTitle.textContent = "Contact Admin";
+  modalBody.innerHTML = `
+    <p style="font-size:.9rem;">Have a question? Send a message to the school admin.</p>
+    <label>Your Name</label>
+    <input id="contact-name" placeholder="Your name">
+    <label style="margin-top:.5rem;">Your Message</label>
+    <textarea id="contact-message" rows="4" placeholder="Type your message here..."></textarea>
+  `;
+  modalConfirm.style.display = "block";
+  modalConfirm.textContent = "Send Message";
+  modalCancel.textContent = "Cancel";
+
+  dialogAction = async () => {
+    const name = document.getElementById("contact-name").value.trim();
+    const message = document.getElementById("contact-message").value.trim();
+    if (!name || !message) throw new Error("Please fill in both fields.");
+
+    await addDoc(collection(db, "messages"), {
+      name, message,
+      from_email: auth.currentUser?.email || "anonymous",
+      created_at: serverTimestamp(),
+      read: false
+    });
+    alert("Message sent to admin!");
+  };
+
+  modal.showModal();
+});
+
+// ═══════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
 </script>
 </body>
 </html>
