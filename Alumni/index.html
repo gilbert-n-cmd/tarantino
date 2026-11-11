@@ -3,221 +3,210 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Admin — Alumni Registration</title>
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
+<title>Alumni Registration — Bishop Angelo Tarantino Memorial SS</title>
 <style>
-  :root { --brand: #004080; --brand-2: #166534; --line: #e2e8f0; --bg: #f8fafc; }
+  :root { --brand: #14532d; --brand-2: #166534; --bg: #f8fafc; --line: #e2e8f0; }
   * { box-sizing: border-box; }
   body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
          background: var(--bg); color: #0f172a; padding: 2rem 1rem; }
-  .wrap { max-width: 1000px; margin: 0 auto 1.5rem; background: #fff; border: 1px solid var(--line);
+  .wrap { max-width: 720px; margin: 0 auto 1.5rem; background: #fff; border: 1px solid var(--line);
           border-radius: 14px; padding: 2rem; box-shadow: 0 6px 24px rgba(15,23,42,.06); }
-  h1 { margin: 0 0 .25rem; font-size: 1.5rem; color: var(--brand); }
-  .sub { margin: 0 0 1.5rem; color: #64748b; font-size: .9rem; }
+  h1 { margin: 0 0 .25rem; font-size: 1.6rem; color: #004080; }
+  h2 { margin: 0 0 1rem; font-size: 1.25rem; color: #004080; }
+  .sub { margin: 0 0 1.75rem; color: #64748b; font-size: .95rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .full { grid-column: 1 / -1; }
   label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .35rem; }
   input, select, textarea {
-    width: 100%; padding: .6rem .7rem; border: 1px solid var(--line);
-    border-radius: 8px; font: inherit; background: #fff;
+    width: 100%; padding: .65rem .75rem; border: 1px solid var(--line);
+    border-radius: 8px; font: inherit; background: #fff; color: inherit;
   }
-  input:focus, select:focus, textarea:focus { outline: 2px solid var(--brand-2); border-color: var(--brand-2); }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid var(--brand-2); outline-offset: 1px; border-color: var(--brand-2);
+  }
+  textarea { resize: vertical; min-height: 96px; }
+  .req { color: #dc2626; }
+  .check { display: flex; gap: .6rem; align-items: flex-start; font-weight: 400; font-size: .9rem; }
+  .check input { width: auto; margin-top: .2rem; }
+  .hp { position: absolute; left: -9999px; }
   button {
-    padding: .65rem 1.1rem; border: 0; border-radius: 8px; font: inherit; font-weight: 600;
-    cursor: pointer; background: var(--brand); color: #fff;
+    margin-top: 1.5rem; width: 100%; padding: .85rem; border: 0; border-radius: 8px;
+    background: #004080; color: #fff; font: inherit; font-weight: 600; cursor: pointer;
   }
-  button:hover:not(:disabled) { background: #00325f; }
-  button:disabled { opacity: .55; cursor: not-allowed; }
-  button.green  { background: var(--brand-2); } button.green:hover:not(:disabled) { background: #14532d; }
-  button.red    { background: #b91c1c; }        button.red:hover:not(:disabled)    { background: #991b1b; }
-  button.gray   { background: #64748b; }        button.gray:hover:not(:disabled)   { background: #475569; }
-  button.small  { padding: .4rem .7rem; font-size: .8rem; }
+  button:hover:not(:disabled) { background: var(--brand-2); }
+  button:disabled { opacity: .6; cursor: not-allowed; }
   .msg { margin-top: 1rem; padding: .8rem 1rem; border-radius: 8px; font-size: .9rem; display: none; }
   .msg.ok  { display: block; background: #dcfce7; color: #166534; }
   .msg.err { display: block; background: #fee2e2; color: #991b1b; }
   .msg.info{ display: block; background: #dbeafe; color: #1e40af; }
 
-  #login-panel { max-width: 460px; margin: 4rem auto; }
-  #admin-panel { display: none; }
-
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-  .stat-card { background: #f8fafc; border: 1px solid var(--line); border-radius: 10px; padding: 1rem; text-align: center; }
-  .stat-card h4 { margin: 0 0 .5rem; font-size: .85rem; color: #64748b; text-transform: uppercase; letter-spacing: .5px; }
-  .stat-card .num { font-size: 1.8rem; font-weight: 700; color: var(--brand); }
-
-  .tabs { display: flex; gap: .5rem; border-bottom: 2px solid var(--line); margin-bottom: 1.25rem; flex-wrap: wrap; }
-  .tab { padding: .6rem 1rem; border: 0; background: none; border-radius: 0; color: #64748b;
-         font-weight: 600; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer; }
-  .tab:hover { background: #f1f5f9; }
-  .tab.active { color: var(--brand); border-bottom-color: var(--brand); }
-
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 700px; }
-  th, td { text-align: left; padding: .55rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { background: #f1f5f9; font-weight: 600; position: sticky; top: 0; }
-  tr:hover { background: #fafcff; }
-  .pill { display: inline-block; padding: .15rem .5rem; border-radius: 999px; font-size: .72rem; font-weight: 600; }
-  .pill.pending  { background: #fef3c7; color: #92400e; }
-  .pill.approved { background: #dcfce7; color: #166534; }
-  .pill.admin    { background: #dbeafe; color: #1e40af; }
-  .pill.member   { background: #e0e7ff; color: #3730a3; }
-
-  .toolbar { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
-  .toolbar input[type=search] { flex: 1; min-width: 200px; }
-
-  .modal-bg {
-    display: none; position: fixed; inset: 0; background: rgba(15,23,42,.55);
-    align-items: center; justify-content: center; padding: 1rem; z-index: 50;
+  /* Directory styles */
+  .directory { margin-top: 1.5rem; }
+  .directory-toolbar { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .directory-toolbar input { flex: 1; min-width: 180px; }
+  .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+  .member-card {
+    border: 1px solid var(--line); border-radius: 10px; padding: 1rem; background: #fbfdff;
+    display: flex; flex-direction: column; gap: .35rem;
   }
-  .modal-bg.active { display: flex; }
-  .modal { background: #fff; border-radius: 14px; padding: 1.75rem; max-width: 560px; width: 100%;
-           box-shadow: 0 20px 50px rgba(15,23,42,.3); max-height: 90vh; overflow-y: auto; }
-  .modal h3 { margin: 0 0 1rem; font-size: 1.15rem; color: var(--brand); }
-  .modal .kv { display: grid; grid-template-columns: 130px 1fr; gap: .35rem 1rem; font-size: .88rem; margin-bottom: 1rem; }
-  .modal .kv dt { font-weight: 600; color: #475569; }
-  .modal .kv dd { margin: 0; word-break: break-word; }
-  .cred-row { display: flex; gap: .5rem; align-items: center; margin-bottom: .4rem; }
-  .cred-row input { font-family: ui-monospace, monospace; font-size: .85rem; }
-  .modal-actions { display: flex; gap: .75rem; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap; }
-  .warn { background: #fef3c7; color: #92400e; padding: .6rem .8rem; border-radius: 8px;
-          font-size: .82rem; margin-top: .5rem; }
+  .member-card h3 { margin: 0; font-size: 1.05rem; color: #0f172a; }
+  .member-card .meta { font-size: .82rem; color: #475569; }
+  .member-card .courses { font-size: .85rem; color: #0f172a; }
+  .member-card .courses span.label { font-weight: 600; color: #166534; }
+  .member-card .bio { font-size: .82rem; color: #64748b; margin-top: .35rem; }
+  .member-card .contact { font-size: .8rem; color: #0f172a; margin-top: .25rem; word-break: break-word; }
+  .empty { color: #64748b; font-size: .9rem; padding: 1rem 0; }
+  .count { font-size: .85rem; color: #64748b; margin-bottom: .5rem; }
 
-  .empty { color: #64748b; font-size: .9rem; padding: 1.5rem 0; text-align: center; }
-  
-  /* MAP FIX: Removed display:none from here so Leaflet can calculate size */
-  #map-container { height: 400px; width: 100%; border-radius: 10px; border: 1px solid var(--line); }
+  /* Login form */
+  .login-box { display: none; }
+  .login-box.active { display: block; }
+  .login-row { display: flex; gap: .75rem; flex-wrap: wrap; }
+  .login-row > div { flex: 1; min-width: 180px; }
+  .whoami { font-size: .85rem; color: #166534; margin-bottom: .75rem; display: none; }
+  .whoami.active { display: block; }
+  .btn-secondary { background: #64748b; }
+  .btn-secondary:hover:not(:disabled) { background: #475569; }
+  .btn-row { display: flex; gap: .75rem; flex-wrap: wrap; }
+  .btn-row button { flex: 1; min-width: 140px; }
 
-  @media (max-width: 768px) {
-    body { padding: 1rem 0.5rem; }
-    .wrap { padding: 1.25rem; border-radius: 10px; }
-    .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-    .stat-card { padding: 0.75rem; }
-    .stat-card .num { font-size: 1.4rem; }
-    .tabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
-    .tab { white-space: nowrap; padding: .5rem .75rem; font-size: .85rem; }
-    .modal { padding: 1.25rem; }
-    .modal .kv { grid-template-columns: 100px 1fr; font-size: .8rem; }
-    .cred-row { flex-wrap: wrap; }
-    .cred-row input { width: 100%; margin-bottom: .25rem; }
-    .cred-row button { flex: 1; }
-    .toolbar { flex-direction: column; align-items: stretch; }
-    .toolbar input[type=search] { width: 100%; }
-    .toolbar button { width: 100%; }
-    #bulk-actions { flex-direction: column; gap: 0.5rem; }
-    #bulk-actions button { width: 100%; margin-left: 0 !important; margin-top: 0.5rem; }
-    .modal-actions { flex-direction: column; }
-    .modal-actions button { width: 100%; }
-  }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } .wrap { padding: 1.25rem; } }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-panel" class="wrap">
-  <h1>Admin Login</h1>
-  <p class="sub">Sign in with your administrator account.</p>
-  <form id="login-form">
-    <label for="login_email">Email</label>
-    <input id="login_email" type="email" required autocomplete="username">
-    <label for="login_password" style="margin-top:.75rem;">Password</label>
-    <input id="login_password" type="password" required autocomplete="current-password">
-    <button type="submit" id="login-btn" style="margin-top:1rem; width:100%;">Sign in</button>
-    <div class="msg" id="login-msg"></div>
+<!-- ══════════ REGISTRATION FORM ══════════ -->
+<div class="wrap">
+  <h1>Alumni Registration</h1>
+  <p class="sub">Bishop Angelo Tarantino Memorial Secondary School — Primus Inter Pares</p>
+
+  <form id="alumni-form" novalidate>
+    <div class="grid">
+      <div class="full">
+        <label for="full_name">Full name <span class="req">*</span></label>
+        <input id="full_name" name="full_name" required maxlength="120" autocomplete="name">
+      </div>
+
+      <div>
+        <label for="graduation_year">Year of graduation</label>
+        <input id="graduation_year" name="graduation_year" type="number" min="1950" max="2100" placeholder="e.g. 2015">
+      </div>
+
+      <div>
+        <label for="class_stream">Class / Stream</label>
+        <input id="class_stream" name="class_stream" maxlength="60" placeholder="e.g. S6 Sciences">
+      </div>
+
+      <div class="full">
+        <label for="courses">Course(s) pursued <span class="req">*</span></label>
+        <input id="courses" name="courses" required maxlength="200" placeholder="e.g. BSc Computer Science, MBA">
+        <small style="color:#64748b; font-size:.78rem;">Separate multiple courses with commas.</small>
+      </div>
+
+      <div>
+        <label for="email">Email <span class="req">*</span></label>
+        <input id="email" name="email" type="email" required autocomplete="email">
+        <small style="color:#64748b; font-size:.78rem;">Approval credentials will be sent here.</small>
+      </div>
+
+      <div>
+        <label for="phone">Phone <span class="req">*</span></label>
+        <input id="phone" name="phone" required type="tel" maxlength="20" autocomplete="tel">
+      </div>
+
+      <div>
+        <label for="occupation">Occupation</label>
+        <input id="occupation" name="occupation" maxlength="80">
+      </div>
+
+      <div>
+        <label for="employer">Employer / Organisation</label>
+        <input id="employer" name="employer" maxlength="80">
+      </div>
+
+      <div>
+        <label for="location">Location</label>
+        <input id="location" name="location" maxlength="80" placeholder="City, Country">
+      </div>
+
+      <div>
+        <label for="linkedin">LinkedIn / Website</label>
+        <input id="linkedin" name="linkedin" type="url" maxlength="200" placeholder="https://">
+      </div>
+
+      <div class="full">
+        <label for="bio">Short bio</label>
+        <textarea id="bio" name="bio" maxlength="500" placeholder="Tell us what you've been up to since school."></textarea>
+      </div>
+
+      <div class="full check">
+        <input id="consent_public" name="consent_public" type="checkbox" checked>
+        <label for="consent_public">
+          I agree to have my name, graduation year, courses and occupation shown in the public alumni directory.
+        </label>
+      </div>
+
+      <div class="full check">
+        <input id="share_location" name="share_location" type="checkbox">
+        <label for="share_location">
+          Share my live location with the school administration (e.g., for alumni events).
+        </label>
+      </div>
+
+      <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off">
+    </div>
+
+    <button type="submit" id="submit-btn">Submit registration</button>
+    <div class="msg" id="msg" role="status" aria-live="polite"></div>
   </form>
 </div>
 
-<!-- ADMIN PANEL -->
-<div id="admin-panel" class="wrap">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:.5rem;">
-    <div>
-      <h1 style="margin:0;">Admin Panel</h1>
-      <p class="sub" style="margin:0;">Signed in as <b id="admin-email"></b> · <span id="admin-role" class="pill admin">admin</span></p>
+<!-- ══════════ ALUMNI DIRECTORY (login-gated) ══════════ -->
+<div class="wrap directory">
+  <h2>Alumni Directory</h2>
+  <p class="sub">Restricted to approved alumni. Use the credentials sent to you by email.</p>
+
+  <!-- Login form -->
+  <div id="login-box" class="login-box active">
+    <form id="login-form" novalidate>
+      <div class="login-row">
+        <div>
+          <label for="login_email">Email</label>
+          <input id="login_email" type="email" required autocomplete="username">
+        </div>
+        <div>
+          <label for="login_password">Password</label>
+          <input id="login_password" type="password" required autocomplete="current-password">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="submit" id="login-btn">Log in</button>
+        <button type="button" id="logout-btn" class="btn-secondary" style="display:none;">Log out</button>
+      </div>
+      <div class="msg" id="login-msg" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+
+  <!-- Directory content (shown after login) -->
+  <div id="directory-content" style="display:none;">
+    <div id="whoami" class="whoami"></div>
+
+    <div class="directory-toolbar">
+      <input id="search" placeholder="Search by name, course, occupation, year…">
+      <button type="button" id="refresh-btn" style="width:auto; margin-top:0; padding:.65rem 1rem;">Refresh</button>
     </div>
-    <button id="logout-btn" class="gray small">Log out</button>
-  </div>
 
-  <div class="stats-grid">
-    <div class="stat-card"><h4>Total Alumni</h4><div class="num" id="stat-total">0</div></div>
-    <div class="stat-card"><h4>Pending</h4><div class="num" id="stat-pending" style="color:#d97706;">0</div></div>
-    <div class="stat-card"><h4>Approved</h4><div class="num" id="stat-approved" style="color:var(--brand-2);">0</div></div>
-    <div class="stat-card"><h4>Sharing Location</h4><div class="num" id="stat-location" style="color:#1e40af;">0</div></div>
-  </div>
-
-  <div class="tabs">
-    <button class="tab active" data-tab="pending">Pending approvals</button>
-    <button class="tab" data-tab="approved">Approved alumni</button>
-    <button class="tab" data-tab="roles">Roles</button>
-    <button class="tab" data-tab="broadcast">Broadcast Email</button>
-    <button class="tab" data-tab="map">Alumni Map</button>
-  </div>
-
-  <div class="toolbar" id="search-toolbar">
-    <input type="search" id="search" placeholder="Search name, email, course, year…">
-    <button id="export-btn" class="green">Export CSV</button>
-    <button id="refresh-btn" class="gray">Refresh</button>
-  </div>
-
-  <div id="msg" class="msg"></div>
-
-  <div class="table-wrap" id="alumni-table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th id="bulk-header" style="display:none; width:30px;"><input type="checkbox" id="select-all"></th>
-          <th>Name</th><th>Email</th><th>Courses</th><th>Year / Stream</th>
-          <th>Submitted</th><th>Status</th><th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="rows">
-        <tr><td colspan="8" class="empty">Loading…</td></tr>
-      </tbody>
-    </table>
-    
-    <div id="bulk-actions" style="display:none; margin-top:1rem; padding:1rem; background:#f8fafc; border-radius:8px; border:1px solid var(--line);">
-      <span style="font-weight:600; font-size:.9rem;" id="bulk-count">0 selected</span>
-      <button class="green small" id="bulk-approve" style="margin-left:1rem;">Approve Selected</button>
-      <button class="red small" id="bulk-reject">Reject Selected</button>
-    </div>
-  </div>
-
-  <div class="table-wrap" id="roles-table-wrap" style="display:none;">
-    <table>
-      <thead>
-        <tr><th>UID</th><th>Email</th><th>Role</th><th>Added</th><th>Actions</th></tr>
-      </thead>
-      <tbody id="role-rows">
-        <tr><td colspan="5" class="empty">Loading…</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div id="broadcast-view" style="display:none;">
-    <h3 style="margin-top:0; color:var(--brand);">Send Broadcast Email</h3>
-    <p class="sub">This will open your email app with all approved alumni in the BCC field.</p>
-    <label for="broadcast-subject">Subject</label>
-    <input id="broadcast-subject" placeholder="e.g., Upcoming Alumni Reunion">
-    <label for="broadcast-body" style="margin-top:.75rem;">Message</label>
-    <textarea id="broadcast-body" rows="6" placeholder="Type your message here..."></textarea>
-    <button class="green" id="broadcast-btn" style="margin-top:1rem;">Open Email Draft (BCC)</button>
-  </div>
-
-  <div id="map-view" style="display:none;">
-    <div id="map-container"></div>
+    <div class="count" id="dir-count"></div>
+    <div id="member-grid" class="member-grid"></div>
+    <div class="msg" id="dir-msg" role="status" aria-live="polite"></div>
   </div>
 </div>
-
-<!-- MODAL -->
-<div class="modal-bg" id="modal-bg">
-  <div class="modal" id="modal"></div>
-</div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore, collection, doc, getDoc, getDocs, updateDoc,
-  deleteDoc, setDoc, serverTimestamp
+  getFirestore, collection, addDoc, doc, getDoc, query, where, getDocs,
+  serverTimestamp, GeoPoint, updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
@@ -236,596 +225,272 @@ const app  = initializeApp(firebaseConfig);
 const db   = getFirestore(app);
 const auth = getAuth(app);
 
-const loginPanel   = document.getElementById("login-panel");
+// ─── UI elements ───
+const form      = document.getElementById("alumni-form");
+const btn       = document.getElementById("submit-btn");
+const msg       = document.getElementById("msg");
+const gotcha    = form.querySelector('input[name="_gotcha"]');
+
+const loginBox     = document.getElementById("login-box");
 const loginForm    = document.getElementById("login-form");
-const loginMsg     = document.getElementById("login-msg");
+const loginEmail   = document.getElementById("login_email");
+const loginPassword= document.getElementById("login_password");
 const loginBtn     = document.getElementById("login-btn");
-const adminPanel   = document.getElementById("admin-panel");
-const adminEmailEl = document.getElementById("admin-email");
-const adminRoleEl  = document.getElementById("admin-role");
 const logoutBtn    = document.getElementById("logout-btn");
-const rows         = document.getElementById("rows");
-const roleRows     = document.getElementById("role-rows");
-const searchIn     = document.getElementById("search");
+const loginMsg     = document.getElementById("login-msg");
+
+const directoryContent = document.getElementById("directory-content");
+const whoami       = document.getElementById("whoami");
+const memberGrid   = document.getElementById("member-grid");
+const dirCount     = document.getElementById("dir-count");
+const dirMsg       = document.getElementById("dir-msg");
+const searchInput  = document.getElementById("search");
 const refreshBtn   = document.getElementById("refresh-btn");
-const exportBtn    = document.getElementById("export-btn");
-const msg          = document.getElementById("msg");
-const modalBg      = document.getElementById("modal-bg");
-const modal        = document.getElementById("modal");
-const tabs         = document.querySelectorAll(".tab");
-const alumniTableWrap = document.getElementById("alumni-table-wrap");
-const rolesTableWrap  = document.getElementById("roles-table-wrap");
-const searchToolbar   = document.getElementById("search-toolbar");
-const broadcastView   = document.getElementById("broadcast-view");
-const mapView         = document.getElementById("map-view");
 
-const bulkHeader = document.getElementById("bulk-header");
-const bulkActions = document.getElementById("bulk-actions");
-const bulkCount = document.getElementById("bulk-count");
-const selectAll = document.getElementById("select-all");
-const bulkApprove = document.getElementById("bulk-approve");
-const bulkReject = document.getElementById("bulk-reject");
-
-let currentTab = "pending";
-let allDocs    = [];
-let allRoles   = [];
-let currentRole = null;
-let authCheckInFlight = false;
-let lastVerifiedUid = null;
-let selectedIds = new Set();
-let mapInstance = null;
+let allMembers = [];
 
 function show(text, type) { msg.textContent = text; msg.className = "msg " + type; }
 function loginShow(text, type) { loginMsg.textContent = text; loginMsg.className = "msg " + type; }
-function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
-function escapeHtml(s) { return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
-function escapeAttr(s) { return escapeHtml(s); }
+function dirShow(text, type) { dirMsg.textContent = text; dirMsg.className = "msg " + type; }
 
-async function fetchRole(uid, attempt = 1) {
-  try {
-    const snap = await getDoc(doc(db, "roles", uid));
-    if (!snap.exists) return { role: null, reason: "no-doc" };
-    const data = snap.data();
-    return { role: data.role || null, reason: data.role ? null : "no-role-field" };
-  } catch (err) {
-    if (attempt < 2 && (err.code === "permission-denied" || err.code === "unavailable")) {
-      await new Promise((r) => setTimeout(r, 800));
-      return fetchRole(uid, attempt + 1);
-    }
-    return { role: null, reason: err.code || "error" };
-  }
-}
-
-function showAccessDenied(user, reason) {
-  const msgByReason = {
-    "no-doc": `Your account exists but has no role assigned.\n\nIn Firestore create a document:\n  Collection: roles\n  ID: ${user.uid}\n  Field: role = "admin"`,
-    "no-role-field": `Your roles document exists but the "role" field is missing.`,
-    "permission-denied": `Firestore rules are blocking the role lookup.`,
-    "error": `Could not verify your role. Check the console.`
-  };
-  const safeReason = (reason || "unknown").replace(/[<>]/g, "");
-  loginMsg.innerHTML =
-    `<div>${escapeHtml(msgByReason[reason] || "Access denied.").replace(/\n/g, "<br>")}</div>` +
-    `<div style="margin-top:.75rem;"><button id="retry-role" class="small">Retry verification</button> <button id="force-logout" class="small gray">Log out</button></div>` +
-    `<div style="margin-top:.5rem; font-size:.75rem; color:#64748b;">Reason code: ${safeReason}</div>`;
-  loginMsg.className = "msg err";
-  document.getElementById("retry-role").onclick = () => { lastVerifiedUid = null; currentRole = null; verifyRoleNow(); };
-  document.getElementById("force-logout").onclick = () => signOut(auth);
-}
-
-function revealAdminPanel(user, role) {
-  lastVerifiedUid = user.uid;
-  currentRole = role;
-  loginPanel.style.display = "none";
-  adminPanel.style.display = "block";
-  adminEmailEl.textContent = user.email || "(no email)";
-  adminRoleEl.textContent = role;
-  adminRoleEl.className = "pill " + role;
-  loginShow("", "ok");
-  loginBtn.disabled = false;
-  switchTab("pending");
-}
-
-async function verifyRoleNow() {
-  const user = auth.currentUser;
-  if (!user) return loginShow("Not signed in.", "err");
-  if (authCheckInFlight) return;
-  authCheckInFlight = true;
-  loginShow("Verifying access…", "info");
-  const { role, reason } = await fetchRole(user.uid);
-  authCheckInFlight = false;
-  if (role === "admin") revealAdminPanel(user, role);
-  else showAccessDenied(user, reason);
-}
-
-loginForm.addEventListener("submit", async (e) => {
+// ════════════════════════════════════════════════════════════════
+//  REGISTRATION — Fetches GPS if checkbox is ticked
+// ════════════════════════════════════════════════════════════════
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  loginBtn.disabled = true;
-  loginShow("Signing in…", "info");
+  if (gotcha.value) return;
+
+  if (!form.full_name.value.trim()) return show("Please enter your full name.", "err");
+  if (!form.courses.value.trim())   return show("Please enter your course(s).", "err");
+  if (!form.email.checkValidity())  return show("Please enter a valid email.", "err");
+  if (!form.phone.value.trim())     return show("Please enter your phone number.", "err");
+  if (!form.consent_public.checked) return show("Please tick the directory consent box.", "err");
+
+  const year = form.graduation_year.value ? Number(form.graduation_year.value) : null;
+  const shareLocation = form.share_location.checked;
+
+  const data = {
+    full_name:       form.full_name.value.trim(),
+    graduation_year: year,
+    class_stream:    form.class_stream.value.trim(),
+    courses:         form.courses.value.trim(),
+    email:           form.email.value.trim().toLowerCase(),
+    phone:           form.phone.value.trim(),
+    occupation:      form.occupation.value.trim(),
+    employer:        form.employer.value.trim(),
+    location:        form.location.value.trim(),
+    linkedin:        form.linkedin.value.trim(),
+    bio:             form.bio.value.trim(),
+    consent_public:  form.consent_public.checked,
+    share_location:  shareLocation,
+    approved:        false,
+    created_at:      serverTimestamp(),
+    live_location:   null, // Will be set if they share
+  };
+
+  btn.disabled = true;
+  btn.textContent = "Submitting…";
+  show("Submitting registration…", "info");
+
+  // ⭐ NEW: Fetch GPS coordinates if they checked the box
+  if (shareLocation && navigator.geolocation) {
+    try {
+      const pos = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000 });
+      });
+      data.live_location = new GeoPoint(pos.coords.latitude, pos.coords.longitude);
+    } catch (err) {
+      console.warn("Geolocation failed or denied:", err);
+      // We don't block registration, just proceed without coords
+    }
+  }
+
   try {
-    await signInWithEmailAndPassword(auth, document.getElementById("login_email").value.trim(), document.getElementById("login_password").value);
-    loginShow("Verifying access…", "info");
+    await addDoc(collection(db, "alumni"), data);
+    show("Registration submitted! You'll receive login credentials by email once approved.", "ok");
+    form.reset();
   } catch (err) {
-    loginShow(err.code === "auth/invalid-credential" || err.code === "auth/wrong-password" ? "Incorrect email or password." : err.message, "err");
-    loginBtn.disabled = false;
+    console.error(err);
+    show("Error saving: " + err.message, "err");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Submit registration";
   }
 });
 
-logoutBtn.addEventListener("click", () => signOut(auth));
+// ════════════════════════════════════════════════════════════════
+//  LOGIN — credentials issued by admin after approval
+// ════════════════════════════════════════════════════════════════
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!loginEmail.value.trim() || !loginPassword.value) {
+    return loginShow("Enter your email and password.", "err");
+  }
+  loginBtn.disabled = true;
+  loginBtn.textContent = "Signing in…";
+  loginShow("Signing in…", "info");
+  try {
+    await signInWithEmailAndPassword(auth, loginEmail.value.trim(), loginPassword.value);
+    loginShow("Logged in.", "ok");
+    loginPassword.value = "";
+  } catch (err) {
+    console.error(err);
+    let m = "Login failed.";
+    if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
+      m = "Incorrect email or password.";
+    } else if (err.code === "auth/too-many-requests") {
+      m = "Too many attempts. Try again later.";
+    }
+    loginShow(m, "err");
+  } finally {
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Log in";
+  }
+});
+
+logoutBtn.addEventListener("click", async () => {
+  await signOut(auth);
+  loginShow("Logged out.", "info");
+});
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    authCheckInFlight = false; lastVerifiedUid = null; currentRole = null;
-    loginPanel.style.display = "block"; adminPanel.style.display = "none";
-    adminEmailEl.textContent = ""; allDocs = []; allRoles = [];
-    loginBtn.disabled = false; loginMsg.className = "msg"; loginMsg.textContent = "";
+    loginBox.classList.add("active");
+    directoryContent.style.display = "none";
+    logoutBtn.style.display = "none";
+    allMembers = [];
+    memberGrid.innerHTML = "";
+    dirCount.textContent = "";
+    whoami.textContent = "";
+    whoami.classList.remove("active");
     return;
   }
-  if (user.uid === lastVerifiedUid && currentRole === "admin") return;
-  if (authCheckInFlight) return;
-  authCheckInFlight = true;
-  loginShow("Verifying access…", "info");
-  const { role, reason } = await fetchRole(user.uid);
-  authCheckInFlight = false;
-  if (role === "admin") revealAdminPanel(user, role);
-  else showAccessDenied(user, reason);
+
+  loginBox.classList.remove("active");
+  loginMsg.className = "msg";
+  loginMsg.textContent = "";
+
+  try {
+    const q = query(collection(db, "alumni"),
+      where("email", "==", user.email.toLowerCase()),
+      where("approved", "==", true));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      await signOut(auth);
+      loginBox.classList.add("active");
+      loginShow("This account is not approved yet. Please contact the school admin.", "err");
+      return;
+    }
+
+    const myDoc = snap.docs[0].data();
+    whoami.textContent = `Logged in as ${myDoc.full_name || user.email}`;
+    whoami.classList.add("active");
+
+    directoryContent.style.display = "block";
+    logoutBtn.style.display = "inline-block";
+
+    await loadDirectory();
+  } catch (err) {
+    console.error(err);
+    loginShow("Could not verify approval: " + err.message, "err");
+    await signOut(auth);
+  }
 });
 
-// ═══════════════════════════════════════════════════════
-//  TAB SWITCHING (Fixed Map Loading)
-// ═══════════════════════════════════════════════════════
-function switchTab(name) {
-  currentTab = name;
-  tabs.forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
-  
-  const isRoles = name === "roles";
-  const isBroadcast = name === "broadcast";
-  const isMap = name === "map";
-  const isAlumni = !isRoles && !isBroadcast && !isMap;
-
-  alumniTableWrap.style.display = isAlumni ? "block" : "none";
-  searchToolbar.style.display = isAlumni ? "flex" : "none";
-  rolesTableWrap.style.display = isRoles ? "block" : "none";
-  broadcastView.style.display = isBroadcast ? "block" : "none";
-  mapView.style.display = isMap ? "block" : "none";
-
-  const showBulk = isAlumni && name === "pending";
-  bulkHeader.style.display = showBulk ? "table-cell" : "none";
-  bulkActions.style.display = (showBulk && selectedIds.size > 0) ? "flex" : "none";
-
-  if (isRoles) loadRoles();
-  else if (isAlumni) loadAlumni();
-  else if (isMap) {
-    // ⭐ FIX: Wait 100ms for the div to become visible, then load the map
-    setTimeout(loadMap, 100);
-  }
-  else if (isBroadcast) {
-    document.getElementById("broadcast-subject").value = "Alumni Update — Bishop Angelo Tarantino Memorial SS";
-  }
-}
-tabs.forEach((t) => t.addEventListener("click", () => switchTab(t.dataset.tab)));
-
-async function loadAlumni() {
-  clearMsg();
-  rows.innerHTML = '<tr><td colspan="8" class="empty">Loading…</td></tr>';
+// ════════════════════════════════════════════════════════════════
+//  DIRECTORY — visible only to approved, logged-in alumni
+// ════════════════════════════════════════════════════════════════
+async function loadDirectory() {
+  memberGrid.innerHTML = '<div class="empty">Loading alumni…</div>';
+  dirShow("", "");
   try {
-    const snap = await getDocs(collection(db, "alumni"));
-    allDocs = [];
-    snap.forEach((d) => allDocs.push({ id: d.id, ...d.data() }));
-    allDocs.sort((a, b) => {
-      const pa = a.approved ? 1 : 0, pb = b.approved ? 1 : 0;
-      if (pa !== pb) return pa - pb;
-      const ta = a.created_at?.toMillis?.() || 0;
-      const tb = b.created_at?.toMillis?.() || 0;
-      return tb - ta;
+    const q = query(collection(db, "alumni"),
+      where("approved", "==", true),
+      where("consent_public", "==", true));
+    const snap = await getDocs(q);
+    allMembers = [];
+    snap.forEach((d) => {
+      const data = d.data();
+      if (data.full_name) allMembers.push({ id: d.id, ...data });
     });
 
-    document.getElementById("stat-total").textContent = allDocs.length;
-    document.getElementById("stat-pending").textContent = allDocs.filter(d => !d.approved).length;
-    document.getElementById("stat-approved").textContent = allDocs.filter(d => d.approved).length;
-    document.getElementById("stat-location").textContent = allDocs.filter(d => d.share_location === true).length;
+    allMembers.sort((a, b) => {
+      const ya = a.graduation_year || 0, yb = b.graduation_year || 0;
+      if (yb !== ya) return yb - ya;
+      return (a.full_name || "").localeCompare(b.full_name || "");
+    });
 
-    renderRows();
+    renderDirectory();
   } catch (err) {
-    rows.innerHTML = "";
-    show(err.code === "permission-denied" ? "You don't have permission to view registrations." : "Error: " + err.message, "err");
+    console.error("Directory load failed:", err);
+    memberGrid.innerHTML = "";
+    dirShow("Could not load directory: " + err.message, "err");
   }
 }
 
-function renderRows() {
-  selectedIds.clear();
-  selectAll.checked = false;
-  bulkCount.textContent = "0 selected";
-  bulkActions.style.display = "none";
-
-  const term = searchIn.value.trim().toLowerCase();
-  const filtered = allDocs.filter((d) => {
-    const matchesTab = currentTab === "pending" ? !d.approved : d.approved;
-    if (!matchesTab) return false;
+function renderDirectory() {
+  const term = searchInput.value.trim().toLowerCase();
+  const filtered = allMembers.filter((m) => {
     if (!term) return true;
-    return [d.full_name, d.email, d.courses, d.occupation, d.employer, d.graduation_year, d.location]
-      .filter(Boolean).some((v) => String(v).toLowerCase().includes(term));
+    return [m.full_name, m.courses, m.occupation, m.employer, m.location, m.graduation_year]
+      .filter(Boolean)
+      .some((v) => String(v).toLowerCase().includes(term));
   });
+
+  dirCount.textContent = `${filtered.length} of ${allMembers.length} alumni shown`;
 
   if (filtered.length === 0) {
-    rows.innerHTML = `<tr><td colspan="8" class="empty">No ${currentTab} registrations.</td></tr>`;
+    memberGrid.innerHTML = '<div class="empty">No alumni match your search.</div>';
     return;
   }
 
-  rows.innerHTML = filtered.map((d) => {
-    const yearStr = [d.graduation_year, d.class_stream].filter(Boolean).join(" · ") || "—";
-    const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
-    const status = d.approved ? `<span class="pill approved">Approved</span>` : `<span class="pill pending">Pending</span>`;
-    
-    const checkbox = (currentTab === "pending") 
-      ? `<td><input type="checkbox" class="bulk-cb" data-id="${escapeAttr(d.id)}"></td>` 
+  memberGrid.innerHTML = filtered.map((m) => {
+    const year = m.graduation_year ? `Class of ${m.graduation_year}` : "Graduation year not set";
+    const stream = m.class_stream ? ` • ${escapeHtml(m.class_stream)}` : "";
+    const occ = m.occupation
+      ? `<div class="meta">${escapeHtml(m.occupation)}${m.employer ? " — " + escapeHtml(m.employer) : ""}</div>`
       : "";
+    const loc = m.location ? `<div class="meta">📍 ${escapeHtml(m.location)}</div>` : "";
+    const courses = m.courses
+      ? `<div class="courses"><span class="label">Course(s):</span> ${escapeHtml(m.courses)}</div>`
+      : `<div class="courses" style="color:#94a3b8;">Course(s) not provided</div>`;
+    const bio = m.bio ? `<div class="bio">${escapeHtml(m.bio)}</div>` : "";
+    const contact = [
+      m.email ? `<div class="contact">✉️ ${escapeHtml(m.email)}</div>` : "",
+      m.phone ? `<div class="contact">📞 ${escapeHtml(m.phone)}</div>` : "",
+      m.linkedin ? `<div class="contact">🔗 <a href="${escapeAttr(m.linkedin)}" target="_blank" rel="noopener">${escapeHtml(m.linkedin)}</a></div>` : ""
+    ].join("");
 
-    const actions = d.approved
-      ? `<button class="small gray" data-view="${escapeAttr(d.id)}">View</button>
-         <button class="small" data-send="${escapeAttr(d.id)}">Send credentials</button>
-         <button class="small red" data-reject="${escapeAttr(d.id)}">Revoke</button>`
-      : `<button class="small green" data-approve="${escapeAttr(d.id)}">Approve</button>
-         <button class="small red" data-reject="${escapeAttr(d.id)}">Reject</button>`;
-
-    return `<tr>
-      ${checkbox}
-      <td>${escapeHtml(d.full_name || "")}</td>
-      <td>${escapeHtml(d.email || "")}</td>
-      <td style="max-width:220px;">${escapeHtml(d.courses || "—")}</td>
-      <td>${escapeHtml(yearStr)}</td>
-      <td style="white-space:nowrap; font-size:.78rem;">${escapeHtml(created)}</td>
-      <td>${status}</td>
-      <td style="white-space:nowrap;">${actions}</td>
-    </tr>`;
+    return `
+      <div class="member-card">
+        <h3>${escapeHtml(m.full_name)}</h3>
+        <div class="meta">${year}${stream}</div>
+        ${courses}
+        ${occ}
+        ${loc}
+        ${bio}
+        ${contact}
+      </div>
+    `;
   }).join("");
-
-  rows.querySelectorAll("[data-approve]").forEach((b) => b.addEventListener("click", () => openApproval(b.dataset.approve)));
-  rows.querySelectorAll("[data-view]").forEach((b) => b.addEventListener("click", () => openApproval(b.dataset.view, true)));
-  rows.querySelectorAll("[data-send]").forEach((b) => b.addEventListener("click", () => openSendCredentials(b.dataset.send)));
-  rows.querySelectorAll("[data-reject]").forEach((b) => b.addEventListener("click", () => rejectDoc(b.dataset.reject)));
-
-  rows.querySelectorAll(".bulk-cb").forEach((cb) => {
-    cb.addEventListener("change", (e) => {
-      if (e.target.checked) selectedIds.add(e.target.dataset.id);
-      else selectedIds.delete(e.target.dataset.id);
-      
-      bulkCount.textContent = `${selectedIds.size} selected`;
-      bulkActions.style.display = selectedIds.size > 0 ? "flex" : "none";
-      if (selectedIds.size === 0) selectAll.checked = false;
-    });
-  });
 }
 
-selectAll.addEventListener("change", (e) => {
-  const checked = e.target.checked;
-  rows.querySelectorAll(".bulk-cb").forEach((cb) => {
-    cb.checked = checked;
-    if (checked) selectedIds.add(cb.dataset.id);
-    else selectedIds.delete(cb.dataset.id);
-  });
-  bulkCount.textContent = `${selectedIds.size} selected`;
-  bulkActions.style.display = selectedIds.size > 0 ? "flex" : "none";
-});
-
-bulkApprove.addEventListener("click", async () => {
-  if (!confirm(`Approve ${selectedIds.size} selected alumni?`)) return;
-  const promises = Array.from(selectedIds).map(id => 
-    updateDoc(doc(db, "alumni", id), { approved: true, approved_at: serverTimestamp(), approved_by: auth.currentUser.email })
-  );
-  await Promise.all(promises);
-  show(`${selectedIds.size} approved.`, "ok");
-  loadAlumni();
-});
-
-bulkReject.addEventListener("click", async () => {
-  if (!confirm(`Reject ${selectedIds.size} selected alumni? This deletes them permanently.`)) return;
-  const promises = Array.from(selectedIds).map(id => deleteDoc(doc(db, "alumni", id)));
-  await Promise.all(promises);
-  show(`${selectedIds.size} rejected.`, "ok");
-  loadAlumni();
-});
-
-exportBtn.addEventListener("click", () => {
-  if (allDocs.length === 0) return alert("No data to export.");
-  const headers = ["Name", "Email", "Phone", "Courses", "Graduation Year", "Stream", "Occupation", "Employer", "Location", "Status"];
-  const csvRows = [headers.join(",")];
-  allDocs.forEach(d => {
-    const row = [
-      `"${(d.full_name || "").replace(/"/g, '""')}"`,
-      `"${(d.email || "").replace(/"/g, '""')}"`,
-      `"${(d.phone || "").replace(/"/g, '""')}"`,
-      `"${(d.courses || "").replace(/"/g, '""')}"`,
-      `"${d.graduation_year || ""}"`,
-      `"${(d.class_stream || "").replace(/"/g, '""')}"`,
-      `"${(d.occupation || "").replace(/"/g, '""')}"`,
-      `"${(d.employer || "").replace(/"/g, '""')}"`,
-      `"${(d.location || "").replace(/"/g, '""')}"`,
-      `"${d.approved ? "Approved" : "Pending"}"`
-    ];
-    csvRows.push(row.join(","));
-  });
-  const blob = new Blob([csvRows.join("\n")], { type: "text/csv" });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.setAttribute("href", url);
-  a.setAttribute("download", `alumni_export_${new Date().toISOString().split("T")[0]}.csv`);
-  a.click();
-  window.URL.revokeObjectURL(url);
-});
-
-document.getElementById("broadcast-btn").addEventListener("click", () => {
-  const approved = allDocs.filter(d => d.approved && d.email);
-  if (approved.length === 0) return alert("No approved alumni to email.");
-  
-  const bccList = approved.map(d => d.email).join(",");
-  const subject = document.getElementById("broadcast-subject").value;
-  const body = document.getElementById("broadcast-body").value;
-
-  const mailtoLink = `mailto:?bcc=${encodeURIComponent(bccList)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  window.open(mailtoLink, "_blank");
-});
-
-// ═══════════════════════════════════════════════════════
-//  MAP (Fixed Initialization)
-// ═══════════════════════════════════════════════════════
-function loadMap() {
-  const mapContainer = document.getElementById("map-container");
-  
-  // If map already exists, just resize it to fix Leaflet rendering glitches
-  if (mapInstance) {
-    mapInstance.invalidateSize();
-  } else {
-    // Create the map for the first time
-    mapInstance = L.map('map-container').setView([20, 0], 2);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap'
-    }).addTo(mapInstance);
-  }
-
-  // Clear existing markers
-  mapInstance.eachLayer((layer) => {
-    if (layer instanceof L.Marker) mapInstance.removeLayer(layer);
-  });
-
-  const located = allDocs.filter(d => d.share_location && d.live_location && d.live_location.latitude);
-  
-  if (located.length === 0) {
-    mapContainer.innerHTML = `<div style="display:flex; height:100%; align-items:center; justify-content:center; background:#f8fafc; color:#64748b; font-size:1.1rem; border-radius:10px;">No GPS coordinates found. Users must allow browser location access.</div>`;
-  } else {
-    mapContainer.innerHTML = ""; 
-    if (!mapInstance) {
-        mapInstance = L.map('map-container').setView([20, 0], 2);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(mapInstance);
-    }
-    const bounds = L.latLngBounds();
-    located.forEach(d => {
-      const lat = d.live_location.latitude;
-      const lon = d.live_location.longitude;
-      L.marker([lat, lon]).addTo(mapInstance).bindPopup(`<b>${escapeHtml(d.full_name)}</b><br>${escapeHtml(d.location || "")}`);
-      bounds.extend([lat, lon]);
-    });
-    mapInstance.fitBounds(bounds);
-  }
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
 }
-
-async function loadRoles() {
-  clearMsg();
-  roleRows.innerHTML = '<tr><td colspan="5" class="empty">Loading…</td></tr>';
+function escapeAttr(str) {
   try {
-    const snap = await getDocs(collection(db, "roles"));
-    allRoles = [];
-    snap.forEach((d) => allRoles.push({ uid: d.id, ...d.data() }));
-    allRoles.sort((a, b) => (a.email || "").localeCompare(b.email || ""));
-    renderRoles();
-  } catch (err) {
-    roleRows.innerHTML = "";
-    show(err.code === "permission-denied" ? "Permission denied." : "Error: " + err.message, "err");
-  }
+    const u = new URL(str);
+    if (u.protocol !== "http:" && u.protocol !== "https:") return "#";
+    return escapeHtml(u.href);
+  } catch { return "#"; }
 }
 
-function renderRoles() {
-  if (allRoles.length === 0) {
-    roleRows.innerHTML = '<tr><td colspan="5" class="empty">No roles defined yet.</td></tr>';
-    return;
-  }
-  roleRows.innerHTML = allRoles.map((r) => {
-    const added = r.added_at?.toDate?.()?.toLocaleString() || "—";
-    const safeRole = ["admin", "member"].includes(r.role) ? r.role : "";
-    const badge = `<span class="pill ${safeRole}">${escapeHtml(r.role || "?")}</span>`;
-    return `<tr>
-      <td style="font-family:monospace; font-size:.78rem;">${escapeHtml(r.uid)}</td>
-      <td>${escapeHtml(r.email || "—")}</td>
-      <td>${badge}</td>
-      <td style="font-size:.78rem;">${escapeHtml(added)}</td>
-      <td>
-        <button class="small gray" data-edit-role="${escapeAttr(r.uid)}">Change role</button>
-        <button class="small red" data-del-role="${escapeAttr(r.uid)}">Remove</button>
-      </td>
-    </tr>`;
-  }).join("");
-
-  roleRows.querySelectorAll("[data-edit-role]").forEach((b) => b.addEventListener("click", () => editRole(b.dataset.editRole)));
-  roleRows.querySelectorAll("[data-del-role]").forEach((b) => b.addEventListener("click", () => deleteRole(b.dataset.delRole)));
-}
-
-async function editRole(uid) {
-  const r = allRoles.find((x) => x.uid === uid);
-  if (!r) return;
-  const newRole = prompt(`Set role for ${r.email || uid}\n\nType: admin, member, or leave blank to remove`, r.role || "member");
-  if (newRole === null) return;
-  try {
-    if (newRole.trim() === "") { await deleteDoc(doc(db, "roles", uid)); show("Role removed.", "ok"); }
-    else if (newRole === "admin" || newRole === "member") {
-      await setDoc(doc(db, "roles", uid), { role: newRole, email: r.email || "", added_at: serverTimestamp() }, { merge: true });
-      show(`Role updated to ${newRole}.`, "ok");
-    } else { show("Invalid role.", "err"); return; }
-    loadRoles();
-  } catch (err) { show("Error: " + err.message, "err"); }
-}
-
-async function deleteRole(uid) {
-  const r = allRoles.find((x) => x.uid === uid);
-  if (!r) return;
-  if (!confirm(`Remove all access from ${r.email || uid}?`)) return;
-  try { await deleteDoc(doc(db, "roles", uid)); show("Role removed.", "ok"); loadRoles(); }
-  catch (err) { show("Error: " + err.message, "err"); }
-}
-
-function openApproval(id, viewOnly = false) {
-  const d = allDocs.find((x) => x.id === id);
-  if (!d) return;
-
-  if (viewOnly) {
-    modal.innerHTML = `<h3>Alumnus details</h3>${detailsHtml(d)}<div class="modal-actions"><button class="gray" id="modal-close">Close</button></div>`;
-    modalBg.classList.add("active");
-    document.getElementById("modal-close").onclick = closeModal;
-    return;
-  }
-
-  const proposedEmail = d.email || "";
-  const proposedPassword = generatePassword(14);
-
-  modal.innerHTML = `
-    <h3>Approve registration</h3>
-    ${detailsHtml(d)}
-    <div class="warn">
-      <b>Important:</b> Clicking approve will mark them as approved in the database and open your email app with the credentials. <b>You must manually create their account in the Firebase Console.</b>
-    </div>
-    <div style="margin-top:1rem;">
-      <label>Login email (used to sign in)</label>
-      <div class="cred-row"><input id="cred-email" value="${escapeAttr(proposedEmail)}" readonly><button class="small gray" id="copy-email">Copy</button></div>
-      <label style="margin-top:.75rem;">Generated password</label>
-      <div class="cred-row"><input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly><button class="small gray" id="copy-pass">Copy</button><button class="small" id="regen-pass">Regenerate</button></div>
-    </div>
-    <div class="modal-actions"><button class="gray" id="modal-close">Cancel</button><button class="green" id="modal-confirm">Approve &amp; open email</button></div>
-    <div class="msg" id="modal-msg" style="margin-top:1rem;"></div>
-  `;
-  modalBg.classList.add("active");
-
-  const emailIn = document.getElementById("cred-email");
-  const passIn  = document.getElementById("cred-pass");
-  const mmsg    = document.getElementById("modal-msg");
-
-  document.getElementById("copy-email").onclick = () => copyToClipboard(emailIn.value, mmsg, "Email copied.");
-  document.getElementById("copy-pass").onclick  = () => copyToClipboard(passIn.value, mmsg, "Password copied.");
-  document.getElementById("regen-pass").onclick = () => { passIn.value = generatePassword(14); mmsg.className = "msg info"; mmsg.textContent = "New password generated."; };
-  document.getElementById("modal-close").onclick = closeModal;
-
-  document.getElementById("modal-confirm").onclick = async () => {
-    const confirmBtn = document.getElementById("modal-confirm");
-    confirmBtn.disabled = true;
-    confirmBtn.textContent = "Saving…";
-    try {
-      await updateDoc(doc(db, "alumni", id), {
-        approved: true, approved_at: serverTimestamp(), approved_by: auth.currentUser.email, login_email: emailIn.value.trim().toLowerCase()
-      });
-      openEmailDraft(d, emailIn.value.trim(), passIn.value);
-      mmsg.className = "msg ok";
-      mmsg.innerHTML = `Approved! Email draft opened.`;
-      setTimeout(() => { closeModal(); loadAlumni(); }, 1500);
-    } catch (err) {
-      mmsg.className = "msg err";
-      mmsg.textContent = err.message;
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = "Approve & open email";
-    }
-  };
-}
-
-function openSendCredentials(id) {
-  const d = allDocs.find((x) => x.id === id);
-  if (!d) return;
-  const email = d.login_email || d.email || "";
-  const proposedPassword = generatePassword(14);
-
-  modal.innerHTML = `
-    <h3>Send credentials</h3>
-    ${detailsHtml(d)}
-    <div class="warn">This will open your email app to send these credentials to <b>${escapeHtml(d.email || "")}</b>.</div>
-    <div style="margin-top:1rem;">
-      <label>Login email</label>
-      <div class="cred-row"><input id="cred-email" value="${escapeAttr(email)}" readonly><button class="small gray" id="copy-email">Copy</button></div>
-      <label style="margin-top:.75rem;">Password</label>
-      <div class="cred-row"><input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly><button class="small gray" id="copy-pass">Copy</button><button class="small" id="regen-pass">Regenerate</button></div>
-    </div>
-    <div class="modal-actions"><button class="gray" id="modal-close">Cancel</button><button class="green" id="modal-confirm">Open email draft</button></div>
-    <div class="msg" id="modal-msg" style="margin-top:1rem;"></div>
-  `;
-  modalBg.classList.add("active");
-
-  const passIn = document.getElementById("cred-pass");
-  const mmsg   = document.getElementById("modal-msg");
-
-  document.getElementById("copy-email").onclick = () => copyToClipboard(email, mmsg, "Email copied.");
-  document.getElementById("copy-pass").onclick  = () => copyToClipboard(passIn.value, mmsg, "Password copied.");
-  document.getElementById("regen-pass").onclick = () => { passIn.value = generatePassword(14); mmsg.className = "msg info"; mmsg.textContent = "New password generated."; };
-  document.getElementById("modal-close").onclick = closeModal;
-
-  document.getElementById("modal-confirm").onclick = () => {
-    openEmailDraft(d, email, passIn.value);
-    mmsg.className = "msg ok";
-    mmsg.innerHTML = `✅ Email draft opened.`;
-    setTimeout(closeModal, 1500);
-  };
-}
-
-function openEmailDraft(alumni, email, password) {
-  const subject = encodeURIComponent("Your alumni directory access — Bishop Angelo Tarantino Memorial SS");
-  const bodyText = 
-`Hello ${alumni.full_name || ""},
-
-Your alumni registration has been approved. You can now log in to the alumni directory.
-
-Email:    ${email}
-Password: ${password}
-
-Log in here: ${location.origin}${location.pathname.replace(/admin\.html?$/i, "")}
-
-Please change your password after your first login.
-
-— Bishop Angelo Tarantino Memorial SS`;
-  const mailtoLink = `mailto:${encodeURIComponent(alumni.email || "")}?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
-  window.open(mailtoLink, "_blank");
-}
-
-function detailsHtml(d) {
-  const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
-  const rowsData = [
-    ["Name", d.full_name], ["Email", d.email], ["Phone", d.phone], ["Courses", d.courses], ["Graduation", d.graduation_year],
-    ["Stream", d.class_stream], ["Occupation", d.occupation], ["Employer", d.employer], ["Location", d.location],
-    ["LinkedIn", d.linkedin], ["Bio", d.bio], ["Directory consent", d.consent_public ? "Yes" : "No"],
-    ["Location sharing", d.share_location ? "Yes" : "No"], ["Submitted", created],
-  ];
-  return `<dl class="kv">` + rowsData.filter(([_, v]) => v !== undefined && v !== null && v !== "").map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(String(v))}</dd>`).join("") + `</dl>`;
-}
-
-function closeModal() { modalBg.classList.remove("active"); modal.innerHTML = ""; }
-modalBg.addEventListener("click", (e) => { if (e.target === modalBg) closeModal(); });
-
-async function rejectDoc(id) {
-  const d = allDocs.find((x) => x.id === id);
-  if (!confirm(`Are you sure you want to remove ${d?.full_name || d?.email}?`)) return;
-  try { await deleteDoc(doc(db, "alumni", id)); show("Removed.", "ok"); loadAlumni(); }
-  catch (err) { show("Error: " + err.message, "err"); }
-}
-
-function generatePassword(length = 14) {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*";
-  let out = "";
-  const buf = new Uint32Array(length);
-  window.crypto.getRandomValues(buf);
-  for (let i = 0; i < length; i++) out += chars[buf[i] % chars.length];
-  return out;
-}
-
-async function copyToClipboard(text, msgEl, okText) {
-  try { await navigator.clipboard.writeText(text); msgEl.className = "msg ok"; msgEl.textContent = okText; } 
-  catch { msgEl.className = "msg err"; msgEl.textContent = "Copy failed."; }
-}
-
-searchIn.addEventListener("input", renderRows);
-refreshBtn.addEventListener("click", () => currentTab === "roles" ? loadRoles() : loadAlumni());
+searchInput.addEventListener("input", renderDirectory);
+refreshBtn.addEventListener("click", loadDirectory);
 </script>
 </body>
 </html>
