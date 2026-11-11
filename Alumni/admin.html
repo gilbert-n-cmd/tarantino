@@ -147,6 +147,7 @@
   <div class="tabs">
     <button class="tab active" data-tab="pending">Pending approvals</button>
     <button class="tab" data-tab="approved">Approved alumni</button>
+    <button class="tab" data-tab="rejected">Rejected Archive</button>
     <button class="tab" data-tab="roles">Roles</button>
     <button class="tab" data-tab="broadcast">Broadcast Email</button>
     <button class="tab" data-tab="map">Alumni Map</button>
@@ -160,6 +161,7 @@
 
   <div id="msg" class="msg"></div>
 
+  <!-- MAIN TABLE -->
   <div class="table-wrap" id="alumni-table-wrap">
     <table>
       <thead>
@@ -181,6 +183,7 @@
     </div>
   </div>
 
+  <!-- ROLES TABLE -->
   <div class="table-wrap" id="roles-table-wrap" style="display:none;">
     <table>
       <thead>
@@ -192,9 +195,20 @@
     </table>
   </div>
 
+  <!-- BROADCAST VIEW (Feature 5: Templates added) -->
   <div id="broadcast-view" style="display:none;">
     <h3 style="margin-top:0; color:var(--brand);">Send Broadcast Email</h3>
     <p class="sub">This will open your email app with all approved alumni in the BCC field.</p>
+    
+    <label for="broadcast-template">Use a Template</label>
+    <select id="broadcast-template" style="margin-bottom:1rem;">
+      <option value="">-- Select a template --</option>
+      <option value="event">🎉 Event Invitation</option>
+      <option value="donation">🙏 Donation Request</option>
+      <option value="report">📊 Annual Report</option>
+      <option value="custom">✏️ Custom Message</option>
+    </select>
+
     <label for="broadcast-subject">Subject</label>
     <input id="broadcast-subject" placeholder="e.g., Upcoming Alumni Reunion">
     <label for="broadcast-body" style="margin-top:.75rem;">Message</label>
@@ -202,6 +216,7 @@
     <button class="green" id="broadcast-btn" style="margin-top:1rem;">Open Email Draft (BCC)</button>
   </div>
 
+  <!-- MAP VIEW -->
   <div id="map-view" style="display:none;">
     <div id="map-container"></div>
   </div>
@@ -225,7 +240,7 @@
 import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getFirestore, collection, doc, getDoc, getDocs, updateDoc,
-  deleteDoc, setDoc, serverTimestamp
+  deleteDoc, setDoc, addDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
@@ -274,7 +289,6 @@ const selectAll = document.getElementById("select-all");
 const bulkApprove = document.getElementById("bulk-approve");
 const bulkReject = document.getElementById("bulk-reject");
 
-// Modal elements
 const dialog = document.getElementById("my-modal");
 const modalTitle = document.getElementById("modal-title");
 const modalBody = document.getElementById("modal-body");
@@ -283,6 +297,7 @@ const modalConfirm = document.getElementById("modal-confirm");
 
 let currentTab = "pending";
 let allDocs    = [];
+let rejectedDocs = [];
 let allRoles   = [];
 let currentRole = null;
 let authCheckInFlight = false;
@@ -317,18 +332,15 @@ async function fetchRole(uid, attempt = 1) {
 
 function showAccessDenied(user, reason) {
   const msgByReason = {
-    "no-doc": `Your account exists but has no role assigned.\n\nIn Firebase Console → Firestore → create a document:\n  Collection: roles\n  Document ID: ${user.uid}\n  Field: role = "admin" (type: string)\n\nThen click Retry below.`,
-    "no-role-field": `Your roles document exists but the "role" field is missing or empty.`,
-    "permission-denied": `Firestore rules are blocking the role lookup.\n\nPublish the corrected rules that allow a user to read their own role doc.`,
-    "error": `Could not verify your role. Check the browser console.`
+    "no-doc": `Your account exists but has no role assigned.\n\nIn Firestore create a document:\n  Collection: roles\n  ID: ${user.uid}\n  Field: role = "admin"`,
+    "no-role-field": `Your roles document exists but the "role" field is missing.`,
+    "permission-denied": `Firestore rules are blocking the role lookup.`,
+    "error": `Could not verify your role. Check the console.`
   };
   const safeReason = (reason || "unknown").replace(/[<>]/g, "");
   loginMsg.innerHTML =
     `<div>${escapeHtml(msgByReason[reason] || "Access denied.").replace(/\n/g, "<br>")}</div>` +
-    `<div style="margin-top:.75rem;">` +
-      `<button id="retry-role" class="small">Retry verification</button> ` +
-      `<button id="force-logout" class="small gray">Log out</button>` +
-    `</div>` +
+    `<div style="margin-top:.75rem;"><button id="retry-role" class="small">Retry verification</button> <button id="force-logout" class="small gray">Log out</button></div>` +
     `<div style="margin-top:.5rem; font-size:.75rem; color:#64748b;">Reason code: ${safeReason}</div>`;
   loginMsg.className = "msg err";
   document.getElementById("retry-role").onclick = () => { lastVerifiedUid = null; currentRole = null; verifyRoleNow(); };
@@ -360,9 +372,6 @@ async function verifyRoleNow() {
   else showAccessDenied(user, reason);
 }
 
-// ═══════════════════════════════════════════════════════
-//  LOGIN
-// ═══════════════════════════════════════════════════════
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   loginBtn.disabled = true;
@@ -378,9 +387,6 @@ loginForm.addEventListener("submit", async (e) => {
 
 logoutBtn.addEventListener("click", () => signOut(auth));
 
-// ═══════════════════════════════════════════════════════
-//  AUTH STATE
-// ═══════════════════════════════════════════════════════
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     authCheckInFlight = false; lastVerifiedUid = null; currentRole = null;
@@ -409,7 +415,7 @@ function switchTab(name) {
   const isRoles = name === "roles";
   const isBroadcast = name === "broadcast";
   const isMap = name === "map";
-  const isAlumni = !isRoles && !isBroadcast && !isMap;
+  const isAlumni = name === "pending" || name === "approved" || name === "rejected";
 
   alumniTableWrap.style.display = isAlumni ? "block" : "none";
   searchToolbar.style.display = isAlumni ? "flex" : "none";
@@ -417,15 +423,19 @@ function switchTab(name) {
   broadcastView.style.display = isBroadcast ? "block" : "none";
   mapView.style.display = isMap ? "block" : "none";
 
-  const showBulk = isAlumni && name === "pending";
+  const showBulk = name === "pending";
   bulkHeader.style.display = showBulk ? "table-cell" : "none";
   bulkActions.style.display = (showBulk && selectedIds.size > 0) ? "flex" : "none";
 
   if (isRoles) loadRoles();
-  else if (isAlumni) loadAlumni();
+  else if (isAlumni) {
+    if (name === "rejected") loadRejected();
+    else loadAlumni();
+  }
   else if (isMap) setTimeout(loadMap, 100);
   else if (isBroadcast) {
-    document.getElementById("broadcast-subject").value = "Alumni Update — Bishop Angelo Tarantino Memorial SS";
+    document.getElementById("broadcast-subject").value = "";
+    document.getElementById("broadcast-body").value = "";
   }
 }
 tabs.forEach((t) => t.addEventListener("click", () => switchTab(t.dataset.tab)));
@@ -460,15 +470,36 @@ async function loadAlumni() {
   }
 }
 
+async function loadRejected() {
+  clearMsg();
+  rows.innerHTML = '<tr><td colspan="8" class="empty">Loading…</td></tr>';
+  try {
+    const snap = await getDocs(collection(db, "rejected_alumni"));
+    rejectedDocs = [];
+    snap.forEach((d) => rejectedDocs.push({ id: d.id, ...d.data() }));
+    rejectedDocs.sort((a, b) => (b.rejected_at?.toMillis?.() || 0) - (a.rejected_at?.toMillis?.() || 0));
+    renderRows();
+  } catch (err) {
+    rows.innerHTML = "";
+    show(err.code === "permission-denied" ? "You don't have permission to view rejected alumni." : "Error: " + err.message, "err");
+  }
+}
+
 function renderRows() {
   selectedIds.clear();
   selectAll.checked = false;
   bulkCount.textContent = "0 selected";
   bulkActions.style.display = "none";
 
+  const source = currentTab === "rejected" ? rejectedDocs : allDocs;
   const term = searchIn.value.trim().toLowerCase();
-  const filtered = allDocs.filter((d) => {
-    const matchesTab = currentTab === "pending" ? !d.approved : d.approved;
+  
+  const filtered = source.filter((d) => {
+    let matchesTab = true;
+    if (currentTab === "pending") matchesTab = !d.approved;
+    else if (currentTab === "approved") matchesTab = d.approved;
+    // rejected tab shows all rejectedDocs
+
     if (!matchesTab) return false;
     if (!term) return true;
     return [d.full_name, d.email, d.courses, d.occupation, d.employer, d.graduation_year, d.location]
@@ -476,25 +507,31 @@ function renderRows() {
   });
 
   if (filtered.length === 0) {
-    rows.innerHTML = `<tr><td colspan="8" class="empty">No ${currentTab} registrations.</td></tr>`;
+    rows.innerHTML = `<tr><td colspan="8" class="empty">No ${currentTab} alumni.</td></tr>`;
     return;
   }
 
   rows.innerHTML = filtered.map((d) => {
     const yearStr = [d.graduation_year, d.class_stream].filter(Boolean).join(" · ") || "—";
     const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
-    const status = d.approved ? `<span class="pill approved">Approved</span>` : `<span class="pill pending">Pending</span>`;
+    
+    let status, actions;
+    if (currentTab === "rejected") {
+      status = `<span class="pill" style="background:#fee2e2; color:#991b1b;">Rejected</span>`;
+      actions = `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>`;
+    } else {
+      status = d.approved ? `<span class="pill approved">Approved</span>` : `<span class="pill pending">Pending</span>`;
+      actions = d.approved
+        ? `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>
+           <button class="small" data-action="send" data-id="${escapeAttr(d.id)}">Send credentials</button>
+           <button class="small red" data-action="reject" data-id="${escapeAttr(d.id)}">Revoke</button>`
+        : `<button class="small green" data-action="approve" data-id="${escapeAttr(d.id)}">Approve</button>
+           <button class="small red" data-action="reject" data-id="${escapeAttr(d.id)}">Reject</button>`;
+    }
     
     const checkbox = (currentTab === "pending") 
       ? `<td><input type="checkbox" class="bulk-cb" data-id="${escapeAttr(d.id)}"></td>` 
       : "";
-
-    const actions = d.approved
-      ? `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>
-         <button class="small" data-action="send" data-id="${escapeAttr(d.id)}">Send credentials</button>
-         <button class="small red" data-action="reject" data-id="${escapeAttr(d.id)}">Revoke</button>`
-      : `<button class="small green" data-action="approve" data-id="${escapeAttr(d.id)}">Approve</button>
-         <button class="small red" data-action="reject" data-id="${escapeAttr(d.id)}">Reject</button>`;
 
     return `<tr>
       ${checkbox}
@@ -521,20 +558,22 @@ function renderRows() {
 }
 
 // ═══════════════════════════════════════════════════════
-//  EVENT DELEGATION (Mobile-friendly)
+//  EVENT DELEGATION
 // ═══════════════════════════════════════════════════════
 rows.addEventListener("click", (e) => {
   const btn = e.target.closest("button[data-action]");
   if (!btn) return;
   const id = btn.dataset.id;
   const action = btn.dataset.action;
-  const d = allDocs.find((x) => x.id === id);
+  
+  const source = currentTab === "rejected" ? rejectedDocs : allDocs;
+  const d = source.find((x) => x.id === id);
   if (!d) return;
 
   if (action === "view") openViewModal(d);
   else if (action === "approve") openApproveModal(d);
   else if (action === "send") openSendModal(d);
-  else if (action === "reject") rejectDoc(id);
+  else if (action === "reject") openRejectModal(d);
 });
 
 // ═══════════════════════════════════════════════════════
@@ -572,10 +611,28 @@ modalConfirm.addEventListener("click", async () => {
 
 function openViewModal(d) {
   modalTitle.textContent = "Alumnus Details";
-  modalBody.innerHTML = detailsHtml(d);
-  modalConfirm.style.display = "none";
+  
+  // Feature 4: Admin Notes textarea
+  modalBody.innerHTML = `
+    ${detailsHtml(d)}
+    <label style="margin-top:1rem;">🔒 Private Admin Notes (only you can see this)</label>
+    <textarea id="admin-notes" rows="3" placeholder="e.g., Promised to donate books, needs transcript help...">${escapeHtml(d.admin_notes || "")}</textarea>
+  `;
+  
+  modalConfirm.style.display = "block";
+  modalConfirm.disabled = false;
+  modalConfirm.textContent = "Save Notes";
+  modalConfirm.className = "green";
   modalCancel.textContent = "Close";
-  pendingAction = null;
+  modalCancel.style.display = "block";
+
+  pendingAction = async () => {
+    const notes = document.getElementById("admin-notes").value.trim();
+    const collectionName = currentTab === "rejected" ? "rejected_alumni" : "alumni";
+    await updateDoc(doc(db, collectionName, d.id), { admin_notes: notes });
+    show("Notes saved.", "ok");
+  };
+
   dialog.showModal();
 }
 
@@ -611,7 +668,6 @@ function openApproveModal(d) {
       await deleteApp(secondaryApp);
     } catch (err) {
       if (err.code === "auth/email-already-in-use") {
-        // User exists, continue anyway
         await deleteApp(secondaryApp);
       } else {
         await deleteApp(secondaryApp);
@@ -664,18 +720,60 @@ function openSendModal(d) {
   dialog.showModal();
 }
 
+// Feature 6: Reject with Reason
+function openRejectModal(d) {
+  modalTitle.textContent = "Reject Registration";
+  modalBody.innerHTML = `
+    ${detailsHtml(d)}
+    <label style="margin-top:1rem;">Reason for rejection (will be saved to archive)</label>
+    <textarea id="reject-reason" rows="3" placeholder="e.g., Incomplete information, duplicate account, fake registration..."></textarea>
+  `;
+  modalConfirm.style.display = "block";
+  modalConfirm.disabled = false;
+  modalConfirm.textContent = "Confirm Rejection";
+  modalConfirm.className = "red";
+  modalCancel.textContent = "Cancel";
+
+  pendingAction = async () => {
+    const reason = document.getElementById("reject-reason").value.trim();
+    if (!reason) throw new Error("Please provide a reason for rejection.");
+
+    // Move to rejected_alumni
+    const { id, ...dataWithoutId } = d;
+    await addDoc(collection(db, "rejected_alumni"), {
+      ...dataWithoutId,
+      rejection_reason: reason,
+      rejected_at: serverTimestamp(),
+      rejected_by: auth.currentUser.email
+    });
+
+    // Remove from main alumni collection
+    await deleteDoc(doc(db, "alumni", d.id));
+    show("Rejected and archived.", "ok");
+    loadAlumni();
+  };
+
+  dialog.showModal();
+}
+
 // ═══════════════════════════════════════════════════════
 //  HELPERS
 // ═══════════════════════════════════════════════════════
 function detailsHtml(d) {
   const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
+  const rejectedInfo = d.rejection_reason 
+    ? `<dt style="color:#991b1b;">Rejection Reason</dt><dd style="color:#991b1b;">${escapeHtml(d.rejection_reason)}</dd>` 
+    : "";
   const rowsData = [
     ["Name", d.full_name], ["Email", d.email], ["Phone", d.phone], ["Courses", d.courses], ["Graduation", d.graduation_year],
     ["Stream", d.class_stream], ["Occupation", d.occupation], ["Employer", d.employer], ["Location", d.location],
     ["LinkedIn", d.linkedin], ["Bio", d.bio], ["Directory consent", d.consent_public ? "Yes" : "No"],
     ["Location sharing", d.share_location ? "Yes" : "No"], ["Submitted", created],
   ];
-  return `<dl class="kv">` + rowsData.filter(([_, v]) => v !== undefined && v !== null && v !== "").map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(String(v))}</dd>`).join("") + `</dl>`;
+  return `<dl class="kv">` + 
+    rowsData.filter(([_, v]) => v !== undefined && v !== null && v !== "").map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(String(v))}</dd>`).join("") + 
+    rejectedInfo +
+    `</dl>`;
 }
 
 function openEmailDraft(alumni, email, password) {
@@ -695,13 +793,6 @@ Please change your password after your first login.
 — Bishop Angelo Tarantino Memorial SS`;
   const mailtoLink = `mailto:${encodeURIComponent(alumni.email || "")}?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
   window.open(mailtoLink, "_blank");
-}
-
-async function rejectDoc(id) {
-  const d = allDocs.find((x) => x.id === id);
-  if (!confirm(`Remove ${d?.full_name || d?.email} permanently?`)) return;
-  try { await deleteDoc(doc(db, "alumni", id)); show("Removed.", "ok"); loadAlumni(); }
-  catch (err) { show("Error: " + err.message, "err"); }
 }
 
 function generatePassword(length = 14) {
@@ -743,10 +834,25 @@ bulkApprove.addEventListener("click", async () => {
 });
 
 bulkReject.addEventListener("click", async () => {
-  if (!confirm(`Reject ${selectedIds.size} selected alumni? This deletes them permanently.`)) return;
-  const promises = Array.from(selectedIds).map(id => deleteDoc(doc(db, "alumni", id)));
-  await Promise.all(promises);
-  show(`${selectedIds.size} rejected.`, "ok");
+  if (!confirm(`Reject ${selectedIds.size} selected alumni?\n\nYou will need to type a reason for each. Continue?`)) return;
+  
+  for (const id of selectedIds) {
+    const d = allDocs.find(x => x.id === id);
+    const reason = prompt(`Reason for rejecting ${d?.full_name || d?.email}:`);
+    if (reason === null) continue; // Skip if cancelled
+    if (!reason.trim()) continue; // Skip if empty
+
+    const { id: _id, ...dataWithoutId } = d;
+    await addDoc(collection(db, "rejected_alumni"), {
+      ...dataWithoutId,
+      rejection_reason: reason,
+      rejected_at: serverTimestamp(),
+      rejected_by: auth.currentUser.email
+    });
+    await deleteDoc(doc(db, "alumni", id));
+  }
+  
+  show(`Bulk rejection complete.`, "ok");
   loadAlumni();
 });
 
@@ -782,8 +888,27 @@ exportBtn.addEventListener("click", () => {
 });
 
 // ═══════════════════════════════════════════════════════
-//  BROADCAST
+//  BROADCAST (Feature 5: Templates)
 // ═══════════════════════════════════════════════════════
+document.getElementById("broadcast-template").addEventListener("change", (e) => {
+  const subject = document.getElementById("broadcast-subject");
+  const body = document.getElementById("broadcast-body");
+  
+  if (e.target.value === "event") {
+    subject.value = "🎉 Alumni Reunion — Save the Date!";
+    body.value = "Dear Alumni,\n\nWe are excited to invite you to our upcoming Alumni Reunion.\n\n📍 Location: [Insert Location]\n📅 Date: [Insert Date]\n⏰ Time: [Insert Time]\n\nPlease let us know if you can attend by replying to this email.\n\nWe look forward to seeing you!\n\n— Bishop Angelo Tarantino Memorial SS";
+  } else if (e.target.value === "donation") {
+    subject.value = "🙏 Support Our School — Donation Appeal";
+    body.value = "Dear Alumni,\n\nOur school continues to grow, and we need your support to fund new projects.\n\nYour donation, no matter how small, will help us improve facilities for current students.\n\n💳 To donate: [Insert Donation Link]\n\nThank you for giving back.\n\n— Bishop Angelo Tarantino Memorial SS";
+  } else if (e.target.value === "report") {
+    subject.value = "📊 Annual Alumni Report";
+    body.value = "Dear Alumni,\n\nHere is our annual report on what we've achieved together this year.\n\n✅ [Achievement 1]\n✅ [Achievement 2]\n✅ [Achievement 3]\n\nRead the full report: [Insert Link]\n\nThank you for being part of our community.\n\n— Bishop Angelo Tarantino Memorial SS";
+  } else if (e.target.value === "custom") {
+    subject.value = "";
+    body.value = "";
+  }
+});
+
 document.getElementById("broadcast-btn").addEventListener("click", () => {
   const approved = allDocs.filter(d => d.approved && d.email);
   if (approved.length === 0) return alert("No approved alumni to email.");
@@ -913,7 +1038,11 @@ async function deleteRole(uid) {
 }
 
 searchIn.addEventListener("input", renderRows);
-refreshBtn.addEventListener("click", () => currentTab === "roles" ? loadRoles() : loadAlumni());
+refreshBtn.addEventListener("click", () => {
+  if (currentTab === "roles") loadRoles();
+  else if (currentTab === "rejected") loadRejected();
+  else loadAlumni();
+});
 </script>
 </body>
 </html>
