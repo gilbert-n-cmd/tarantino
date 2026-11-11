@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin — Alumni Portal</title>
-
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
 <style>
   :root { --brand: #004080; --brand-2: #166534; --line: #e2e8f0; --bg: #f8fafc; }
   * { box-sizing: border-box; }
@@ -17,40 +15,32 @@
   h1 { margin: 0 0 .25rem; font-size: 1.5rem; color: var(--brand); }
   .sub { margin: 0 0 1.5rem; color: #64748b; font-size: .9rem; }
   label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .35rem; }
-  input, select, textarea {
-    width: 100%; padding: .6rem .7rem; border: 1px solid var(--line);
-    border-radius: 8px; font: inherit; background: #fff;
-  }
+  input, select, textarea { width: 100%; padding: .6rem .7rem; border: 1px solid var(--line);
+    border-radius: 8px; font: inherit; background: #fff; }
   input:focus, select:focus, textarea:focus { outline: 2px solid var(--brand-2); border-color: var(--brand-2); }
-  button {
-    padding: .65rem 1.1rem; border: 0; border-radius: 8px; font: inherit; font-weight: 600;
-    cursor: pointer; background: var(--brand); color: #fff;
-  }
+  button { padding: .65rem 1.1rem; border: 0; border-radius: 8px; font: inherit; font-weight: 600;
+    cursor: pointer; background: var(--brand); color: #fff; }
   button:hover:not(:disabled) { background: #00325f; }
   button:disabled { opacity: .55; cursor: not-allowed; }
   button.green  { background: var(--brand-2); } button.green:hover:not(:disabled) { background: #14532d; }
-  button.red    { background: #b91c1c; }        button.red:hover:not(:disabled)    { background: #991b1b; }
-  button.gray   { background: #64748b; }        button.gray:hover:not(:disabled)   { background: #475569; }
+  button.red    { background: #b91c1c; } button.red:hover:not(:disabled) { background: #991b1b; }
+  button.gray   { background: #64748b; } button.gray:hover:not(:disabled) { background: #475569; }
   button.small  { padding: .4rem .7rem; font-size: .8rem; }
   .msg { margin-top: 1rem; padding: .8rem 1rem; border-radius: 8px; font-size: .9rem; display: none; }
-  .msg.ok  { display: block; background: #dcfce7; color: #166534; }
+  .msg.ok { display: block; background: #dcfce7; color: #166534; }
   .msg.err { display: block; background: #fee2e2; color: #991b1b; }
   .msg.info{ display: block; background: #dbeafe; color: #1e40af; }
-
   #login-panel { max-width: 460px; margin: 4rem auto; }
   #admin-panel { display: none; }
-
   .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
   .stat-card { background: #f8fafc; border: 1px solid var(--line); border-radius: 10px; padding: 1rem; text-align: center; }
   .stat-card h4 { margin: 0 0 .5rem; font-size: .85rem; color: #64748b; text-transform: uppercase; letter-spacing: .5px; }
   .stat-card .num { font-size: 1.8rem; font-weight: 700; color: var(--brand); }
-
   .tabs { display: flex; gap: .5rem; border-bottom: 2px solid var(--line); margin-bottom: 1.25rem; flex-wrap: wrap; }
   .tab { padding: .6rem 1rem; border: 0; background: none; border-radius: 0; color: #64748b;
          font-weight: 600; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer; }
   .tab:hover { background: #f1f5f9; }
   .tab.active { color: var(--brand); border-bottom-color: var(--brand); }
-
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 700px; }
   th, td { text-align: left; padding: .55rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
@@ -61,19 +51,11 @@
   .pill.approved { background: #dcfce7; color: #166534; }
   .pill.admin    { background: #dbeafe; color: #1e40af; }
   .pill.member   { background: #e0e7ff; color: #3730a3; }
-
   .toolbar { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
   .toolbar input[type=search] { flex: 1; min-width: 200px; }
-
   .empty { color: #64748b; font-size: .9rem; padding: 1.5rem 0; text-align: center; }
   #map-container { height: 400px; width: 100%; border-radius: 10px; border: 1px solid var(--line); }
-
-  /* MODAL */
-  dialog#my-modal {
-    border: none; border-radius: 16px; padding: 0; 
-    max-width: 560px; width: calc(100% - 2rem); 
-    box-shadow: 0 20px 50px rgba(15,23,42,.4);
-  }
+  dialog#my-modal { border: none; border-radius: 16px; padding: 0; max-width: 560px; width: calc(100% - 2rem); box-shadow: 0 20px 50px rgba(15,23,42,.4); }
   dialog#my-modal::backdrop { background: rgba(15,23,42,.6); }
   .modal-inner { padding: 1.5rem; max-height: 85vh; overflow-y: auto; }
   .modal-inner h3 { margin: 0 0 1rem; font-size: 1.15rem; color: var(--brand); }
@@ -84,11 +66,9 @@
   .modal .kv dd { margin: 0; word-break: break-word; }
   .cred-row { display: flex; gap: .5rem; align-items: center; margin-bottom: .4rem; }
   .cred-row input { font-family: ui-monospace, monospace; font-size: .85rem; }
-  .warn { background: #fef3c7; color: #92400e; padding: .6rem .8rem; border-radius: 8px;
-          font-size: .82rem; margin-top: .5rem; }
+  .warn { background: #fef3c7; color: #92400e; padding: .6rem .8rem; border-radius: 8px; font-size: .82rem; margin-top: .5rem; }
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
   .form-grid .full { grid-column: 1 / -1; }
-
   @media (max-width: 768px) {
     body { padding: 1rem 0.5rem; }
     .wrap { padding: 1.25rem; border-radius: 10px; }
@@ -97,11 +77,7 @@
     .stat-card .num { font-size: 1.4rem; }
     .tabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
     .tab { white-space: nowrap; padding: .5rem .75rem; font-size: .85rem; }
-    dialog#my-modal { 
-      width: 100%; max-width: 100%; 
-      border-radius: 20px 20px 0 0;
-      margin-bottom: 0;
-    }
+    dialog#my-modal { width: 100%; max-width: 100%; border-radius: 20px 20px 0 0; margin-bottom: 0; }
     .modal-inner { padding: 1.25rem; max-height: 82vh; }
     .toolbar { flex-direction: column; align-items: stretch; }
     .toolbar input[type=search] { width: 100%; }
@@ -135,18 +111,16 @@
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:.5rem;">
     <div>
       <h1 style="margin:0;">Admin Panel</h1>
-      <p class="sub" style="margin:0;">Signed in as <b id="admin-email"></b> · <span id="admin-role" class="pill admin">admin</span></p>
+      <p class="sub" style="margin:0;">Signed in as <b id="admin-email"></b></p>
     </div>
     <button id="logout-btn" class="gray small">Log out</button>
   </div>
-
   <div class="stats-grid">
     <div class="stat-card"><h4>Total Alumni</h4><div class="num" id="stat-total">0</div></div>
     <div class="stat-card"><h4>Pending</h4><div class="num" id="stat-pending" style="color:#d97706;">0</div></div>
     <div class="stat-card"><h4>Approved</h4><div class="num" id="stat-approved" style="color:var(--brand-2);">0</div></div>
     <div class="stat-card"><h4>Sharing Location</h4><div class="num" id="stat-location" style="color:#1e40af;">0</div></div>
   </div>
-
   <div class="tabs">
     <button class="tab active" data-tab="pending">Pending</button>
     <button class="tab" data-tab="approved">Approved</button>
@@ -155,34 +129,28 @@
     <button class="tab" data-tab="roles">Roles</button>
     <button class="tab" data-tab="broadcast">Broadcast</button>
     <button class="tab" data-tab="map">Map</button>
-    <!-- ⭐ NEW TABS -->
     <button class="tab" data-tab="events">📅 Events</button>
     <button class="tab" data-tab="jobs">💼 Jobs</button>
     <button class="tab" data-tab="stories">📚 Stories</button>
     <button class="tab" data-tab="settings">⚙️ Settings</button>
   </div>
-
   <div class="toolbar" id="search-toolbar">
     <input type="search" id="search" placeholder="Search name, email, course, year…">
     <button id="export-btn" class="green">Export CSV</button>
     <button id="refresh-btn" class="gray">Refresh</button>
   </div>
-
   <div id="msg" class="msg"></div>
-
-  <!-- ALUMNI TABLES -->
+  
   <div class="table-wrap" id="alumni-table-wrap">
     <table>
       <thead>
         <tr>
           <th id="bulk-header" style="display:none; width:30px;"><input type="checkbox" id="select-all"></th>
-          <th>Name</th><th>Email</th><th>Courses</th><th>Year / Stream</th>
-          <th>Submitted</th><th>Status</th><th>Actions</th>
+          <th>Name</th><th>Email</th><th>Courses</th><th>Year / Stream</th><th>Submitted</th><th>Status</th><th>Actions</th>
         </tr>
       </thead>
       <tbody id="rows"><tr><td colspan="8" class="empty">Loading…</td></tr></tbody>
     </table>
-    
     <div id="bulk-actions" style="display:none; margin-top:1rem; padding:1rem; background:#f8fafc; border-radius:8px; border:1px solid var(--line);">
       <span style="font-weight:600; font-size:.9rem;" id="bulk-count">0 selected</span>
       <button class="green small" id="bulk-approve" style="margin-left:1rem;">Approve Selected</button>
@@ -190,20 +158,15 @@
     </div>
   </div>
 
-  <!-- ROLES TABLE -->
   <div class="table-wrap" id="roles-table-wrap" style="display:none;">
     <table>
-      <thead>
-        <tr><th>UID</th><th>Email</th><th>Role</th><th>Added</th><th>Actions</th></tr>
-      </thead>
+      <thead><tr><th>UID</th><th>Email</th><th>Role</th><th>Added</th><th>Actions</th></tr></thead>
       <tbody id="role-rows"><tr><td colspan="5" class="empty">Loading…</td></tr></tbody>
     </table>
   </div>
 
-  <!-- BROADCAST VIEW -->
   <div id="broadcast-view" style="display:none;">
     <h3 style="margin-top:0; color:var(--brand);">Send Broadcast Email</h3>
-    <p class="sub">This will open your email app with all approved alumni in the BCC field.</p>
     <label for="broadcast-template">Use a Template</label>
     <select id="broadcast-template" style="margin-bottom:1rem;">
       <option value="">-- Select a template --</option>
@@ -213,18 +176,16 @@
       <option value="custom">✏️ Custom Message</option>
     </select>
     <label for="broadcast-subject">Subject</label>
-    <input id="broadcast-subject" placeholder="Subject">
+    <input id="broadcast-subject">
     <label for="broadcast-body" style="margin-top:.75rem;">Message</label>
     <textarea id="broadcast-body" rows="6"></textarea>
     <button class="green" id="broadcast-btn" style="margin-top:1rem;">Open Email Draft (BCC)</button>
   </div>
 
-  <!-- MAP VIEW -->
   <div id="map-view" style="display:none;">
     <div id="map-container"></div>
   </div>
 
-  <!-- ⭐ NEW: EVENTS VIEW -->
   <div id="events-view" style="display:none;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
       <h3 style="margin:0; color:var(--brand);">Upcoming Events</h3>
@@ -233,7 +194,6 @@
     <div id="events-list"></div>
   </div>
 
-  <!-- ⭐ NEW: JOBS VIEW -->
   <div id="jobs-view" style="display:none;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
       <h3 style="margin:0; color:var(--brand);">Job Board</h3>
@@ -242,7 +202,6 @@
     <div id="jobs-list"></div>
   </div>
 
-  <!-- ⭐ NEW: STORIES VIEW -->
   <div id="stories-view" style="display:none;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
       <h3 style="margin:0; color:var(--brand);">Alumni Stories</h3>
@@ -251,29 +210,19 @@
     <div id="stories-list"></div>
   </div>
 
-  <!-- ⭐ NEW: SETTINGS VIEW -->
   <div id="settings-view" style="display:none;">
     <h3 style="margin-top:0; color:var(--brand);">Site Settings</h3>
-    
-    <!-- Alumni of the Month -->
     <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid var(--line); margin-bottom:1.5rem;">
       <h4 style="margin:0 0 .5rem;">🌟 Alumni of the Month</h4>
-      <label>Name</label>
-      <input id="aotm-name" placeholder="e.g., John Doe">
-      <label style="margin-top:.5rem;">Description</label>
-      <textarea id="aotm-desc" rows="2" placeholder="Why they are being highlighted..."></textarea>
-      <button class="green small" id="save-aotm-btn" style="margin-top:.75rem;">Save Alumni of Month</button>
+      <label>Name</label><input id="aotm-name">
+      <label style="margin-top:.5rem;">Description</label><textarea id="aotm-desc" rows="2"></textarea>
+      <button class="green small" id="save-aotm-btn" style="margin-top:.75rem;">Save</button>
     </div>
-
-    <!-- Announcement Banner -->
     <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid var(--line); margin-bottom:1.5rem;">
       <h4 style="margin:0 0 .5rem;">📢 Announcement Banner</h4>
-      <label>Message (leave blank to hide)</label>
-      <input id="announcement-text" placeholder="e.g., Reunion coming June 15th!">
-      <button class="green small" id="save-announcement-btn" style="margin-top:.75rem;">Save Announcement</button>
+      <label>Message (leave blank to hide)</label><input id="announcement-text">
+      <button class="green small" id="save-announcement-btn" style="margin-top:.75rem;">Save</button>
     </div>
-
-    <!-- Inbox -->
     <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid var(--line);">
       <h4 style="margin:0 0 .5rem;">📥 Inbox (Messages from Alumni)</h4>
       <div id="messages-list"><div class="empty">Loading...</div></div>
@@ -281,7 +230,6 @@
   </div>
 </div>
 
-<!-- NATIVE DIALOG MODAL -->
 <dialog id="my-modal">
   <div class="modal-inner">
     <h3 id="modal-title">Details</h3>
@@ -294,55 +242,47 @@
 </dialog>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script type="module">
 import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore, collection, doc, getDoc, getDocs, updateDoc,
-  deleteDoc, setDoc, addDoc, serverTimestamp, query, orderBy
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import {
-  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
-  createUserWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, getDocs, updateDoc, deleteDoc, setDoc, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey:            "AIzaSyCVJT7FQcfX9OWf-HgD2Xd_M_hBp0v1Pf0",
-  authDomain:        "alumni-74176.firebaseapp.com",
-  projectId:         "alumni-74176",
-  storageBucket:     "alumni-74176.firebasestorage.app",
+  apiKey: "AIzaSyCVJT7FQcfX9OWf-HgD2Xd_M_hBp0v1Pf0",
+  authDomain: "alumni-74176.firebaseapp.com",
+  projectId: "alumni-74176",
+  storageBucket: "alumni-74176.firebasestorage.app",
   messagingSenderId: "952137152614",
-  appId:             "1:952137152614:web:d9c5aea4643fcc585915a7"
+  appId: "1:952137152614:web:d9c5aea4643fcc585915a7"
 };
 
-const app  = initializeApp(firebaseConfig);
-const db   = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 const auth = getAuth(app);
 
-// ─── UI Elements ───
-const loginPanel   = document.getElementById("login-panel");
-const loginForm    = document.getElementById("login-form");
-const loginMsg     = document.getElementById("login-msg");
-const loginBtn     = document.getElementById("login-btn");
-const adminPanel   = document.getElementById("admin-panel");
+const loginPanel = document.getElementById("login-panel");
+const loginForm = document.getElementById("login-form");
+const loginMsg = document.getElementById("login-msg");
+const loginBtn = document.getElementById("login-btn");
+const adminPanel = document.getElementById("admin-panel");
 const adminEmailEl = document.getElementById("admin-email");
-const logoutBtn    = document.getElementById("logout-btn");
-const rows         = document.getElementById("rows");
-const roleRows     = document.getElementById("role-rows");
-const searchIn     = document.getElementById("search");
-const refreshBtn   = document.getElementById("refresh-btn");
-const exportBtn    = document.getElementById("export-btn");
-const msg          = document.getElementById("msg");
-const tabs         = document.querySelectorAll(".tab");
+const logoutBtn = document.getElementById("logout-btn");
+const rows = document.getElementById("rows");
+const roleRows = document.getElementById("role-rows");
+const searchIn = document.getElementById("search");
+const refreshBtn = document.getElementById("refresh-btn");
+const exportBtn = document.getElementById("export-btn");
+const msg = document.getElementById("msg");
+const tabs = document.querySelectorAll(".tab");
 const alumniTableWrap = document.getElementById("alumni-table-wrap");
-const rolesTableWrap  = document.getElementById("roles-table-wrap");
-const searchToolbar   = document.getElementById("search-toolbar");
-const broadcastView   = document.getElementById("broadcast-view");
-const mapView         = document.getElementById("map-view");
-const eventsView      = document.getElementById("events-view");
-const jobsView        = document.getElementById("jobs-view");
-const storiesView     = document.getElementById("stories-view");
-const settingsView    = document.getElementById("settings-view");
+const rolesTableWrap = document.getElementById("roles-table-wrap");
+const searchToolbar = document.getElementById("search-toolbar");
+const broadcastView = document.getElementById("broadcast-view");
+const mapView = document.getElementById("map-view");
+const eventsView = document.getElementById("events-view");
+const jobsView = document.getElementById("jobs-view");
+const storiesView = document.getElementById("stories-view");
+const settingsView = document.getElementById("settings-view");
 
 const bulkHeader = document.getElementById("bulk-header");
 const bulkActions = document.getElementById("bulk-actions");
@@ -358,10 +298,10 @@ const modalCancel = document.getElementById("modal-cancel");
 const modalConfirm = document.getElementById("modal-confirm");
 
 let currentTab = "pending";
-let allDocs    = [];
+let allDocs = [];
 let rejectedDocs = [];
-let revokedDocs  = [];
-let allRoles   = [];
+let revokedDocs = [];
+let allRoles = [];
 let authCheckInFlight = false;
 let lastVerifiedUid = null;
 let selectedIds = new Set();
@@ -370,65 +310,62 @@ let pendingAction = null;
 
 function show(text, type) { msg.textContent = text; msg.className = "msg " + type; }
 function loginShow(text, type) { loginMsg.textContent = text; loginMsg.className = "msg " + type; }
-function clearMsg() { msg.className = "msg"; msg.textContent = ""; }
 function escapeHtml(s) { return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 function escapeAttr(s) { return escapeHtml(s); }
 
 // ═══════════════════════════════════════════════════════
-//  ROLE CHECK & LOGIN
+//  THE BULLETPROOF AUTH FIX
 // ═══════════════════════════════════════════════════════
-async function fetchRole(uid, attempt = 1) {
-  try {
-    const snap = await getDoc(doc(db, "roles", uid));
-    if (!snap.exists) return { role: null, reason: "no-doc" };
-    const data = snap.data();
-    return { role: data.role || null, reason: data.role ? null : "no-role-field" };
-  } catch (err) {
-    if (attempt < 2 && (err.code === "permission-denied" || err.code === "unavailable")) {
-      await new Promise((r) => setTimeout(r, 800));
-      return fetchRole(uid, attempt + 1);
-    }
-    return { role: null, reason: err.code || "error" };
+onAuthStateChanged(auth, async (user) => {
+  // 1. If logged out, show login
+  if (!user) {
+    loginPanel.style.display = "block";
+    adminPanel.style.display = "none";
+    loginBtn.disabled = false;
+    loginMsg.className = "msg"; loginMsg.textContent = "";
+    return;
   }
-}
 
-function showAccessDenied(user, reason) {
-  const msgByReason = {
-    "no-doc": `Your account exists but has no role assigned.\n\nIn Firestore create a document:\n  Collection: roles\n  ID: ${user.uid}\n  Field: role = "admin"`,
-    "no-role-field": `Your roles document exists but the "role" field is missing.`,
-    "permission-denied": `Firestore rules are blocking the role lookup.`,
-    "error": `Could not verify your role. Check the console.`
-  };
-  const safeReason = (reason || "unknown").replace(/[<>]/g, "");
-  loginMsg.innerHTML =
-    `<div>${escapeHtml(msgByReason[reason] || "Access denied.").replace(/\n/g, "<br>")}</div>` +
-    `<div style="margin-top:.75rem;"><button id="retry-role" class="small">Retry verification</button> <button id="force-logout" class="small gray">Log out</button></div>`;
-  loginMsg.className = "msg err";
-  document.getElementById("retry-role").onclick = () => { lastVerifiedUid = null; verifyRoleNow(); };
-  document.getElementById("force-logout").onclick = () => signOut(auth);
-}
-
-function revealAdminPanel(user, role) {
-  lastVerifiedUid = user.uid;
-  loginPanel.style.display = "none";
-  adminPanel.style.display = "block";
-  adminEmailEl.textContent = user.email || "(no email)";
-  loginShow("", "ok");
-  loginBtn.disabled = false;
-  switchTab("pending");
-}
-
-async function verifyRoleNow() {
-  const user = auth.currentUser;
-  if (!user) return loginShow("Not signed in.", "err");
+  // 2. Dedupe: if we already verified this user, skip
+  if (user.uid === lastVerifiedUid && adminPanel.style.display === "block") return;
   if (authCheckInFlight) return;
   authCheckInFlight = true;
-  loginShow("Verifying access…", "info");
-  const { role, reason } = await fetchRole(user.uid);
-  authCheckInFlight = false;
-  if (role === "admin") revealAdminPanel(user, role);
-  else showAccessDenied(user, reason);
-}
+
+  loginShow("Verifying access...", "info");
+
+  try {
+    // 3. Add a 3-second timeout so it never hangs
+    const rolePromise = getDoc(doc(db, "roles", user.uid));
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Firestore timed out")), 3000));
+    const snap = await Promise.race([rolePromise, timeoutPromise]);
+
+    // 4. Handle the result
+    if (!snap.exists() || snap.data().role !== "admin") {
+      // Not an admin -> sign out
+      await signOut(auth);
+      loginShow("You are not an admin.", "err");
+      loginBtn.disabled = false;
+      authCheckInFlight = false;
+      return;
+    }
+
+    // 5. Success -> Reveal panel
+    lastVerifiedUid = user.uid;
+    loginPanel.style.display = "none";
+    adminPanel.style.display = "block";
+    adminEmailEl.textContent = user.email || "(no email)";
+    loginShow("", "ok");
+    loginBtn.disabled = false;
+    switchTab("pending");
+
+  } catch (err) {
+    // 6. Handle timeout or errors WITHOUT logging out
+    loginShow("Verification error: " + err.message + ". Check Firestore rules.", "err");
+    loginBtn.disabled = false;
+  } finally {
+    authCheckInFlight = false;
+  }
+});
 
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -436,49 +373,21 @@ loginForm.addEventListener("submit", async (e) => {
   loginShow("Signing in…", "info");
   try {
     await signInWithEmailAndPassword(auth, document.getElementById("login_email").value.trim(), document.getElementById("login_password").value);
-    loginShow("Verifying access…", "info");
   } catch (err) {
-    loginShow(err.code === "auth/invalid-credential" || err.code === "auth/wrong-password" ? "Incorrect email or password." : err.message, "err");
+    loginShow(err.message, "err");
     loginBtn.disabled = false;
   }
 });
 
 logoutBtn.addEventListener("click", () => signOut(auth));
 
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    authCheckInFlight = false; lastVerifiedUid = null;
-    loginPanel.style.display = "block"; adminPanel.style.display = "none";
-    loginBtn.disabled = false; loginMsg.className = "msg"; loginMsg.textContent = "";
-    return;
-  }
-  if (user.uid === lastVerifiedUid) return;
-  if (authCheckInFlight) return;
-  authCheckInFlight = true;
-  loginShow("Verifying access…", "info");
-  const { role, reason } = await fetchRole(user.uid);
-  authCheckInFlight = false;
-  if (role === "admin") revealAdminPanel(user, role);
-  else showAccessDenied(user, reason);
-});
-
 // ═══════════════════════════════════════════════════════
-//  TABS
+//  TABS & DATA
 // ═══════════════════════════════════════════════════════
 function switchTab(name) {
   currentTab = name;
   tabs.forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
   
-  const isRoles = name === "roles";
-  const isBroadcast = name === "broadcast";
-  const isMap = name === "map";
-  const isEvents = name === "events";
-  const isJobs = name === "jobs";
-  const isStories = name === "stories";
-  const isSettings = name === "settings";
-  const isAlumni = name === "pending" || name === "approved" || name === "rejected" || name === "revoked";
-
-  // Hide all first
   alumniTableWrap.style.display = "none";
   searchToolbar.style.display = "none";
   rolesTableWrap.style.display = "none";
@@ -489,52 +398,44 @@ function switchTab(name) {
   storiesView.style.display = "none";
   settingsView.style.display = "none";
 
-  // Show the right one
+  const isAlumni = name === "pending" || name === "approved" || name === "rejected" || name === "revoked";
+
   if (isAlumni) { alumniTableWrap.style.display = "block"; searchToolbar.style.display = "flex"; }
-  if (isRoles) rolesTableWrap.style.display = "block";
-  if (isBroadcast) broadcastView.style.display = "block";
-  if (isMap) mapView.style.display = "block";
-  if (isEvents) eventsView.style.display = "block";
-  if (isJobs) jobsView.style.display = "block";
-  if (isStories) storiesView.style.display = "block";
-  if (isSettings) settingsView.style.display = "block";
+  if (name === "roles") rolesTableWrap.style.display = "block";
+  if (name === "broadcast") broadcastView.style.display = "block";
+  if (name === "map") mapView.style.display = "block";
+  if (name === "events") eventsView.style.display = "block";
+  if (name === "jobs") jobsView.style.display = "block";
+  if (name === "stories") storiesView.style.display = "block";
+  if (name === "settings") settingsView.style.display = "block";
 
   const showBulk = name === "pending";
   bulkHeader.style.display = showBulk ? "table-cell" : "none";
   bulkActions.style.display = (showBulk && selectedIds.size > 0) ? "flex" : "none";
 
-  // Load data
-  if (isRoles) loadRoles();
+  if (name === "roles") loadRoles();
   else if (name === "rejected") loadRejected();
   else if (name === "revoked") loadRevoked();
   else if (isAlumni) loadAlumni();
-  else if (isMap) setTimeout(loadMap, 100);
-  else if (isEvents) loadEvents();
-  else if (isJobs) loadJobs();
-  else if (isStories) loadStories();
-  else if (isSettings) loadSettings();
-  else if (isBroadcast) {
+  else if (name === "map") setTimeout(loadMap, 100);
+  else if (name === "events") loadEvents();
+  else if (name === "jobs") loadJobs();
+  else if (name === "stories") loadStories();
+  else if (name === "settings") loadSettings();
+  else if (name === "broadcast") {
     document.getElementById("broadcast-subject").value = "";
     document.getElementById("broadcast-body").value = "";
   }
 }
 tabs.forEach((t) => t.addEventListener("click", () => switchTab(t.dataset.tab)));
 
-// ═══════════════════════════════════════════════════════
-//  ALUMNI DATA & RENDERING
-// ═══════════════════════════════════════════════════════
 async function loadAlumni() {
-  clearMsg();
   rows.innerHTML = '<tr><td colspan="8" class="empty">Loading…</td></tr>';
   try {
     const snap = await getDocs(collection(db, "alumni"));
     allDocs = [];
     snap.forEach((d) => allDocs.push({ id: d.id, ...d.data() }));
-    allDocs.sort((a, b) => {
-      const pa = a.approved ? 1 : 0, pb = b.approved ? 1 : 0;
-      if (pa !== pb) return pa - pb;
-      return (b.created_at?.toMillis?.() || 0) - (a.created_at?.toMillis?.() || 0);
-    });
+    allDocs.sort((a, b) => (a.approved === b.approved) ? (b.created_at?.toMillis?.() || 0) - (a.created_at?.toMillis?.() || 0) : (a.approved ? 1 : -1));
     document.getElementById("stat-total").textContent = allDocs.length;
     document.getElementById("stat-pending").textContent = allDocs.filter(d => !d.approved).length;
     document.getElementById("stat-approved").textContent = allDocs.filter(d => d.approved).length;
@@ -544,46 +445,39 @@ async function loadAlumni() {
 }
 
 async function loadRejected() {
-  clearMsg();
   rows.innerHTML = '<tr><td colspan="8" class="empty">Loading…</td></tr>';
   try {
     const snap = await getDocs(collection(db, "rejected_alumni"));
     rejectedDocs = [];
     snap.forEach((d) => rejectedDocs.push({ id: d.id, ...d.data() }));
     renderRows();
-  } catch (err) { rows.innerHTML = ""; show("Error: " + err.message, "err"); }
+  } catch (err) { show("Error: " + err.message, "err"); }
 }
 
 async function loadRevoked() {
-  clearMsg();
   rows.innerHTML = '<tr><td colspan="8" class="empty">Loading…</td></tr>';
   try {
     const snap = await getDocs(collection(db, "revoked_alumni"));
     revokedDocs = [];
     snap.forEach((d) => revokedDocs.push({ id: d.id, ...d.data() }));
     renderRows();
-  } catch (err) { rows.innerHTML = ""; show("Error: " + err.message, "err"); }
+  } catch (err) { show("Error: " + err.message, "err"); }
 }
 
 function renderRows() {
-  selectedIds.clear();
-  selectAll.checked = false;
-  bulkCount.textContent = "0 selected";
-  bulkActions.style.display = "none";
-
+  selectedIds.clear(); selectAll.checked = false; bulkCount.textContent = "0 selected"; bulkActions.style.display = "none";
   let source = allDocs;
   if (currentTab === "rejected") source = rejectedDocs;
   else if (currentTab === "revoked") source = revokedDocs;
 
   const term = searchIn.value.trim().toLowerCase();
   const filtered = source.filter((d) => {
-    let matchesTab = true;
-    if (currentTab === "pending") matchesTab = !d.approved;
-    else if (currentTab === "approved") matchesTab = d.approved;
-    if (!matchesTab) return false;
+    let match = true;
+    if (currentTab === "pending") match = !d.approved;
+    else if (currentTab === "approved") match = d.approved;
+    if (!match) return false;
     if (!term) return true;
-    return [d.full_name, d.email, d.courses, d.occupation, d.employer, d.graduation_year, d.location]
-      .filter(Boolean).some((v) => String(v).toLowerCase().includes(term));
+    return [d.full_name, d.email, d.courses, d.occupation, d.employer, d.graduation_year, d.location].filter(Boolean).some((v) => String(v).toLowerCase().includes(term));
   });
 
   if (filtered.length === 0) {
@@ -594,67 +488,43 @@ function renderRows() {
   rows.innerHTML = filtered.map((d) => {
     const yearStr = [d.graduation_year, d.class_stream].filter(Boolean).join(" · ") || "—";
     const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
-    
     let status, actions;
     if (currentTab === "rejected") {
       status = `<span class="pill" style="background:#fee2e2; color:#991b1b;">Rejected</span>`;
-      actions = `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>
-                 <button class="small green" data-action="restore" data-id="${escapeAttr(d.id)}">Restore</button>`;
+      actions = `<button class="small gray" data-action="view" data-id="${d.id}">View</button><button class="small green" data-action="restore" data-id="${d.id}">Restore</button>`;
     } else if (currentTab === "revoked") {
       status = `<span class="pill" style="background:#ffedd5; color:#9a3412;">Revoked</span>`;
-      actions = `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>
-                 <button class="small green" data-action="restore" data-id="${escapeAttr(d.id)}">Restore</button>`;
+      actions = `<button class="small gray" data-action="view" data-id="${d.id}">View</button><button class="small green" data-action="restore" data-id="${d.id}">Restore</button>`;
     } else {
       status = d.approved ? `<span class="pill approved">Approved</span>` : `<span class="pill pending">Pending</span>`;
       actions = d.approved
-        ? `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>
-           <button class="small" data-action="send" data-id="${escapeAttr(d.id)}">Send credentials</button>
-           <button class="small red" data-action="revoke" data-id="${escapeAttr(d.id)}">Revoke</button>`
-        : `<button class="small green" data-action="approve" data-id="${escapeAttr(d.id)}">Approve</button>
-           <button class="small red" data-action="reject" data-id="${escapeAttr(d.id)}">Reject</button>`;
+        ? `<button class="small gray" data-action="view" data-id="${d.id}">View</button><button class="small" data-action="send" data-id="${d.id}">Send credentials</button><button class="small red" data-action="revoke" data-id="${d.id}">Revoke</button>`
+        : `<button class="small green" data-action="approve" data-id="${d.id}">Approve</button><button class="small red" data-action="reject" data-id="${d.id}">Reject</button>`;
     }
-    
-    const checkbox = (currentTab === "pending") 
-      ? `<td><input type="checkbox" class="bulk-cb" data-id="${escapeAttr(d.id)}"></td>` 
-      : "";
-
-    return `<tr>
-      ${checkbox}
-      <td>${escapeHtml(d.full_name || "")}</td>
-      <td>${escapeHtml(d.email || "")}</td>
-      <td style="max-width:220px;">${escapeHtml(d.courses || "—")}</td>
-      <td>${escapeHtml(yearStr)}</td>
-      <td style="white-space:nowrap; font-size:.78rem;">${escapeHtml(created)}</td>
-      <td>${status}</td>
-      <td style="white-space:nowrap;">${actions}</td>
-    </tr>`;
+    const checkbox = (currentTab === "pending") ? `<td><input type="checkbox" class="bulk-cb" data-id="${d.id}"></td>` : "";
+    return `<tr>${checkbox}<td>${escapeHtml(d.full_name || "")}</td><td>${escapeHtml(d.email || "")}</td><td>${escapeHtml(d.courses || "—")}</td><td>${escapeHtml(yearStr)}</td><td>${escapeHtml(created)}</td><td>${status}</td><td>${actions}</td></tr>`;
   }).join("");
 
   rows.querySelectorAll(".bulk-cb").forEach((cb) => {
     cb.addEventListener("change", (e) => {
-      if (e.target.checked) selectedIds.add(e.target.dataset.id);
-      else selectedIds.delete(e.target.dataset.id);
+      if (e.target.checked) selectedIds.add(e.target.dataset.id); else selectedIds.delete(e.target.dataset.id);
       bulkCount.textContent = `${selectedIds.size} selected`;
       bulkActions.style.display = selectedIds.size > 0 ? "flex" : "none";
     });
   });
 }
 
-// ═══════════════════════════════════════════════════════
-//  EVENT DELEGATION FOR ALUMNI ROWS
-// ═══════════════════════════════════════════════════════
+// EVENT DELEGATION
 rows.addEventListener("click", (e) => {
   const btn = e.target.closest("button[data-action]");
   if (!btn) return;
   const id = btn.dataset.id;
   const action = btn.dataset.action;
-  
   let source = allDocs;
   if (currentTab === "rejected") source = rejectedDocs;
   else if (currentTab === "revoked") source = revokedDocs;
   const d = source.find((x) => x.id === id);
   if (!d) return;
-
   if (action === "view") openViewModal(d);
   else if (action === "approve") openApproveModal(d);
   else if (action === "send") openSendModal(d);
@@ -663,31 +533,21 @@ rows.addEventListener("click", (e) => {
   else if (action === "restore") openRestoreModal(d);
 });
 
-// ═══════════════════════════════════════════════════════
-//  MODALS FOR ALUMNI (View, Approve, Send, Reject, Revoke, Restore)
-// ═══════════════════════════════════════════════════════
+// MODALS
 function closeDialog() { dialog.close(); pendingAction = null; }
 modalCancel.addEventListener("click", closeDialog);
 modalConfirm.addEventListener("click", async () => {
   if (!pendingAction) return;
-  modalConfirm.disabled = true;
-  const original = modalConfirm.textContent;
+  modalConfirm.disabled = true; const original = modalConfirm.textContent;
   modalConfirm.textContent = "Processing…";
-  try { await pendingAction(); closeDialog(); } 
-  catch (err) { alert("Error: " + err.message); }
-  modalConfirm.disabled = false;
-  modalConfirm.textContent = original;
+  try { await pendingAction(); closeDialog(); } catch (err) { alert("Error: " + err.message); }
+  modalConfirm.disabled = false; modalConfirm.textContent = original;
 });
 
 function openViewModal(d) {
   modalTitle.textContent = "Alumnus Details";
-  modalBody.innerHTML = `${detailsHtml(d)}
-    <label style="margin-top:1rem;">🔒 Private Admin Notes</label>
-    <textarea id="admin-notes" rows="3">${escapeHtml(d.admin_notes || "")}</textarea>`;
-  modalConfirm.style.display = "block";
-  modalConfirm.textContent = "Save Notes";
-  modalConfirm.className = "green";
-  modalCancel.textContent = "Close";
+  modalBody.innerHTML = `${detailsHtml(d)}<label style="margin-top:1rem;">🔒 Private Admin Notes</label><textarea id="admin-notes" rows="3">${escapeHtml(d.admin_notes || "")}</textarea>`;
+  modalConfirm.style.display = "block"; modalConfirm.textContent = "Save Notes"; modalConfirm.className = "green"; modalCancel.textContent = "Close";
   pendingAction = async () => {
     const notes = document.getElementById("admin-notes").value.trim();
     let coll = currentTab === "rejected" ? "rejected_alumni" : currentTab === "revoked" ? "revoked_alumni" : "alumni";
@@ -701,22 +561,15 @@ function openApproveModal(d) {
   const proposedEmail = d.email || "";
   const proposedPassword = generatePassword(14);
   modalTitle.textContent = "Approve & Create Account";
-  modalBody.innerHTML = `${detailsHtml(d)}
-    <div class="warn">Clicking Approve will create a Firebase Auth account and open your email app.</div>
-    <label style="margin-top:1rem;">Email</label><input id="cred-email" value="${escapeAttr(proposedEmail)}" readonly>
-    <label style="margin-top:.5rem;">Password</label><input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly>`;
-  modalConfirm.style.display = "block";
-  modalConfirm.textContent = "Approve & Create";
-  modalConfirm.className = "green";
+  modalBody.innerHTML = `${detailsHtml(d)}<div class="warn">Clicking Approve will create a Firebase Auth account and open your email app.</div><label style="margin-top:1rem;">Email</label><input id="cred-email" value="${escapeAttr(proposedEmail)}" readonly><label style="margin-top:.5rem;">Password</label><input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly>`;
+  modalConfirm.style.display = "block"; modalConfirm.textContent = "Approve & Create"; modalConfirm.className = "green";
   pendingAction = async () => {
     const sApp = initializeApp(firebaseConfig, "Sec-" + Date.now());
-    try { await createUserWithEmailAndPassword(getAuth(sApp), proposedEmail.toLowerCase(), proposedPassword); } 
-    catch (err) { if (err.code !== "auth/email-already-in-use") throw err; }
+    try { await createUserWithEmailAndPassword(getAuth(sApp), proposedEmail.toLowerCase(), proposedPassword); } catch (err) { if (err.code !== "auth/email-already-in-use") throw err; }
     await deleteApp(sApp);
     await updateDoc(doc(db, "alumni", d.id), { approved: true, approved_at: serverTimestamp(), login_email: proposedEmail.toLowerCase() });
     openEmailDraft(d, proposedEmail, proposedPassword);
-    show("Approved!", "ok");
-    loadAlumni();
+    show("Approved!", "ok"); loadAlumni();
   };
   dialog.showModal();
 }
@@ -725,24 +578,16 @@ function openSendModal(d) {
   const email = d.login_email || d.email || "";
   const pass = generatePassword(14);
   modalTitle.textContent = "Send Credentials";
-  modalBody.innerHTML = `${detailsHtml(d)}
-    <label>Email</label><input value="${escapeAttr(email)}" readonly>
-    <label style="margin-top:.5rem;">Password</label><input id="send-pass" value="${escapeAttr(pass)}" readonly>`;
-  modalConfirm.style.display = "block";
-  modalConfirm.textContent = "Open Email Draft";
-  modalConfirm.className = "green";
+  modalBody.innerHTML = `${detailsHtml(d)}<label>Email</label><input value="${escapeAttr(email)}" readonly><label style="margin-top:.5rem;">Password</label><input id="send-pass" value="${escapeAttr(pass)}" readonly>`;
+  modalConfirm.style.display = "block"; modalConfirm.textContent = "Open Email Draft"; modalConfirm.className = "green";
   pendingAction = async () => { openEmailDraft(d, email, pass); show("Email opened.", "ok"); };
   dialog.showModal();
 }
 
 function openRejectModal(d) {
   modalTitle.textContent = "Reject Registration";
-  modalBody.innerHTML = `${detailsHtml(d)}
-    <label style="margin-top:1rem;">Reason</label>
-    <textarea id="reason-input" rows="3"></textarea>`;
-  modalConfirm.style.display = "block";
-  modalConfirm.textContent = "Confirm Rejection";
-  modalConfirm.className = "red";
+  modalBody.innerHTML = `${detailsHtml(d)}<label style="margin-top:1rem;">Reason</label><textarea id="reason-input" rows="3"></textarea>`;
+  modalConfirm.style.display = "block"; modalConfirm.textContent = "Confirm Rejection"; modalConfirm.className = "red";
   pendingAction = async () => {
     const reason = document.getElementById("reason-input").value.trim();
     if (!reason) throw new Error("Reason required");
@@ -756,12 +601,8 @@ function openRejectModal(d) {
 
 function openRevokeModal(d) {
   modalTitle.textContent = "Revoke Access";
-  modalBody.innerHTML = `${detailsHtml(d)}
-    <label style="margin-top:1rem;">Reason</label>
-    <textarea id="reason-input" rows="3"></textarea>`;
-  modalConfirm.style.display = "block";
-  modalConfirm.textContent = "Confirm Revoke";
-  modalConfirm.className = "red";
+  modalBody.innerHTML = `${detailsHtml(d)}<label style="margin-top:1rem;">Reason</label><textarea id="reason-input" rows="3"></textarea>`;
+  modalConfirm.style.display = "block"; modalConfirm.textContent = "Confirm Revoke"; modalConfirm.className = "red";
   pendingAction = async () => {
     const reason = document.getElementById("reason-input").value.trim();
     if (!reason) throw new Error("Reason required");
@@ -775,10 +616,8 @@ function openRevokeModal(d) {
 
 function openRestoreModal(d) {
   modalTitle.textContent = "Restore Alumnus";
-  modalBody.innerHTML = `<p>This will move <b>${escapeHtml(d.full_name)}</b> back to the Pending list.</p>`;
-  modalConfirm.style.display = "block";
-  modalConfirm.textContent = "Restore";
-  modalConfirm.className = "green";
+  modalBody.innerHTML = `<p>This will move <b>${escapeHtml(d.full_name)}</b> back to Pending.</p>`;
+  modalConfirm.style.display = "block"; modalConfirm.textContent = "Restore"; modalConfirm.className = "green";
   pendingAction = async () => {
     const src = currentTab === "rejected" ? "rejected_alumni" : "revoked_alumni";
     const { id, rejected_at, rejected_by, rejection_reason, revoked_at, revoked_by, revoked_reason, ...rest } = d;
@@ -790,15 +629,13 @@ function openRestoreModal(d) {
   dialog.showModal();
 }
 
-// ═══════════════════════════════════════════════════════
-//  HELPERS
-// ═══════════════════════════════════════════════════════
+// HELPERS
 function detailsHtml(d) {
   const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
   const rowsData = [
-    ["Name", d.full_name], ["Email", d.email], ["Phone", d.phone], ["Courses", d.courses],
-    ["Graduation", d.graduation_year], ["Stream", d.class_stream], ["Occupation", d.occupation],
-    ["Employer", d.employer], ["Location", d.location], ["Bio", d.bio], ["Submitted", created],
+    ["Name", d.full_name], ["Email", d.email], ["Phone", d.phone], ["Courses", d.courses], ["Graduation", d.graduation_year],
+    ["Stream", d.class_stream], ["Occupation", d.occupation], ["Employer", d.employer], ["Location", d.location],
+    ["Bio", d.bio], ["Submitted", created],
   ];
   return `<dl class="kv">` + rowsData.filter(([_, v]) => v).map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(String(v))}</dd>`).join("") + `</dl>`;
 }
@@ -811,42 +648,28 @@ function openEmailDraft(alumni, email, password) {
 
 function generatePassword() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*";
-  let out = "";
-  const buf = new Uint32Array(14);
-  window.crypto.getRandomValues(buf);
+  let out = ""; const buf = new Uint32Array(14); window.crypto.getRandomValues(buf);
   for (let i = 0; i < 14; i++) out += chars[buf[i] % chars.length];
   return out;
 }
 
-// ═══════════════════════════════════════════════════════
-//  ROLES
-// ═══════════════════════════════════════════════════════
+// ROLES
 async function loadRoles() {
-  clearMsg();
   roleRows.innerHTML = '<tr><td colspan="5" class="empty">Loading…</td></tr>';
   try {
     const snap = await getDocs(collection(db, "roles"));
     allRoles = [];
     snap.forEach((d) => allRoles.push({ uid: d.id, ...d.data() }));
     roleRows.innerHTML = allRoles.map((r) => `
-      <tr>
-        <td style="font-family:monospace; font-size:.78rem;">${escapeHtml(r.uid)}</td>
-        <td>${escapeHtml(r.email || "—")}</td>
-        <td><span class="pill ${r.role}">${escapeHtml(r.role || "?")}</span></td>
-        <td>${r.added_at?.toDate?.()?.toLocaleDateString() || "—"}</td>
-        <td>
-          <button class="small gray" onclick="editRole('${escapeAttr(r.uid)}')">Change</button>
-          <button class="small red" onclick="deleteRole('${escapeAttr(r.uid)}')">Remove</button>
-        </td>
-      </tr>`).join("");
+      <tr><td style="font-family:monospace;">${escapeHtml(r.uid)}</td><td>${escapeHtml(r.email || "—")}</td><td><span class="pill ${r.role}">${escapeHtml(r.role || "?")}</span></td><td>${r.added_at?.toDate?.()?.toLocaleDateString() || "—"}</td>
+      <td><button class="small gray" onclick="editRole('${escapeAttr(r.uid)}')">Change</button><button class="small red" onclick="deleteRole('${escapeAttr(r.uid)}')">Remove</button></td></tr>`).join("");
   } catch (err) { show("Error: " + err.message, "err"); }
 }
 
 window.editRole = async (uid) => {
   const r = allRoles.find(x => x.uid === uid);
   const newRole = prompt(`Set role for ${r.email}`, r.role);
-  if (!newRole) return;
-  if (newRole !== "admin" && newRole !== "member") return alert("Use 'admin' or 'member'");
+  if (!newRole || (newRole !== "admin" && newRole !== "member")) return alert("Use 'admin' or 'member'");
   await setDoc(doc(db, "roles", uid), { role: newRole, email: r.email }, { merge: true });
   loadRoles();
 };
@@ -857,291 +680,128 @@ window.deleteRole = async (uid) => {
   loadRoles();
 };
 
-// ═══════════════════════════════════════════════════════
-//  ⭐ NEW: EVENTS
-// ═══════════════════════════════════════════════════════
+// EVENTS
 async function loadEvents() {
-  const list = document.getElementById("events-list");
-  list.innerHTML = '<div class="empty">Loading…</div>';
+  const list = document.getElementById("events-list"); list.innerHTML = '<div class="empty">Loading…</div>';
   try {
     const snap = await getDocs(collection(db, "events"));
-    if (snap.empty) return list.innerHTML = '<div class="empty">No events yet. Click "+ Add Event".</div>';
+    if (snap.empty) return list.innerHTML = '<div class="empty">No events yet.</div>';
     list.innerHTML = "";
-    snap.forEach(d => {
-      const ev = d.data();
-      list.innerHTML += `
-        <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid var(--line); margin-bottom:.75rem;">
-          <div style="display:flex; justify-content:space-between; align-items:start; gap:1rem;">
-            <div>
-              <b>${escapeHtml(ev.name)}</b><br>
-              <span style="font-size:.85rem; color:#64748b;">📅 ${escapeHtml(ev.date || "")} • 📍 ${escapeHtml(ev.location || "")}</span>
-              <p style="margin:.5rem 0 0; font-size:.9rem;">${escapeHtml(ev.description || "")}</p>
-            </div>
-            <button class="small red" onclick="deleteEvent('${d.id}')">Delete</button>
-          </div>
-        </div>`;
-    });
+    snap.forEach(d => { const ev = d.data(); list.innerHTML += `<div style="background:#f8fafc;padding:1rem;border-radius:8px;margin-bottom:.75rem;"><b>${escapeHtml(ev.name)}</b><br><span style="font-size:.85rem;color:#64748b;">📅 ${escapeHtml(ev.date || "")} • 📍 ${escapeHtml(ev.location || "")}</span><p>${escapeHtml(ev.description || "")}</p><button class="small red" onclick="deleteItem('events','${d.id}','loadEvents')">Delete</button></div>`; });
   } catch (err) { list.innerHTML = `<div class="empty">Error: ${err.message}</div>`; }
 }
 
 document.getElementById("add-event-btn").addEventListener("click", () => {
   modalTitle.textContent = "Add Event";
-  modalBody.innerHTML = `
-    <div class="form-grid">
-      <div class="full"><label>Event Name</label><input id="ev-name"></div>
-      <div><label>Date (e.g. 2025-06-15)</label><input id="ev-date" placeholder="YYYY-MM-DD"></div>
-      <div><label>Location</label><input id="ev-loc"></div>
-      <div class="full"><label>Description</label><textarea id="ev-desc" rows="3"></textarea></div>
-    </div>`;
-  modalConfirm.style.display = "block";
-  modalConfirm.textContent = "Save Event";
-  modalConfirm.className = "green";
+  modalBody.innerHTML = `<div class="form-grid"><div class="full"><label>Name</label><input id="ev-name"></div><div><label>Date</label><input id="ev-date" placeholder="2025-06-15"></div><div><label>Location</label><input id="ev-loc"></div><div class="full"><label>Description</label><textarea id="ev-desc"></textarea></div></div>`;
+  modalConfirm.style.display = "block"; modalConfirm.textContent = "Save"; modalConfirm.className = "green";
   pendingAction = async () => {
-    const name = document.getElementById("ev-name").value.trim();
-    if (!name) throw new Error("Name required");
-    await addDoc(collection(db, "events"), {
-      name, date: document.getElementById("ev-date").value.trim(),
-      location: document.getElementById("ev-loc").value.trim(),
-      description: document.getElementById("ev-desc").value.trim(),
-      created_at: serverTimestamp()
-    });
-    show("Event added.", "ok");
-    loadEvents();
+    const name = document.getElementById("ev-name").value.trim(); if (!name) throw new Error("Name required");
+    await addDoc(collection(db, "events"), { name, date: document.getElementById("ev-date").value.trim(), location: document.getElementById("ev-loc").value.trim(), description: document.getElementById("ev-desc").value.trim(), created_at: serverTimestamp() });
+    show("Event added.", "ok"); loadEvents();
   };
   dialog.showModal();
 });
 
-window.deleteEvent = async (id) => {
-  if (!confirm("Delete this event?")) return;
-  await deleteDoc(doc(db, "events", id));
-  loadEvents();
-};
-
-// ═══════════════════════════════════════════════════════
-//  ⭐ NEW: JOBS
-// ═══════════════════════════════════════════════════════
+// JOBS
 async function loadJobs() {
-  const list = document.getElementById("jobs-list");
-  list.innerHTML = '<div class="empty">Loading…</div>';
+  const list = document.getElementById("jobs-list"); list.innerHTML = '<div class="empty">Loading…</div>';
   try {
     const snap = await getDocs(collection(db, "jobs"));
-    if (snap.empty) return list.innerHTML = '<div class="empty">No jobs yet. Click "+ Add Job".</div>';
+    if (snap.empty) return list.innerHTML = '<div class="empty">No jobs yet.</div>';
     list.innerHTML = "";
-    snap.forEach(d => {
-      const j = d.data();
-      list.innerHTML += `
-        <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid var(--line); margin-bottom:.75rem;">
-          <div style="display:flex; justify-content:space-between; align-items:start; gap:1rem;">
-            <div>
-              <b>${escapeHtml(j.title)}</b><br>
-              <span style="font-size:.85rem; color:#64748b;">🏢 ${escapeHtml(j.company)} • 📍 ${escapeHtml(j.location || "Remote")}</span>
-              <p style="margin:.5rem 0 0; font-size:.9rem;">${escapeHtml(j.description || "")}</p>
-              ${j.contact ? `<div style="font-size:.8rem; color:#64748b; margin-top:.35rem;">📧 ${escapeHtml(j.contact)}</div>` : ""}
-            </div>
-            <button class="small red" onclick="deleteJob('${d.id}')">Delete</button>
-          </div>
-        </div>`;
-    });
+    snap.forEach(d => { const j = d.data(); list.innerHTML += `<div style="background:#f8fafc;padding:1rem;border-radius:8px;margin-bottom:.75rem;"><b>${escapeHtml(j.title)}</b><br><span style="font-size:.85rem;color:#64748b;">🏢 ${escapeHtml(j.company)} • 📍 ${escapeHtml(j.location || "")}</span><p>${escapeHtml(j.description || "")}</p><button class="small red" onclick="deleteItem('jobs','${d.id}','loadJobs')">Delete</button></div>`; });
   } catch (err) { list.innerHTML = `<div class="empty">Error: ${err.message}</div>`; }
 }
 
 document.getElementById("add-job-btn").addEventListener("click", () => {
-  modalTitle.textContent = "Add Job Posting";
-  modalBody.innerHTML = `
-    <div class="form-grid">
-      <div class="full"><label>Job Title</label><input id="job-title"></div>
-      <div><label>Company</label><input id="job-comp"></div>
-      <div><label>Location</label><input id="job-loc"></div>
-      <div class="full"><label>Description</label><textarea id="job-desc" rows="3"></textarea></div>
-      <div class="full"><label>Contact (email)</label><input id="job-contact"></div>
-    </div>`;
-  modalConfirm.style.display = "block";
-  modalConfirm.textContent = "Save Job";
-  modalConfirm.className = "green";
+  modalTitle.textContent = "Add Job";
+  modalBody.innerHTML = `<div class="form-grid"><div class="full"><label>Title</label><input id="jb-title"></div><div><label>Company</label><input id="jb-comp"></div><div><label>Location</label><input id="jb-loc"></div><div class="full"><label>Description</label><textarea id="jb-desc"></textarea></div><div class="full"><label>Contact Email</label><input id="jb-contact"></div></div>`;
+  modalConfirm.style.display = "block"; modalConfirm.textContent = "Save"; modalConfirm.className = "green";
   pendingAction = async () => {
-    const title = document.getElementById("job-title").value.trim();
-    if (!title) throw new Error("Title required");
-    await addDoc(collection(db, "jobs"), {
-      title, company: document.getElementById("job-comp").value.trim(),
-      location: document.getElementById("job-loc").value.trim(),
-      description: document.getElementById("job-desc").value.trim(),
-      contact: document.getElementById("job-contact").value.trim(),
-      created_at: serverTimestamp()
-    });
-    show("Job added.", "ok");
-    loadJobs();
+    const title = document.getElementById("jb-title").value.trim(); if (!title) throw new Error("Title required");
+    await addDoc(collection(db, "jobs"), { title, company: document.getElementById("jb-comp").value.trim(), location: document.getElementById("jb-loc").value.trim(), description: document.getElementById("jb-desc").value.trim(), contact: document.getElementById("jb-contact").value.trim(), created_at: serverTimestamp() });
+    show("Job added.", "ok"); loadJobs();
   };
   dialog.showModal();
 });
 
-window.deleteJob = async (id) => {
-  if (!confirm("Delete this job?")) return;
-  await deleteDoc(doc(db, "jobs", id));
-  loadJobs();
-};
-
-// ═══════════════════════════════════════════════════════
-//  ⭐ NEW: STORIES
-// ═══════════════════════════════════════════════════════
+// STORIES
 async function loadStories() {
-  const list = document.getElementById("stories-list");
-  list.innerHTML = '<div class="empty">Loading…</div>';
+  const list = document.getElementById("stories-list"); list.innerHTML = '<div class="empty">Loading…</div>';
   try {
     const snap = await getDocs(collection(db, "stories"));
-    if (snap.empty) return list.innerHTML = '<div class="empty">No stories yet. Click "+ Add Story".</div>';
+    if (snap.empty) return list.innerHTML = '<div class="empty">No stories yet.</div>';
     list.innerHTML = "";
-    snap.forEach(d => {
-      const s = d.data();
-      list.innerHTML += `
-        <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid var(--line); margin-bottom:.75rem;">
-          <div style="display:flex; justify-content:space-between; align-items:start; gap:1rem;">
-            <div>
-              <b>${escapeHtml(s.title)}</b><br>
-              <span style="font-size:.85rem; color:#64748b;">by ${escapeHtml(s.author)}</span>
-              <p style="margin:.5rem 0 0; font-size:.9rem;">${escapeHtml(s.content || "")}</p>
-            </div>
-            <button class="small red" onclick="deleteStory('${d.id}')">Delete</button>
-          </div>
-        </div>`;
-    });
+    snap.forEach(d => { const s = d.data(); list.innerHTML += `<div style="background:#f8fafc;padding:1rem;border-radius:8px;margin-bottom:.75rem;"><b>${escapeHtml(s.title)}</b> <span style="color:#64748b;font-size:.85rem;">by ${escapeHtml(s.author)}</span><p>${escapeHtml(s.content || "")}</p><button class="small red" onclick="deleteItem('stories','${d.id}','loadStories')">Delete</button></div>`; });
   } catch (err) { list.innerHTML = `<div class="empty">Error: ${err.message}</div>`; }
 }
 
 document.getElementById("add-story-btn").addEventListener("click", () => {
   modalTitle.textContent = "Add Story";
-  modalBody.innerHTML = `
-    <div class="form-grid">
-      <div class="full"><label>Title</label><input id="st-title"></div>
-      <div class="full"><label>Author</label><input id="st-author"></div>
-      <div class="full"><label>Content</label><textarea id="st-content" rows="6"></textarea></div>
-    </div>`;
-  modalConfirm.style.display = "block";
-  modalConfirm.textContent = "Save Story";
-  modalConfirm.className = "green";
+  modalBody.innerHTML = `<div class="form-grid"><div class="full"><label>Title</label><input id="st-title"></div><div class="full"><label>Author</label><input id="st-author"></div><div class="full"><label>Content</label><textarea id="st-content" rows="6"></textarea></div></div>`;
+  modalConfirm.style.display = "block"; modalConfirm.textContent = "Save"; modalConfirm.className = "green";
   pendingAction = async () => {
-    const title = document.getElementById("st-title").value.trim();
-    if (!title) throw new Error("Title required");
-    await addDoc(collection(db, "stories"), {
-      title, author: document.getElementById("st-author").value.trim(),
-      content: document.getElementById("st-content").value.trim(),
-      created_at: serverTimestamp()
-    });
-    show("Story added.", "ok");
-    loadStories();
+    const title = document.getElementById("st-title").value.trim(); if (!title) throw new Error("Title required");
+    await addDoc(collection(db, "stories"), { title, author: document.getElementById("st-author").value.trim(), content: document.getElementById("st-content").value.trim(), created_at: serverTimestamp() });
+    show("Story added.", "ok"); loadStories();
   };
   dialog.showModal();
 });
 
-window.deleteStory = async (id) => {
-  if (!confirm("Delete this story?")) return;
-  await deleteDoc(doc(db, "stories", id));
-  loadStories();
-};
-
-// ═══════════════════════════════════════════════════════
-//  ⭐ NEW: SETTINGS (Alumni of Month, Announcement, Inbox)
-// ═══════════════════════════════════════════════════════
+// SETTINGS
 async function loadSettings() {
-  // Load Alumni of Month
-  try {
-    const snap = await getDoc(doc(db, "settings", "alumni_of_month"));
-    if (snap.exists()) {
-      document.getElementById("aotm-name").value = snap.data().name || "";
-      document.getElementById("aotm-desc").value = snap.data().description || "";
-    }
-  } catch (e) {}
-
-  // Load Announcement
-  try {
-    const snap = await getDoc(doc(db, "settings", "announcement"));
-    if (snap.exists() && snap.data().active) {
-      document.getElementById("announcement-text").value = snap.data().text || "";
-    }
-  } catch (e) {}
-
-  // Load Messages
-  const msgList = document.getElementById("messages-list");
-  msgList.innerHTML = '<div class="empty">Loading messages…</div>';
+  try { const s = await getDoc(doc(db, "settings", "alumni_of_month")); if (s.exists()) { document.getElementById("aotm-name").value = s.data().name || ""; document.getElementById("aotm-desc").value = s.data().description || ""; } } catch(e) {}
+  try { const s = await getDoc(doc(db, "settings", "announcement")); if (s.exists()) document.getElementById("announcement-text").value = s.data().text || ""; } catch(e) {}
+  
+  const msgList = document.getElementById("messages-list"); msgList.innerHTML = '<div class="empty">Loading…</div>';
   try {
     const snap = await getDocs(collection(db, "messages"));
     if (snap.empty) return msgList.innerHTML = '<div class="empty">No messages yet.</div>';
-    
     msgList.innerHTML = "";
-    const sorted = snap.docs.sort((a, b) => (b.data().created_at?.toMillis?.() || 0) - (a.data().created_at?.toMillis?.() || 0));
-    sorted.forEach(d => {
-      const m = d.data();
-      msgList.innerHTML += `
-        <div style="background:white; padding:.75rem; border-radius:8px; border:1px solid var(--line); margin-bottom:.5rem;">
-          <div style="display:flex; justify-content:space-between; align-items:start;">
-            <div>
-              <b>${escapeHtml(m.name)}</b> <span style="color:#64748b; font-size:.8rem;">(${escapeHtml(m.from_email)})</span><br>
-              <p style="margin:.25rem 0; font-size:.9rem;">${escapeHtml(m.message)}</p>
-            </div>
-            <button class="small red" onclick="deleteMessage('${d.id}')">Delete</button>
-          </div>
-        </div>`;
-    });
+    snap.forEach(d => { const m = d.data(); msgList.innerHTML += `<div style="background:white;padding:.75rem;border-radius:8px;margin-bottom:.5rem;"><b>${escapeHtml(m.name)}</b> <span style="color:#64748b;font-size:.8rem;">(${escapeHtml(m.from_email)})</span><p>${escapeHtml(m.message)}</p><button class="small red" onclick="deleteItem('messages','${d.id}','loadSettings')">Delete</button></div>`; });
   } catch (err) { msgList.innerHTML = `<div class="empty">Error: ${err.message}</div>`; }
 }
 
 document.getElementById("save-aotm-btn").addEventListener("click", async () => {
-  await setDoc(doc(db, "settings", "alumni_of_month"), {
-    name: document.getElementById("aotm-name").value.trim(),
-    description: document.getElementById("aotm-desc").value.trim(),
-    updated_at: serverTimestamp()
-  });
-  show("Alumni of Month saved.", "ok");
+  await setDoc(doc(db, "settings", "alumni_of_month"), { name: document.getElementById("aotm-name").value.trim(), description: document.getElementById("aotm-desc").value.trim(), updated_at: serverTimestamp() });
+  show("Saved.", "ok");
 });
 
 document.getElementById("save-announcement-btn").addEventListener("click", async () => {
   const text = document.getElementById("announcement-text").value.trim();
-  await setDoc(doc(db, "settings", "announcement"), {
-    text, active: text.length > 0,
-    updated_at: serverTimestamp()
-  });
-  show(text ? "Announcement saved." : "Announcement cleared.", "ok");
+  await setDoc(doc(db, "settings", "announcement"), { text, active: text.length > 0, updated_at: serverTimestamp() });
+  show(text ? "Saved." : "Cleared.", "ok");
 });
 
-window.deleteMessage = async (id) => {
-  if (!confirm("Delete this message?")) return;
-  await deleteDoc(doc(db, "messages", id));
-  loadSettings();
+window.deleteItem = async (coll, id, reloadFnName) => {
+  if (!confirm("Delete this?")) return;
+  await deleteDoc(doc(db, coll, id));
+  if (window[reloadFnName]) window[reloadFnName]();
 };
 
-// ═══════════════════════════════════════════════════════
-//  BROADCAST
-// ═══════════════════════════════════════════════════════
+window.loadEvents = loadEvents;
+window.loadJobs = loadJobs;
+window.loadStories = loadStories;
+window.loadSettings = loadSettings;
+
+// BROADCAST & MAP (Keep from previous version)
 document.getElementById("broadcast-template").addEventListener("change", (e) => {
-  const subj = document.getElementById("broadcast-subject");
-  const body = document.getElementById("broadcast-body");
-  const templates = {
-    event: { s: "🎉 Alumni Reunion", b: "Dear Alumni,\n\nYou're invited to our Alumni Reunion!\n\n📍 Location: \n📅 Date: \n\n— Bishop Angelo Tarantino Memorial SS" },
-    donation: { s: "🙏 Support Our School", b: "Dear Alumni,\n\nWe need your support for our new projects.\n\nTo donate: \n\n— Bishop Angelo Tarantino Memorial SS" },
-    report: { s: "📊 Annual Report", b: "Dear Alumni,\n\nHere is our annual report.\n\n— Bishop Angelo Tarantino Memorial SS" },
-    custom: { s: "", b: "" }
-  };
-  if (templates[e.target.value]) {
-    subj.value = templates[e.target.value].s;
-    body.value = templates[e.target.value].b;
-  }
+  const subj = document.getElementById("broadcast-subject"); const body = document.getElementById("broadcast-body");
+  const templates = { event: { s: "🎉 Alumni Reunion", b: "Dear Alumni,\n\nYou're invited!\n\n— School" }, donation: { s: "🙏 Support Our School", b: "Dear Alumni,\n\nPlease support us.\n\n— School" }, report: { s: "📊 Annual Report", b: "Dear Alumni,\n\nReport attached.\n\n— School" }, custom: { s: "", b: "" } };
+  if (templates[e.target.value]) { subj.value = templates[e.target.value].s; body.value = templates[e.target.value].b; }
 });
 
 document.getElementById("broadcast-btn").addEventListener("click", () => {
-  const approved = allDocs.filter(d => d.approved && d.email);
-  if (approved.length === 0) return alert("No approved alumni.");
+  const approved = allDocs.filter(d => d.approved && d.email); if (!approved.length) return alert("No approved alumni.");
   const bcc = approved.map(d => d.email).join(",");
-  const subj = encodeURIComponent(document.getElementById("broadcast-subject").value);
-  const body = encodeURIComponent(document.getElementById("broadcast-body").value);
+  const subj = encodeURIComponent(document.getElementById("broadcast-subject").value); const body = encodeURIComponent(document.getElementById("broadcast-body").value);
   window.open(`mailto:?bcc=${bcc}&subject=${subj}&body=${body}`, "_blank");
 });
 
-// ═══════════════════════════════════════════════════════
-//  MAP
-// ═══════════════════════════════════════════════════════
 function loadMap() {
   const mapContainer = document.getElementById("map-container");
-  if (mapInstance) { mapInstance.invalidateSize(); } 
-  else {
+  if (mapInstance) { mapInstance.invalidateSize(); } else {
     mapInstance = L.map('map-container').setView([20, 0], 2);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(mapInstance);
   }
@@ -1149,39 +809,27 @@ function loadMap() {
   const located = allDocs.filter(d => d.share_location && d.live_location && d.live_location.latitude);
   if (located.length === 0) {
     if (!mapInstance._container.querySelector('.no-gps')) {
-      const overlay = document.createElement('div');
-      overlay.className = 'no-gps';
-      overlay.style = 'position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#f8fafc; color:#64748b; font-size:1rem; border-radius:10px; z-index:400;';
-      overlay.textContent = 'No GPS coordinates found.';
-      mapContainer.style.position = 'relative';
-      mapContainer.appendChild(overlay);
+      const overlay = document.createElement('div'); overlay.className = 'no-gps';
+      overlay.style = 'position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#f8fafc; color:#64748b; z-index:400;';
+      overlay.textContent = 'No GPS data found.';
+      mapContainer.style.position = 'relative'; mapContainer.appendChild(overlay);
     }
   } else {
     const ov = mapContainer.querySelector('.no-gps'); if (ov) ov.remove();
     const bounds = L.latLngBounds();
-    located.forEach(d => {
-      L.marker([d.live_location.latitude, d.live_location.longitude]).addTo(mapInstance).bindPopup(`<b>${escapeHtml(d.full_name)}</b><br>${escapeHtml(d.location || "")}`);
-      bounds.extend([d.live_location.latitude, d.live_location.longitude]);
-    });
+    located.forEach(d => { L.marker([d.live_location.latitude, d.live_location.longitude]).addTo(mapInstance).bindPopup(`<b>${escapeHtml(d.full_name)}</b>`); bounds.extend([d.live_location.latitude, d.live_location.longitude]); });
     mapInstance.fitBounds(bounds);
   }
 }
 
-// ═══════════════════════════════════════════════════════
-//  CSV EXPORT & SEARCH
-// ═══════════════════════════════════════════════════════
 exportBtn.addEventListener("click", () => {
-  if (allDocs.length === 0) return alert("No data.");
-  const headers = ["Name","Email","Phone","Courses","Year","Stream","Occupation","Employer","Location","Status"];
+  if (!allDocs.length) return alert("No data.");
+  const headers = ["Name","Email","Phone","Courses","Year","Status"];
   const csv = [headers.join(",")];
-  allDocs.forEach(d => {
-    csv.push([`"${d.full_name||""}"`,`"${d.email||""}"`,`"${d.phone||""}"`,`"${d.courses||""}"`,`"${d.graduation_year||""}"`,`"${d.class_stream||""}"`,`"${d.occupation||""}"`,`"${d.employer||""}"`,`"${d.location||""}"`,`"${d.approved?"Approved":"Pending"}"`].join(","));
-  });
+  allDocs.forEach(d => csv.push([`"${d.full_name||""}"`,`"${d.email||""}"`,`"${d.phone||""}"`,`"${d.courses||""}"`,`"${d.graduation_year||""}"`,`"${d.approved?"Approved":"Pending"}"`].join(",")));
   const blob = new Blob([csv.join("\n")], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = `alumni_${new Date().toISOString().split("T")[0]}.csv`; a.click();
-  URL.revokeObjectURL(url);
+  const url = URL.createObjectURL(blob); const a = document.createElement("a");
+  a.href = url; a.download = `alumni.csv`; a.click(); URL.revokeObjectURL(url);
 });
 
 searchIn.addEventListener("input", renderRows);
