@@ -65,48 +65,76 @@
   .toolbar { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
   .toolbar input[type=search] { flex: 1; min-width: 200px; }
 
+  /* ═══════════════════════════════════════════════════════
+     MODAL FIX (Works on Desktop & Mobile)
+     ═══════════════════════════════════════════════════════ */
   .modal-bg {
-    display: none; position: fixed; inset: 0; background: rgba(15,23,42,.55);
+    display: none; position: fixed; inset: 0; background: rgba(15,23,42,.6);
     align-items: center; justify-content: center; padding: 1rem; z-index: 50;
+    backdrop-filter: blur(2px);
   }
   .modal-bg.active { display: flex; }
-  .modal { background: #fff; border-radius: 14px; padding: 1.75rem; max-width: 560px; width: 100%;
-           box-shadow: 0 20px 50px rgba(15,23,42,.3); max-height: 90vh; overflow-y: auto; }
+  
+  .modal { 
+    background: #fff; border-radius: 14px; padding: 1.75rem; max-width: 560px; width: 100%;
+    box-shadow: 0 20px 50px rgba(15,23,42,.3); max-height: 90vh; overflow-y: auto;
+    display: flex; flex-direction: column;
+  }
   .modal h3 { margin: 0 0 1rem; font-size: 1.15rem; color: var(--brand); }
   .modal .kv { display: grid; grid-template-columns: 130px 1fr; gap: .35rem 1rem; font-size: .88rem; margin-bottom: 1rem; }
   .modal .kv dt { font-weight: 600; color: #475569; }
   .modal .kv dd { margin: 0; word-break: break-word; }
   .cred-row { display: flex; gap: .5rem; align-items: center; margin-bottom: .4rem; }
   .cred-row input { font-family: ui-monospace, monospace; font-size: .85rem; }
-  .modal-actions { display: flex; gap: .75rem; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap; }
+  .modal-actions { 
+    display: flex; gap: .75rem; justify-content: flex-end; margin-top: 1rem; 
+    flex-wrap: wrap; position: sticky; bottom: 0; background: #fff; padding-top: 1rem;
+  }
   .warn { background: #fef3c7; color: #92400e; padding: .6rem .8rem; border-radius: 8px;
           font-size: .82rem; margin-top: .5rem; }
 
   .empty { color: #64748b; font-size: .9rem; padding: 1.5rem 0; text-align: center; }
-  
-  /* MAP FIX: Removed display:none from here so Leaflet can calculate size */
   #map-container { height: 400px; width: 100%; border-radius: 10px; border: 1px solid var(--line); }
 
+  /* ═══════════════════════════════════════════════════════
+     MOBILE RESPONSIVENESS
+     ═══════════════════════════════════════════════════════ */
   @media (max-width: 768px) {
     body { padding: 1rem 0.5rem; }
     .wrap { padding: 1.25rem; border-radius: 10px; }
+    
     .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
     .stat-card { padding: 0.75rem; }
     .stat-card .num { font-size: 1.4rem; }
+
     .tabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
     .tab { white-space: nowrap; padding: .5rem .75rem; font-size: .85rem; }
-    .modal { padding: 1.25rem; }
-    .modal .kv { grid-template-columns: 100px 1fr; font-size: .8rem; }
-    .cred-row { flex-wrap: wrap; }
-    .cred-row input { width: 100%; margin-bottom: .25rem; }
-    .cred-row button { flex: 1; }
+
+    /* ⭐ MOBILE MODAL: Slide up from bottom, pin buttons */
+    .modal-bg { 
+      align-items: flex-end; /* Push to bottom */
+      padding: 0; 
+    }
+    .modal { 
+      border-radius: 20px 20px 0 0; /* Rounded top only */
+      padding: 1.5rem 1.25rem; 
+      max-height: 85vh; /* Leave room at top */
+    }
+    .modal-actions { 
+      flex-direction: column; /* Stack buttons */
+      padding-bottom: env(safe-area-inset-bottom); /* iPhone notch support */
+    }
+    .modal-actions button { 
+      width: 100%; 
+      padding: 0.85rem; /* Bigger touch target */
+    }
+
     .toolbar { flex-direction: column; align-items: stretch; }
     .toolbar input[type=search] { width: 100%; }
     .toolbar button { width: 100%; }
+    
     #bulk-actions { flex-direction: column; gap: 0.5rem; }
     #bulk-actions button { width: 100%; margin-left: 0 !important; margin-top: 0.5rem; }
-    .modal-actions { flex-direction: column; }
-    .modal-actions button { width: 100%; }
   }
 </style>
 </head>
@@ -371,9 +399,6 @@ onAuthStateChanged(auth, async (user) => {
   else showAccessDenied(user, reason);
 });
 
-// ═══════════════════════════════════════════════════════
-//  TAB SWITCHING (Fixed Map Loading)
-// ═══════════════════════════════════════════════════════
 function switchTab(name) {
   currentTab = name;
   tabs.forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
@@ -396,8 +421,7 @@ function switchTab(name) {
   if (isRoles) loadRoles();
   else if (isAlumni) loadAlumni();
   else if (isMap) {
-    // ⭐ FIX: Wait 100ms for the div to become visible, then load the map
-    setTimeout(loadMap, 100);
+    setTimeout(loadMap, 100); // Wait for div to render
   }
   else if (isBroadcast) {
     document.getElementById("broadcast-subject").value = "Alumni Update — Bishop Angelo Tarantino Memorial SS";
@@ -566,24 +590,18 @@ document.getElementById("broadcast-btn").addEventListener("click", () => {
   window.open(mailtoLink, "_blank");
 });
 
-// ═══════════════════════════════════════════════════════
-//  MAP (Fixed Initialization)
-// ═══════════════════════════════════════════════════════
 function loadMap() {
   const mapContainer = document.getElementById("map-container");
   
-  // If map already exists, just resize it to fix Leaflet rendering glitches
   if (mapInstance) {
     mapInstance.invalidateSize();
   } else {
-    // Create the map for the first time
     mapInstance = L.map('map-container').setView([20, 0], 2);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap'
     }).addTo(mapInstance);
   }
 
-  // Clear existing markers
   mapInstance.eachLayer((layer) => {
     if (layer instanceof L.Marker) mapInstance.removeLayer(layer);
   });
