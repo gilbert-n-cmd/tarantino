@@ -147,7 +147,8 @@
   <div class="tabs">
     <button class="tab active" data-tab="pending">Pending approvals</button>
     <button class="tab" data-tab="approved">Approved alumni</button>
-    <button class="tab" data-tab="rejected">Rejected Archive</button>
+    <button class="tab" data-tab="rejected">Rejected</button>
+    <button class="tab" data-tab="revoked">Revoked</button>
     <button class="tab" data-tab="roles">Roles</button>
     <button class="tab" data-tab="broadcast">Broadcast Email</button>
     <button class="tab" data-tab="map">Alumni Map</button>
@@ -195,7 +196,7 @@
     </table>
   </div>
 
-  <!-- BROADCAST VIEW (Feature 5: Templates added) -->
+  <!-- BROADCAST VIEW -->
   <div id="broadcast-view" style="display:none;">
     <h3 style="margin-top:0; color:var(--brand);">Send Broadcast Email</h3>
     <p class="sub">This will open your email app with all approved alumni in the BCC field.</p>
@@ -298,6 +299,7 @@ const modalConfirm = document.getElementById("modal-confirm");
 let currentTab = "pending";
 let allDocs    = [];
 let rejectedDocs = [];
+let revokedDocs  = [];
 let allRoles   = [];
 let currentRole = null;
 let authCheckInFlight = false;
@@ -415,7 +417,7 @@ function switchTab(name) {
   const isRoles = name === "roles";
   const isBroadcast = name === "broadcast";
   const isMap = name === "map";
-  const isAlumni = name === "pending" || name === "approved" || name === "rejected";
+  const isAlumni = name === "pending" || name === "approved" || name === "rejected" || name === "revoked";
 
   alumniTableWrap.style.display = isAlumni ? "block" : "none";
   searchToolbar.style.display = isAlumni ? "flex" : "none";
@@ -428,10 +430,9 @@ function switchTab(name) {
   bulkActions.style.display = (showBulk && selectedIds.size > 0) ? "flex" : "none";
 
   if (isRoles) loadRoles();
-  else if (isAlumni) {
-    if (name === "rejected") loadRejected();
-    else loadAlumni();
-  }
+  else if (name === "rejected") loadRejected();
+  else if (name === "revoked") loadRevoked();
+  else if (isAlumni) loadAlumni();
   else if (isMap) setTimeout(loadMap, 100);
   else if (isBroadcast) {
     document.getElementById("broadcast-subject").value = "";
@@ -441,7 +442,7 @@ function switchTab(name) {
 tabs.forEach((t) => t.addEventListener("click", () => switchTab(t.dataset.tab)));
 
 // ═══════════════════════════════════════════════════════
-//  LOAD ALUMNI
+//  LOAD DATA
 // ═══════════════════════════════════════════════════════
 async function loadAlumni() {
   clearMsg();
@@ -485,20 +486,37 @@ async function loadRejected() {
   }
 }
 
+async function loadRevoked() {
+  clearMsg();
+  rows.innerHTML = '<tr><td colspan="8" class="empty">Loading…</td></tr>';
+  try {
+    const snap = await getDocs(collection(db, "revoked_alumni"));
+    revokedDocs = [];
+    snap.forEach((d) => revokedDocs.push({ id: d.id, ...d.data() }));
+    revokedDocs.sort((a, b) => (b.revoked_at?.toMillis?.() || 0) - (a.revoked_at?.toMillis?.() || 0));
+    renderRows();
+  } catch (err) {
+    rows.innerHTML = "";
+    show(err.code === "permission-denied" ? "You don't have permission to view revoked alumni." : "Error: " + err.message, "err");
+  }
+}
+
 function renderRows() {
   selectedIds.clear();
   selectAll.checked = false;
   bulkCount.textContent = "0 selected";
   bulkActions.style.display = "none";
 
-  const source = currentTab === "rejected" ? rejectedDocs : allDocs;
+  let source = allDocs;
+  if (currentTab === "rejected") source = rejectedDocs;
+  else if (currentTab === "revoked") source = revokedDocs;
+
   const term = searchIn.value.trim().toLowerCase();
   
   const filtered = source.filter((d) => {
     let matchesTab = true;
     if (currentTab === "pending") matchesTab = !d.approved;
     else if (currentTab === "approved") matchesTab = d.approved;
-    // rejected tab shows all rejectedDocs
 
     if (!matchesTab) return false;
     if (!term) return true;
@@ -519,12 +537,15 @@ function renderRows() {
     if (currentTab === "rejected") {
       status = `<span class="pill" style="background:#fee2e2; color:#991b1b;">Rejected</span>`;
       actions = `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>`;
+    } else if (currentTab === "revoked") {
+      status = `<span class="pill" style="background:#ffedd5; color:#9a3412;">Revoked</span>`;
+      actions = `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>`;
     } else {
       status = d.approved ? `<span class="pill approved">Approved</span>` : `<span class="pill pending">Pending</span>`;
       actions = d.approved
         ? `<button class="small gray" data-action="view" data-id="${escapeAttr(d.id)}">View</button>
            <button class="small" data-action="send" data-id="${escapeAttr(d.id)}">Send credentials</button>
-           <button class="small red" data-action="reject" data-id="${escapeAttr(d.id)}">Revoke</button>`
+           <button class="small red" data-action="revoke" data-id="${escapeAttr(d.id)}">Revoke</button>`
         : `<button class="small green" data-action="approve" data-id="${escapeAttr(d.id)}">Approve</button>
            <button class="small red" data-action="reject" data-id="${escapeAttr(d.id)}">Reject</button>`;
     }
@@ -566,7 +587,10 @@ rows.addEventListener("click", (e) => {
   const id = btn.dataset.id;
   const action = btn.dataset.action;
   
-  const source = currentTab === "rejected" ? rejectedDocs : allDocs;
+  let source = allDocs;
+  if (currentTab === "rejected") source = rejectedDocs;
+  else if (currentTab === "revoked") source = revokedDocs;
+  
   const d = source.find((x) => x.id === id);
   if (!d) return;
 
@@ -574,6 +598,7 @@ rows.addEventListener("click", (e) => {
   else if (action === "approve") openApproveModal(d);
   else if (action === "send") openSendModal(d);
   else if (action === "reject") openRejectModal(d);
+  else if (action === "revoke") openRevokeModal(d);
 });
 
 // ═══════════════════════════════════════════════════════
@@ -612,7 +637,6 @@ modalConfirm.addEventListener("click", async () => {
 function openViewModal(d) {
   modalTitle.textContent = "Alumnus Details";
   
-  // Feature 4: Admin Notes textarea
   modalBody.innerHTML = `
     ${detailsHtml(d)}
     <label style="margin-top:1rem;">🔒 Private Admin Notes (only you can see this)</label>
@@ -628,7 +652,10 @@ function openViewModal(d) {
 
   pendingAction = async () => {
     const notes = document.getElementById("admin-notes").value.trim();
-    const collectionName = currentTab === "rejected" ? "rejected_alumni" : "alumni";
+    let collectionName = "alumni";
+    if (currentTab === "rejected") collectionName = "rejected_alumni";
+    else if (currentTab === "revoked") collectionName = "revoked_alumni";
+    
     await updateDoc(doc(db, collectionName, d.id), { admin_notes: notes });
     show("Notes saved.", "ok");
   };
@@ -720,7 +747,6 @@ function openSendModal(d) {
   dialog.showModal();
 }
 
-// Feature 6: Reject with Reason
 function openRejectModal(d) {
   modalTitle.textContent = "Reject Registration";
   modalBody.innerHTML = `
@@ -738,7 +764,6 @@ function openRejectModal(d) {
     const reason = document.getElementById("reject-reason").value.trim();
     if (!reason) throw new Error("Please provide a reason for rejection.");
 
-    // Move to rejected_alumni
     const { id, ...dataWithoutId } = d;
     await addDoc(collection(db, "rejected_alumni"), {
       ...dataWithoutId,
@@ -747,9 +772,43 @@ function openRejectModal(d) {
       rejected_by: auth.currentUser.email
     });
 
-    // Remove from main alumni collection
     await deleteDoc(doc(db, "alumni", d.id));
     show("Rejected and archived.", "ok");
+    loadAlumni();
+  };
+
+  dialog.showModal();
+}
+
+// ⭐ NEW: Revoke Modal (Feature: Revoked Alumni)
+function openRevokeModal(d) {
+  modalTitle.textContent = "Revoke Access";
+  modalBody.innerHTML = `
+    ${detailsHtml(d)}
+    <div class="warn">This will revoke their access to the directory. They will be moved to the "Revoked" archive.</div>
+    <label style="margin-top:1rem;">Reason for revoking</label>
+    <textarea id="revoke-reason" rows="3" placeholder="e.g., Account compromised, requested removal, violation of rules..."></textarea>
+  `;
+  modalConfirm.style.display = "block";
+  modalConfirm.disabled = false;
+  modalConfirm.textContent = "Confirm Revoke";
+  modalConfirm.className = "red";
+  modalCancel.textContent = "Cancel";
+
+  pendingAction = async () => {
+    const reason = document.getElementById("revoke-reason").value.trim();
+    if (!reason) throw new Error("Please provide a reason for revoking.");
+
+    const { id, ...dataWithoutId } = d;
+    await addDoc(collection(db, "revoked_alumni"), {
+      ...dataWithoutId,
+      revoked_reason: reason,
+      revoked_at: serverTimestamp(),
+      revoked_by: auth.currentUser.email
+    });
+
+    await deleteDoc(doc(db, "alumni", d.id));
+    show("Revoked and archived.", "ok");
     loadAlumni();
   };
 
@@ -761,9 +820,15 @@ function openRejectModal(d) {
 // ═══════════════════════════════════════════════════════
 function detailsHtml(d) {
   const created = d.created_at?.toDate?.()?.toLocaleString() || "—";
-  const rejectedInfo = d.rejection_reason 
-    ? `<dt style="color:#991b1b;">Rejection Reason</dt><dd style="color:#991b1b;">${escapeHtml(d.rejection_reason)}</dd>` 
-    : "";
+  
+  let archiveInfo = "";
+  if (d.rejection_reason) {
+    archiveInfo += `<dt style="color:#991b1b;">Rejection Reason</dt><dd style="color:#991b1b;">${escapeHtml(d.rejection_reason)}</dd>`;
+  }
+  if (d.revoked_reason) {
+    archiveInfo += `<dt style="color:#9a3412;">Revoke Reason</dt><dd style="color:#9a3412;">${escapeHtml(d.revoked_reason)}</dd>`;
+  }
+
   const rowsData = [
     ["Name", d.full_name], ["Email", d.email], ["Phone", d.phone], ["Courses", d.courses], ["Graduation", d.graduation_year],
     ["Stream", d.class_stream], ["Occupation", d.occupation], ["Employer", d.employer], ["Location", d.location],
@@ -772,7 +837,7 @@ function detailsHtml(d) {
   ];
   return `<dl class="kv">` + 
     rowsData.filter(([_, v]) => v !== undefined && v !== null && v !== "").map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(String(v))}</dd>`).join("") + 
-    rejectedInfo +
+    archiveInfo +
     `</dl>`;
 }
 
@@ -839,8 +904,8 @@ bulkReject.addEventListener("click", async () => {
   for (const id of selectedIds) {
     const d = allDocs.find(x => x.id === id);
     const reason = prompt(`Reason for rejecting ${d?.full_name || d?.email}:`);
-    if (reason === null) continue; // Skip if cancelled
-    if (!reason.trim()) continue; // Skip if empty
+    if (reason === null) continue;
+    if (!reason.trim()) continue;
 
     const { id: _id, ...dataWithoutId } = d;
     await addDoc(collection(db, "rejected_alumni"), {
@@ -888,7 +953,7 @@ exportBtn.addEventListener("click", () => {
 });
 
 // ═══════════════════════════════════════════════════════
-//  BROADCAST (Feature 5: Templates)
+//  BROADCAST
 // ═══════════════════════════════════════════════════════
 document.getElementById("broadcast-template").addEventListener("change", (e) => {
   const subject = document.getElementById("broadcast-subject");
@@ -1041,6 +1106,7 @@ searchIn.addEventListener("input", renderRows);
 refreshBtn.addEventListener("click", () => {
   if (currentTab === "roles") loadRoles();
   else if (currentTab === "rejected") loadRejected();
+  else if (currentTab === "revoked") loadRevoked();
   else loadAlumni();
 });
 </script>
