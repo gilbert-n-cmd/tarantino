@@ -38,7 +38,7 @@
   .stat-card .num { font-size: 1.8rem; font-weight: 700; color: var(--brand); }
   .tabs { display: flex; gap: .5rem; border-bottom: 2px solid var(--line); margin-bottom: 1.25rem; flex-wrap: wrap; }
   .tab { padding: .6rem 1rem; border: 0; background: none; border-radius: 0; color: #64748b;
-         font-weight: 600; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer; }
+         font-weight: 600; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer; position: relative; }
   .tab:hover { background: #f1f5f9; }
   .tab.active { color: var(--brand); border-bottom-color: var(--brand); }
   .table-wrap { overflow-x: auto; }
@@ -69,6 +69,26 @@
   .warn { background: #fef3c7; color: #92400e; padding: .6rem .8rem; border-radius: 8px; font-size: .82rem; margin-top: .5rem; }
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
   .form-grid .full { grid-column: 1 / -1; }
+
+  /* Inbox specific styles */
+  .inbox-message {
+    background: #f8fafc; padding: 1rem; border-radius: 8px;
+    border: 1px solid var(--line); margin-bottom: .75rem;
+    border-left: 4px solid #94a3b8;
+  }
+  .inbox-message.unread {
+    background: #dbeafe;
+    border-left-color: #2563eb;
+  }
+  .inbox-message .message-header {
+    display: flex; justify-content: space-between; align-items: start; gap: 1rem;
+  }
+  .inbox-message .sender { font-weight: 700; font-size: .95rem; }
+  .inbox-message .sender-email { color: #64748b; font-size: .82rem; font-weight: 400; }
+  .inbox-message .timestamp { color: #64748b; font-size: .75rem; }
+  .inbox-message .message-body { margin: .5rem 0 0; font-size: .9rem; line-height: 1.5; }
+  .inbox-message .message-actions { display: flex; flex-direction: column; gap: .4rem; }
+
   @media (max-width: 768px) {
     body { padding: 1rem 0.5rem; }
     .wrap { padding: 1.25rem; border-radius: 10px; }
@@ -87,6 +107,9 @@
     .cred-row input { width: 100%; margin-bottom: .25rem; }
     .cred-row button { flex: 1; }
     .form-grid { grid-template-columns: 1fr; }
+    .inbox-message .message-header { flex-direction: column; }
+    .inbox-message .message-actions { flex-direction: row; width: 100%; }
+    .inbox-message .message-actions button { flex: 1; }
   }
 </style>
 </head>
@@ -132,10 +155,12 @@
     <button class="tab" data-tab="events">📅 Events</button>
     <button class="tab" data-tab="jobs">💼 Jobs</button>
     <button class="tab" data-tab="stories">📚 Stories</button>
+    <button class="tab" data-tab="inbox">📥 Inbox <span id="inbox-badge" style="background:#dc2626;color:white;font-size:.65rem;padding:.15rem .4rem;border-radius:999px;margin-left:.25rem;display:none;">0</span></button>
     <button class="tab" data-tab="settings">⚙️ Settings</button>
   </div>
   <div class="toolbar" id="search-toolbar">
     <input type="search" id="search" placeholder="Search name, email, course, year…">
+    <button id="manual-add-btn" class="green">+ Add Alumni</button>
     <button id="export-btn" class="green">Export CSV</button>
     <button id="refresh-btn" class="gray">Refresh</button>
   </div>
@@ -210,6 +235,12 @@
     <div id="stories-list"></div>
   </div>
 
+  <!-- ⭐ NEW: INBOX VIEW -->
+  <div id="inbox-view" style="display:none;">
+    <h3 style="margin-top:0; color:var(--brand);">📥 Inbox — Messages from Alumni</h3>
+    <div id="inbox-list"><div class="empty">Loading messages…</div></div>
+  </div>
+
   <div id="settings-view" style="display:none;">
     <h3 style="margin-top:0; color:var(--brand);">Site Settings</h3>
     <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid var(--line); margin-bottom:1.5rem;">
@@ -222,10 +253,6 @@
       <h4 style="margin:0 0 .5rem;">📢 Announcement Banner</h4>
       <label>Message (leave blank to hide)</label><input id="announcement-text">
       <button class="green small" id="save-announcement-btn" style="margin-top:.75rem;">Save</button>
-    </div>
-    <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid var(--line);">
-      <h4 style="margin:0 0 .5rem;">📥 Inbox (Messages from Alumni)</h4>
-      <div id="messages-list"><div class="empty">Loading...</div></div>
     </div>
   </div>
 </div>
@@ -272,6 +299,7 @@ const roleRows = document.getElementById("role-rows");
 const searchIn = document.getElementById("search");
 const refreshBtn = document.getElementById("refresh-btn");
 const exportBtn = document.getElementById("export-btn");
+const manualAddBtn = document.getElementById("manual-add-btn");
 const msg = document.getElementById("msg");
 const tabs = document.querySelectorAll(".tab");
 const alumniTableWrap = document.getElementById("alumni-table-wrap");
@@ -282,6 +310,7 @@ const mapView = document.getElementById("map-view");
 const eventsView = document.getElementById("events-view");
 const jobsView = document.getElementById("jobs-view");
 const storiesView = document.getElementById("stories-view");
+const inboxView = document.getElementById("inbox-view");
 const settingsView = document.getElementById("settings-view");
 
 const bulkHeader = document.getElementById("bulk-header");
@@ -314,10 +343,9 @@ function escapeHtml(s) { return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&
 function escapeAttr(s) { return escapeHtml(s); }
 
 // ═══════════════════════════════════════════════════════
-//  THE BULLETPROOF AUTH FIX
+//  AUTH
 // ═══════════════════════════════════════════════════════
 onAuthStateChanged(auth, async (user) => {
-  // 1. If logged out, show login
   if (!user) {
     loginPanel.style.display = "block";
     adminPanel.style.display = "none";
@@ -326,7 +354,6 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  // 2. Dedupe: if we already verified this user, skip
   if (user.uid === lastVerifiedUid && adminPanel.style.display === "block") return;
   if (authCheckInFlight) return;
   authCheckInFlight = true;
@@ -334,14 +361,11 @@ onAuthStateChanged(auth, async (user) => {
   loginShow("Verifying access...", "info");
 
   try {
-    // 3. Add a 3-second timeout so it never hangs
     const rolePromise = getDoc(doc(db, "roles", user.uid));
     const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Firestore timed out")), 3000));
     const snap = await Promise.race([rolePromise, timeoutPromise]);
 
-    // 4. Handle the result
     if (!snap.exists() || snap.data().role !== "admin") {
-      // Not an admin -> sign out
       await signOut(auth);
       loginShow("You are not an admin.", "err");
       loginBtn.disabled = false;
@@ -349,7 +373,6 @@ onAuthStateChanged(auth, async (user) => {
       return;
     }
 
-    // 5. Success -> Reveal panel
     lastVerifiedUid = user.uid;
     loginPanel.style.display = "none";
     adminPanel.style.display = "block";
@@ -357,9 +380,8 @@ onAuthStateChanged(auth, async (user) => {
     loginShow("", "ok");
     loginBtn.disabled = false;
     switchTab("pending");
-
+    updateInboxBadge(); // Check for unread messages on login
   } catch (err) {
-    // 6. Handle timeout or errors WITHOUT logging out
     loginShow("Verification error: " + err.message + ". Check Firestore rules.", "err");
     loginBtn.disabled = false;
   } finally {
@@ -382,7 +404,7 @@ loginForm.addEventListener("submit", async (e) => {
 logoutBtn.addEventListener("click", () => signOut(auth));
 
 // ═══════════════════════════════════════════════════════
-//  TABS & DATA
+//  TABS
 // ═══════════════════════════════════════════════════════
 function switchTab(name) {
   currentTab = name;
@@ -396,6 +418,7 @@ function switchTab(name) {
   eventsView.style.display = "none";
   jobsView.style.display = "none";
   storiesView.style.display = "none";
+  inboxView.style.display = "none";
   settingsView.style.display = "none";
 
   const isAlumni = name === "pending" || name === "approved" || name === "rejected" || name === "revoked";
@@ -407,11 +430,14 @@ function switchTab(name) {
   if (name === "events") eventsView.style.display = "block";
   if (name === "jobs") jobsView.style.display = "block";
   if (name === "stories") storiesView.style.display = "block";
+  if (name === "inbox") inboxView.style.display = "block";
   if (name === "settings") settingsView.style.display = "block";
 
   const showBulk = name === "pending";
   bulkHeader.style.display = showBulk ? "table-cell" : "none";
   bulkActions.style.display = (showBulk && selectedIds.size > 0) ? "flex" : "none";
+
+  manualAddBtn.style.display = (name === "pending" || name === "approved") ? "inline-block" : "none";
 
   if (name === "roles") loadRoles();
   else if (name === "rejected") loadRejected();
@@ -421,6 +447,7 @@ function switchTab(name) {
   else if (name === "events") loadEvents();
   else if (name === "jobs") loadJobs();
   else if (name === "stories") loadStories();
+  else if (name === "inbox") loadInbox();
   else if (name === "settings") loadSettings();
   else if (name === "broadcast") {
     document.getElementById("broadcast-subject").value = "";
@@ -429,6 +456,9 @@ function switchTab(name) {
 }
 tabs.forEach((t) => t.addEventListener("click", () => switchTab(t.dataset.tab)));
 
+// ═══════════════════════════════════════════════════════
+//  ALUMNI DATA
+// ═══════════════════════════════════════════════════════
 async function loadAlumni() {
   rows.innerHTML = '<tr><td colspan="8" class="empty">Loading…</td></tr>';
   try {
@@ -514,7 +544,6 @@ function renderRows() {
   });
 }
 
-// EVENT DELEGATION
 rows.addEventListener("click", (e) => {
   const btn = e.target.closest("button[data-action]");
   if (!btn) return;
@@ -561,15 +590,46 @@ function openApproveModal(d) {
   const proposedEmail = d.email || "";
   const proposedPassword = generatePassword(14);
   modalTitle.textContent = "Approve & Create Account";
-  modalBody.innerHTML = `${detailsHtml(d)}<div class="warn">Clicking Approve will create a Firebase Auth account and open your email app.</div><label style="margin-top:1rem;">Email</label><input id="cred-email" value="${escapeAttr(proposedEmail)}" readonly><label style="margin-top:.5rem;">Password</label><input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly>`;
+  modalBody.innerHTML = `
+    ${detailsHtml(d)}
+    <div class="warn">
+      <b>Clicking Approve will:</b>
+      <ol style="margin:.35rem 0 0 1.1rem; padding:0;">
+        <li>Create their Firebase Authentication account.</li>
+        <li>Link the Auth UID to this Firestore document.</li>
+        <li>Open your email app with the credentials.</li>
+      </ol>
+    </div>
+    <label style="margin-top:1rem;">Email</label>
+    <div class="cred-row"><input id="cred-email" value="${escapeAttr(proposedEmail)}" readonly><button class="small gray" id="copy-email" type="button">Copy</button></div>
+    <label style="margin-top:.5rem;">Password</label>
+    <div class="cred-row"><input id="cred-pass" value="${escapeAttr(proposedPassword)}" readonly><button class="small gray" id="copy-pass" type="button">Copy</button></div>
+  `;
   modalConfirm.style.display = "block"; modalConfirm.textContent = "Approve & Create"; modalConfirm.className = "green";
+  document.getElementById("copy-email").onclick = () => { navigator.clipboard.writeText(proposedEmail); show("Email copied.", "ok"); };
+  document.getElementById("copy-pass").onclick = () => { navigator.clipboard.writeText(proposedPassword); show("Password copied.", "ok"); };
+  
   pendingAction = async () => {
     const sApp = initializeApp(firebaseConfig, "Sec-" + Date.now());
-    try { await createUserWithEmailAndPassword(getAuth(sApp), proposedEmail.toLowerCase(), proposedPassword); } catch (err) { if (err.code !== "auth/email-already-in-use") throw err; }
+    let newUid;
+    try {
+      const cred = await createUserWithEmailAndPassword(getAuth(sApp), proposedEmail.toLowerCase(), proposedPassword);
+      newUid = cred.user.uid;
+    } catch (err) {
+      if (err.code === "auth/email-already-in-use") throw new Error("Email already has an account.");
+      else throw err;
+    }
     await deleteApp(sApp);
-    await updateDoc(doc(db, "alumni", d.id), { approved: true, approved_at: serverTimestamp(), login_email: proposedEmail.toLowerCase() });
+
+    const newData = { ...d, approved: true, approved_at: serverTimestamp(), approved_by: auth.currentUser.email, login_email: proposedEmail.toLowerCase() };
+    delete newData.id;
+    await setDoc(doc(db, "alumni", newUid), newData);
+    if (d.id !== newUid) await deleteDoc(doc(db, "alumni", d.id));
+    await setDoc(doc(db, "roles", newUid), { role: "member", email: proposedEmail.toLowerCase(), added_at: serverTimestamp() }, { merge: true });
+
     openEmailDraft(d, proposedEmail, proposedPassword);
-    show("Approved!", "ok"); loadAlumni();
+    show("Approved and linked! ✓", "ok");
+    loadAlumni();
   };
   dialog.showModal();
 }
@@ -652,6 +712,69 @@ function generatePassword() {
   for (let i = 0; i < 14; i++) out += chars[buf[i] % chars.length];
   return out;
 }
+
+// MANUAL ADD
+manualAddBtn.addEventListener("click", () => {
+  modalTitle.textContent = "Add Alumni Manually";
+  modalBody.innerHTML = `
+    <div class="form-grid">
+      <div class="full"><label>Full Name <span style="color:red;">*</span></label><input id="man-name"></div>
+      <div><label>Email <span style="color:red;">*</span></label><input id="man-email" type="email"></div>
+      <div><label>Phone</label><input id="man-phone"></div>
+      <div><label>Year of Graduation</label><input id="man-year" type="number"></div>
+      <div><label>Class / Stream</label><input id="man-stream"></div>
+      <div class="full"><label>Courses Pursued <span style="color:red;">*</span></label><input id="man-courses"></div>
+      <div><label>Occupation</label><input id="man-occ"></div>
+      <div><label>Employer</label><input id="man-emp"></div>
+      <div class="full"><label>Location</label><input id="man-loc"></div>
+      <div class="full"><label>Bio</label><textarea id="man-bio" rows="2"></textarea></div>
+    </div>
+  `;
+  modalConfirm.style.display = "block"; modalConfirm.textContent = "Create Account & Save"; modalConfirm.className = "green"; modalCancel.textContent = "Cancel";
+
+  pendingAction = async () => {
+    const name = document.getElementById("man-name").value.trim();
+    const email = document.getElementById("man-email").value.trim().toLowerCase();
+    const courses = document.getElementById("man-courses").value.trim();
+    if (!name) throw new Error("Name is required.");
+    if (!email) throw new Error("Email is required.");
+    if (!courses) throw new Error("Courses are required.");
+
+    const newPassword = generatePassword();
+    const sApp = initializeApp(firebaseConfig, "Sec-" + Date.now());
+    let newUid;
+    try {
+      const cred = await createUserWithEmailAndPassword(getAuth(sApp), email, newPassword);
+      newUid = cred.user.uid;
+    } catch (err) {
+      await deleteApp(sApp);
+      if (err.code === "auth/email-already-in-use") throw new Error("Email already registered.");
+      else throw err;
+    }
+    await deleteApp(sApp);
+
+    await setDoc(doc(db, "alumni", newUid), {
+      full_name: name, email: email,
+      phone: document.getElementById("man-phone").value.trim(),
+      graduation_year: document.getElementById("man-year").value ? Number(document.getElementById("man-year").value) : null,
+      class_stream: document.getElementById("man-stream").value.trim(),
+      courses: courses,
+      occupation: document.getElementById("man-occ").value.trim(),
+      employer: document.getElementById("man-emp").value.trim(),
+      location: document.getElementById("man-loc").value.trim(),
+      bio: document.getElementById("man-bio").value.trim(),
+      consent_public: true, share_location: false, approved: true,
+      approved_at: serverTimestamp(), approved_by: auth.currentUser.email,
+      created_at: serverTimestamp(), source: "manual",
+    });
+
+    await setDoc(doc(db, "roles", newUid), { role: "member", email: email, added_at: serverTimestamp() }, { merge: true });
+    openEmailDraft({ full_name: name, email: email }, email, newPassword);
+    show("Alumni added! Email draft opened.", "ok");
+    loadAlumni();
+  };
+  dialog.showModal();
+});
 
 // ROLES
 async function loadRoles() {
@@ -749,18 +872,73 @@ document.getElementById("add-story-btn").addEventListener("click", () => {
   dialog.showModal();
 });
 
+// ═══════════════════════════════════════════════════════
+//  ⭐ INBOX — Messages from Alumni
+// ═══════════════════════════════════════════════════════
+async function loadInbox() {
+  const list = document.getElementById("inbox-list");
+  list.innerHTML = '<div class="empty">Loading messages…</div>';
+  try {
+    const snap = await getDocs(collection(db, "messages"));
+    if (snap.empty) {
+      list.innerHTML = '<div class="empty">No messages yet.</div>';
+      return;
+    }
+
+    const messages = [];
+    snap.forEach(d => messages.push({ id: d.id, ...d.data() }));
+    messages.sort((a, b) => (b.created_at?.toMillis?.() || 0) - (a.created_at?.toMillis?.() || 0));
+
+    list.innerHTML = messages.map(m => `
+      <div class="inbox-message ${m.read ? '' : 'unread'}">
+        <div class="message-header">
+          <div style="flex:1;">
+            <div>
+              <span class="sender">${escapeHtml(m.name)}</span>
+              <span class="sender-email">(${escapeHtml(m.from_email || "unknown")})</span>
+              ${!m.read ? '<span style="background:#dc2626;color:white;font-size:.65rem;padding:.1rem .4rem;border-radius:999px;margin-left:.5rem;">NEW</span>' : ''}
+            </div>
+            <div class="timestamp">${m.created_at?.toDate?.()?.toLocaleString() || ""}</div>
+            <p class="message-body">${escapeHtml(m.message)}</p>
+          </div>
+          <div class="message-actions">
+            <button class="small red" onclick="deleteItem('messages','${m.id}','loadInbox')">Delete</button>
+          </div>
+        </div>
+      </div>
+    `).join("");
+
+    // Auto-mark all messages as read after viewing
+    for (const m of messages) {
+      if (!m.read) await updateDoc(doc(db, "messages", m.id), { read: true });
+    }
+    updateInboxBadge();
+  } catch (err) {
+    list.innerHTML = `<div class="empty" style="color:red;">Error: ${err.message}</div>`;
+  }
+}
+
+async function updateInboxBadge() {
+  try {
+    const snap = await getDocs(collection(db, "messages"));
+    const unread = snap.docs.filter(d => !d.data().read).length;
+    const badge = document.getElementById("inbox-badge");
+    if (unread > 0) {
+      badge.textContent = unread;
+      badge.style.display = "inline-block";
+    } else {
+      badge.style.display = "none";
+    }
+  } catch (e) { /* silent */ }
+}
+
+// Check for new messages every 30 seconds
+setInterval(updateInboxBadge, 30000);
+
 // SETTINGS
 async function loadSettings() {
   try { const s = await getDoc(doc(db, "settings", "alumni_of_month")); if (s.exists()) { document.getElementById("aotm-name").value = s.data().name || ""; document.getElementById("aotm-desc").value = s.data().description || ""; } } catch(e) {}
   try { const s = await getDoc(doc(db, "settings", "announcement")); if (s.exists()) document.getElementById("announcement-text").value = s.data().text || ""; } catch(e) {}
-  
-  const msgList = document.getElementById("messages-list"); msgList.innerHTML = '<div class="empty">Loading…</div>';
-  try {
-    const snap = await getDocs(collection(db, "messages"));
-    if (snap.empty) return msgList.innerHTML = '<div class="empty">No messages yet.</div>';
-    msgList.innerHTML = "";
-    snap.forEach(d => { const m = d.data(); msgList.innerHTML += `<div style="background:white;padding:.75rem;border-radius:8px;margin-bottom:.5rem;"><b>${escapeHtml(m.name)}</b> <span style="color:#64748b;font-size:.8rem;">(${escapeHtml(m.from_email)})</span><p>${escapeHtml(m.message)}</p><button class="small red" onclick="deleteItem('messages','${d.id}','loadSettings')">Delete</button></div>`; });
-  } catch (err) { msgList.innerHTML = `<div class="empty">Error: ${err.message}</div>`; }
 }
 
 document.getElementById("save-aotm-btn").addEventListener("click", async () => {
@@ -783,9 +961,10 @@ window.deleteItem = async (coll, id, reloadFnName) => {
 window.loadEvents = loadEvents;
 window.loadJobs = loadJobs;
 window.loadStories = loadStories;
+window.loadInbox = loadInbox;
 window.loadSettings = loadSettings;
 
-// BROADCAST & MAP (Keep from previous version)
+// BROADCAST
 document.getElementById("broadcast-template").addEventListener("change", (e) => {
   const subj = document.getElementById("broadcast-subject"); const body = document.getElementById("broadcast-body");
   const templates = { event: { s: "🎉 Alumni Reunion", b: "Dear Alumni,\n\nYou're invited!\n\n— School" }, donation: { s: "🙏 Support Our School", b: "Dear Alumni,\n\nPlease support us.\n\n— School" }, report: { s: "📊 Annual Report", b: "Dear Alumni,\n\nReport attached.\n\n— School" }, custom: { s: "", b: "" } };
@@ -799,6 +978,7 @@ document.getElementById("broadcast-btn").addEventListener("click", () => {
   window.open(`mailto:?bcc=${bcc}&subject=${subj}&body=${body}`, "_blank");
 });
 
+// MAP
 function loadMap() {
   const mapContainer = document.getElementById("map-container");
   if (mapInstance) { mapInstance.invalidateSize(); } else {
@@ -822,6 +1002,7 @@ function loadMap() {
   }
 }
 
+// CSV
 exportBtn.addEventListener("click", () => {
   if (!allDocs.length) return alert("No data.");
   const headers = ["Name","Email","Phone","Courses","Year","Status"];
@@ -840,6 +1021,7 @@ refreshBtn.addEventListener("click", () => {
   else if (currentTab === "events") loadEvents();
   else if (currentTab === "jobs") loadJobs();
   else if (currentTab === "stories") loadStories();
+  else if (currentTab === "inbox") loadInbox();
   else if (currentTab === "settings") loadSettings();
   else loadAlumni();
 });
