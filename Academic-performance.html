@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Academic-performance</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=20261112b" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="school-assistan/css/ai-bot.css">
   <link rel="stylesheet" href="school-assistan/css/ai-auth.css">
 
- <link rel="stylesheet" href="badge.css">
+ <link rel="stylesheet" href="badge.css?v=20261112b">
 
  <link rel="preconnect" href="https://fonts.googleapis.com" />
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,6 +23,25 @@
 
 <link rel="stylesheet" href="E-library.css" />
 
+
+
+  <!-- Localhost display fixes: deliberately loaded after all shared stylesheets. -->
+  <style id="localhost-display-fixes">
+    /* The secondary navigation badge is mobile-only. */
+    nav img.nav-badge, nav .nav-badge { display: none !important; }
+    @media screen and (max-width: 768px) {
+      nav img.nav-badge, nav .nav-badge { display: block !important; }
+    }
+    /* Keep the Portal control a clearly visible white button. */
+    #portalBtn {
+      display: inline-flex !important; align-items: center !important; justify-content: center !important;
+      background: #fff !important; color: #06427a !important; border: 2px solid #06427a !important;
+      border-radius: 8px !important; padding: 8px 18px !important; min-height: 38px !important;
+      font-weight: 700 !important; text-decoration: none !important; cursor: pointer !important;
+      opacity: 1 !important; visibility: visible !important;
+    }
+    #portalBtn:hover, #portalBtn:focus-visible { background: #edf5ff !important; color: #04345f !important; }
+  </style>
 
 </head>
 <body>

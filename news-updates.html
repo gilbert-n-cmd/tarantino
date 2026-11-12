@@ -6,12 +6,12 @@
   <title>news-updates</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=20261112b" />
 
   <link rel="stylesheet" href="school-assistan/css/ai-bot.css">
   <link rel="stylesheet" href="school-assistan/css/ai-auth.css">
 
- <link rel="stylesheet" href="badge.css">
+ <link rel="stylesheet" href="badge.css?v=20261112b">
 
  <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,6 +21,25 @@
   <link rel="stylesheet" href="search/styles/features.css" />
   <link rel="stylesheet" href="search/styles/extra-features.css" />
 
+
+
+  <!-- Localhost display fixes: deliberately loaded after all shared stylesheets. -->
+  <style id="localhost-display-fixes">
+    /* The secondary navigation badge is mobile-only. */
+    nav img.nav-badge, nav .nav-badge { display: none !important; }
+    @media screen and (max-width: 768px) {
+      nav img.nav-badge, nav .nav-badge { display: block !important; }
+    }
+    /* Keep the Portal control a clearly visible white button. */
+    #portalBtn {
+      display: inline-flex !important; align-items: center !important; justify-content: center !important;
+      background: #fff !important; color: #06427a !important; border: 2px solid #06427a !important;
+      border-radius: 8px !important; padding: 8px 18px !important; min-height: 38px !important;
+      font-weight: 700 !important; text-decoration: none !important; cursor: pointer !important;
+      opacity: 1 !important; visibility: visible !important;
+    }
+    #portalBtn:hover, #portalBtn:focus-visible { background: #edf5ff !important; color: #04345f !important; }
+  </style>
 
 </head>
 <style>
@@ -742,7 +761,34 @@ newsContainer.innerHTML += `
 loadNews();
 </script>
 
-<button id="backToTopBtn" type="button" onclick="scrollToTop()" aria-label="Back to top" title="Back to top">↑</button>
+<button id="backToTopBtn" type="button" aria-label="Back to top" title="Back to top">↑</button>
+<style>
+  #backToTopBtn { position: fixed !important; left: 22px !important; bottom: 22px !important;
+    width: 48px !important; height: 48px !important; border: 0 !important; border-radius: 50% !important;
+    background: #064b8e !important; color: #fff !important; font-size: 25px !important;
+    display: none; align-items: center; justify-content: center; cursor: pointer;
+    z-index: 2147483000 !important; box-shadow: 0 4px 14px rgba(0,0,0,.25) !important; }
+  #backToTopBtn.is-visible { display: flex !important; }
+</style>
+<script>
+(function () {
+  const button = document.getElementById('backToTopBtn');
+  if (!button) return;
+  const update = () => {
+    const y = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    button.classList.toggle('is-visible', y > 250);
+  };
+  button.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  });
+  window.addEventListener('scroll', update, { passive: true });
+  document.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('load', update);
+  update();
+})();
+</script>
 
 <script type="module" src="termlyregister.js"></script>
 <script src="script.js"></script>
