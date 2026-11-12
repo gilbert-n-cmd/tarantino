@@ -34,3 +34,6 @@
     }
   }
   
+/* Keep the secondary navigation badge hidden on desktop. */
+nav .nav-badge { display: none !important; }
+@media (max-width: 768px) { nav .nav-badge { display: block !important; } }

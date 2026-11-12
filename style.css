@@ -957,3 +957,31 @@ nav .dropdown-submenu:hover .dropdown-submenu-content {
     margin: 0 6px !important; /* Space between icons */
   }
 }
+
+
+/* Portal entry: clear white button on every page */
+#portalBtn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff !important;
+  color: #004080 !important;
+  border: 2px solid #004080 !important;
+  border-radius: 7px;
+  padding: 8px 16px;
+  min-height: 38px;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+#portalBtn:hover, #portalBtn:focus-visible {
+  background: #f1f7ff !important;
+  color: #003366 !important;
+}
+
+/* The small navigation badge is intended for mobile screens only. */
+nav .nav-badge { display: none !important; }
+@media (max-width: 768px) {
+  nav .nav-badge { display: block !important; }
+}

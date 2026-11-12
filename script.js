@@ -2,20 +2,6 @@
         var chatBox = document.getElementById("chat-box");
         chatBox.style.display = (chatBox.style.display === "block") ? "none" : "block";
     }
-    function updateTime() {
-            let now = new Date();
-            document.getElementById("liveTime").innerText = now.toLocaleTimeString();
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
-
-        function updateDate() {
-            let now = new Date();
-            document.getElementById("liveDate").innerText = now.toLocaleDateString();
-        }
-        setInterval(updateDate, 1000);
-        updateDate();
-
 document.addEventListener('DOMContentLoaded', function () {
   const navToggle = document.querySelector('.nav-toggle');
   const nav = document.querySelector('nav');
