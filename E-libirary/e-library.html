@@ -113,7 +113,7 @@ const todayString = `${yyyy}-${mm}-${dd}`;
 
 onAuthStateChanged(auth, (user) => {
   if (!user) {
-    window.location.href = "e-library-login.html";
+    window.location.href = "index.html";
   } else {
     document.getElementById("loading-screen").style.display = "none";
     document.getElementById("app-container").style.display = "block";
